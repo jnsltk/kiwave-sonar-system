@@ -21,7 +21,7 @@ int timeToDistance(int time, int speedInMetersPerSecond){
 #include "KiwiSonic.h"
 
 //Instantiating KiwiSonic sensor object. args: signalPin, delayToUse. Leave as is for now. Will be auto-calculated once the implementation for temperature sensor is there.
-KiwiSonic sensor(1,100);
+KiwiSonic sensor(0,100);
 
 void setup()
 {

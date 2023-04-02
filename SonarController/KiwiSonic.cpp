@@ -1,12 +1,13 @@
 #include "Arduino.h"
 #include "kiwiSonic.h"
+
 KiwiSonic::KiwiSonic(int sigPin,int maxDelay) {
 	_sigPin = sigPin;
   _maxDelay = maxDelay;
 }
 
 int KiwiSonic::ping(){
-    	pinMode(sigPin, OUTPUT);
+    	pinMode(_sigPin, OUTPUT);
 
     digitalWrite(_sigPin, HIGH);
     delay(_maxDelay);
