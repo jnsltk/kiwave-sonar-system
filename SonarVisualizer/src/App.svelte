@@ -1,13 +1,12 @@
 <script>
   import svelteLogo from './assets/svelte.svg'
   import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
-    import Title from './components/Title.svelte';
+    import {initMqtt} from './components/MqttHandler.svelte';
+    initMqtt()
 </script>
 
 <main>
   <div>
-    <Title/>
     <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
       <img src={viteLogo} class="logo" alt="Vite Logo" />
     </a>
@@ -18,7 +17,6 @@
   <h1>Vite + Svelte</h1>
 
   <div class="card">
-    <Counter />
   </div>
 
   <p>
