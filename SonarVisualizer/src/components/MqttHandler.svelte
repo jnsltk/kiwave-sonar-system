@@ -1,12 +1,23 @@
+
 <script context="module">
-import * as mqtt from "mqtt"  // import everything inside the mqtt module and give it the namespace "mqtt"
-import { Buffer } from "buffer";
+import mqtt_client from 'u8-mqtt/esm/web/index.js' // or v4.js or v5.js
 
-export async function connectMqtt(){
-    let client = mqtt.connect('mqtt://test.mosquitto.org') // create a client
+export async function initMqtt(){
+    let my_mqtt = mqtt_client()
+  .with_websock('wss://test.mosquitto.org:8081')
+  .with_autoreconnect()
 
+await my_mqtt.connect()
 
+my_mqtt.subscribe_topic(
+  'u8-mqtt/demo-simple/:topic',
+  (pkt, params, ctx) => {
+    console.log('topic packet', params, pkt, pkt.json())
+  })
+
+await my_mqtt.json_send(
+  'u8-mqtt/demo-simple/live',
+  { note: 'from Web bundled example',
+    live: new Date().toISOString() })
 }
-
-
 </script>
