@@ -1,47 +1,57 @@
-# Svelte + Vite
+# Svelte Project Structure
 
-This template should help get you started developing with Svelte in Vite.
 
-## Recommended IDE Setup
+- /src :contains all the source files for the project
+- /node_modules :contains all external libraries for the project
+- /assets :shall contain media files: *.png, *.jpeg, etc.
+- /components :shall contain Svelte components
+- app.css :shall only contain **global** styling. In all cases, ensure to apply styling only in respective component.
+- App.svelte :contains the root component for the Svelte Application. Shall not contain HTML code related to the function of the application and should utilize components, instead.
+- main.js :contains the js code to inject the application into the browser. No need to touch this file.
+- index.html :contains raw HTML code. Nothing shall be added here atm, except for maybe changing the title tag, importing fonts, or other external ES6 modules
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+# Naming conventions
 
-## Need an official Svelte framework?
+- *.svelte files should start with a capital letter and use camelcase. Example: RadarScreen.svelte
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
 
-## Technical considerations
+# Running the project
 
-**Why use this over SvelteKit?**
+**If this is the first time running the project, ensure you have the necessary libraries by running ``npm i```**
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+**Run project by running**
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
 ```
+npm run dev
+```
+
+# Utilizing Svelte Stores
+
+If you need to share data across components one option is to use the predefined `sonarStore`. Not all components have it imported. See example `RadarScreen.svelte` on how to import it.
+sonarStore acts as a JSON object accessible by components that import it. Before using it, complete tutorial: https://svelte.dev/tutorial/writable-stores
+
+# Using the MQTT integration
+
+- Before sending/receiving any data, you need to initialize the MQTT connection. This can be done by calling the exported function: `initMqtt()` from `MqttHandler.svelte`
+- To receive data you need to call the `mqttSubscribe(topic, callback)` function and pass a **String** as the topic argument and a function that is executed everytime a message is received as the callback function.
+  The `mqttSubscribe` function returns two parameters to the callback function: `pkt` and `pkt.json()`
+
+  Example callback function:
+    ```
+        async function(pkt,pktJson){
+            console.log(pkt);
+            console.log(pktJson);
+        }
+    ```
+
+  Example call to the `mqttSubscribe(topic,callback)` function:
+  ```
+    async function exampleFunction(){
+        mqttSubscribe("exampletopic",async function(pkt,pktJson){
+            console.log(pkt);
+            console.log(pktJson);
+        })
+    }
+  ```
+
+
