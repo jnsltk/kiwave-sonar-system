@@ -27,13 +27,18 @@
     .slideContainer{
         width: 500px;
         height: 90px;
+        text-align: left;
     }
 
 
 
     p{
-        font-family: IBM Plex Sans;
-        font-weight:bold;
+        font-family: 'Gloock', serif;
+        font-family: 'IBM Plex Sans', sans-serif;
+        font-weight: bold;
+        color: black;
+        font-size: 20px;
+        margin-left: 10px;
     }
     .slider{
         -webkit-appearance: none;
@@ -53,7 +58,7 @@
     .slider::-webkit-slider-thumb{
         -webkit-appearance: none;
         width: 55px;
-        height: 45px;
+        height: 55px;
         background-color:#D9D9D9;
         border-radius: 30px;
         border: 1px black solid;
@@ -66,5 +71,10 @@
         background-color:#D9D9D9;
         cursor: pointer;
     }
+
+    
+
+  @import url('https://fonts.googleapis.com/css2?family=Gloock&family=IBM+Plex+Sans:wght@700&display=swap');
+
 
 </style>
