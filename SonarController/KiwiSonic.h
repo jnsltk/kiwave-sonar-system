@@ -7,11 +7,11 @@ class KiwiSonic {
         int ping();
         void setDelay(int newDelay);
         int getDelay();
-        int getPin();
-        void setPin(int newPin);
+        long calculateDistance(float temperature);
     private:
-        int _sigPin;
+        int _sigPin; //sigPin stands for the signal pin
         int _maxDelay;
 };
+
 #endif
 
