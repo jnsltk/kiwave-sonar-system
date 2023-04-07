@@ -1,14 +1,18 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
+ 
     import Sonar from './components/gui/Sonar.svelte';
-  import viteLogo from '/vite.svg'
+    import Range from './components/gui/Range.svelte';
+
 
 </script>
 
 <main>
 <Sonar/>
+<Range/>
 </main>
 
 <style>
-
+  :global(body){
+    background-color: #DAE1D5;
+  }
 </style>
