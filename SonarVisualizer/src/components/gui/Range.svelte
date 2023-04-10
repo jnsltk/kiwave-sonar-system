@@ -31,7 +31,6 @@
     }
 
 
-
     p{
         font-family: 'Gloock', serif;
         font-family: 'IBM Plex Sans', sans-serif;
@@ -57,8 +56,8 @@
 
     .slider::-webkit-slider-thumb{
         -webkit-appearance: none;
-        width: 55px;
-        height: 55px;
+        width: 50px;
+        height: 50px;
         background-color:#D9D9D9;
         border-radius: 30px;
         border: 1px black solid;
