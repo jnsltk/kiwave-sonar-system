@@ -28,9 +28,13 @@
         deg = sonarStore.sonarData.deg;
         dist = sonarStore.sonarData.dist;
         // Set it to maximum range for now (in cm)
-        range = 350;
+        range = sonarStore.sonarData.range;
     });
 
+    /**
+     * Draws the radar screen 
+     * @param context The graphical context
+     */
     const drawRadar = (context) => {
         context.save();
         context.translate(screenRadius, screenRadius);
@@ -76,6 +80,12 @@
         context.restore();
     }
 
+    /**
+     * Draws a green line from the center to the specified coordinates
+     * @param context The graphical context
+     * @param x The x coordinate of the line's endpoint
+     * @param y The y coordinate of the line's endpoint
+     */
     const drawLineTo = (context, x, y) => {
         context.save();
         context.translate(screenRadius, screenRadius);
@@ -84,6 +94,27 @@
         context.lineWidth = 3;
         context.moveTo(0, 0);
         context.lineTo(x, y);
+        context.stroke();
+        context.restore();
+    };
+
+    /**
+     * Draws a red line from the specified coordinates to the edge of the radar screen, which represents a detected object
+     * @param context The graphcial context
+     * @param deg The angle at which the object was detected, used to determine the edge of the screen in combination with range
+     * @param x The x coordinate of the detected object on the radar screen
+     * @param y The y coordinate of the detected object on the radar screen
+     */
+    const drawObjectFrom = (context, deg, x, y) => {
+        // Calculate coordinates for the endpoint for the line on the circle
+        let endCoordinates = getCoordinates(deg, range);
+        context.save();
+        context.translate(screenRadius, screenRadius);
+        context.beginPath();
+        context.strokeStyle = 'red';
+        context.lineWidth = 3;
+        context.moveTo(x, y);
+        context.lineTo(endCoordinates.x, endCoordinates.y);
         context.stroke();
         context.restore();
     };
@@ -131,8 +162,14 @@
         context.restore();
 
         drawRadar(context);
+        // If dist is greater than or equal to range, the whole line is green, else the object is red
         const coordinates = getCoordinates(deg, dist);
-        drawLineTo(context, coordinates.x, coordinates.y);
+        if (dist >= range) {
+            drawLineTo(context, coordinates.x, coordinates.y);
+        } else {
+            drawLineTo(context, coordinates.x, coordinates.y);
+            drawObjectFrom(context, deg, coordinates.x, coordinates.y);
+        }
     }
     
     /**
@@ -148,17 +185,26 @@
     onMount(() => {
         console.log("RadarScreen mounted");
         context = canvasEl.getContext('2d');
+
         // Testing with a for loop
+        console.log(`${deg}, ${dist}`)
         for (let i = 0; i < 360; i++) {
             setTimeout(function() {
-                draw(context, i, 350);
+                if (i == deg) {
+                    draw(context, i, dist);
+                } else {
+                    draw(context, i, 350);
+                };
             }, 10*i);
         }
+        //draw(context, deg, dist);
     });
     
 </script>
 
+<!-- Display current degree and corresponding distance from store.js for testing purposes -->
 <p>{deg}: {dist}</p>
+
 <canvas bind:this={canvasEl} width={canvas.width} height={canvas.height}></canvas>
 
 <style>
