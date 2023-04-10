@@ -120,7 +120,17 @@
      * @param deg The direction of the distance measurement
      * @param dist The distance from the sensor
      */
-    const drawLine = (context, deg, dist) => {
+    const draw = (context, deg, dist) => {
+        // Fade out previous lines
+        context.save();
+        context.translate(screenRadius, screenRadius);
+        context.moveTo(0, 0);
+        context.arc(0, 0, screenRadius, 0, 2 * Math.PI);
+        context.fillStyle = "rgba(20, 20, 20, 0.03)";
+        context.fill();
+        context.restore();
+
+        drawRadar(context);
         const coordinates = getCoordinates(deg, dist);
         drawLineTo(context, coordinates.x, coordinates.y);
     }
@@ -138,10 +148,10 @@
     onMount(() => {
         console.log("RadarScreen mounted");
         context = canvasEl.getContext('2d');
-        drawRadar(context);
+        // Testing with a for loop
         for (let i = 0; i < 360; i++) {
             setTimeout(function() {
-                drawLine(context, i, 350);
+                draw(context, i, 350);
             }, 10*i);
         }
     });
