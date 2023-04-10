@@ -12,13 +12,13 @@
     Used for communicating data from Mqtt component and radar screen
     */
     
-    const screenRadius = 200;
+    const screenRadius = 300;
     const canvas = {
         width: screenRadius*2,
         height: screenRadius*2
     };
 
-    let context; 
+    let context;
     let deg;
     let dist;
     let range;
@@ -32,10 +32,11 @@
     });
 
     const drawRadar = (context) => {
+        context.save();
+        context.translate(screenRadius, screenRadius);
         context.beginPath();
         context.strokeStyle = 'grey';
         context.lineWidth = 1;
-        context.translate(screenRadius, screenRadius);
         // Draw concentric circles
         context.arc(0, 0, screenRadius, 0, 2 * Math.PI);
         context.moveTo(screenRadius * 3/4, 0);
@@ -72,17 +73,28 @@
         context.lineTo(Math.cos(toRadians(180)) * screenRadius, Math.sin(toRadians(180)) * screenRadius);
         context.stroke();
 
+        context.restore();
     }
 
     const drawLineTo = (context, x, y) => {
+        context.save();
+        context.translate(screenRadius, screenRadius);
         context.beginPath();
         context.strokeStyle = 'green';
         context.lineWidth = 3;
-        context.moveTo(canvas.width/2, canvas.height/2);
+        context.moveTo(0, 0);
         context.lineTo(x, y);
         context.stroke();
+        context.restore();
     };
 
+    /**
+     * Returns the x and y coordinates of the point defined by the angle and distance from the sensor
+     * @typedef {Object} Point
+     * @param deg The direction of the distance meaurement
+     * @param dist The distance from the sensor
+     * @return {Point} The object containing the x and y coordinates
+     */
     const getCoordinates = (deg, dist) => {
         let mappedDist = mapDistance(dist, range);
         // X = cos(deg) * dist
@@ -93,8 +105,24 @@
         };
     }
 
+    /**
+     * Converts degrees to radians
+     * @param deg Angle in degrees
+     * @return {Number} Angle in radians
+     */
     const toRadians = (deg) => {
         return deg * (Math.PI / 180);
+    }
+
+    /**
+     * Draws line on radar screen based on data received from the sensor
+     * @param context The graphical context
+     * @param deg The direction of the distance measurement
+     * @param dist The distance from the sensor
+     */
+    const drawLine = (context, deg, dist) => {
+        const coordinates = getCoordinates(deg, dist);
+        drawLineTo(context, coordinates.x, coordinates.y);
     }
     
     /**
@@ -111,6 +139,11 @@
         console.log("RadarScreen mounted");
         context = canvasEl.getContext('2d');
         drawRadar(context);
+        for (let i = 0; i < 360; i++) {
+            setTimeout(function() {
+                drawLine(context, i, 350);
+            }, 10*i);
+        }
     });
     
 </script>
@@ -119,8 +152,5 @@
 <canvas bind:this={canvasEl} width={canvas.width} height={canvas.height}></canvas>
 
 <style>
-    canvas {
-        border: 1px solid black;
-    }
     
 </style>
