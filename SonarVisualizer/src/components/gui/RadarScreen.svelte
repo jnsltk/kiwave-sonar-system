@@ -34,7 +34,7 @@
      * Draws the radar screen 
      * @param context The graphical context
      */
-    const drawRadar = (context) => {
+     const drawRadar = (context) => {
         context.save();
         context.translate(screenRadius, screenRadius);
         context.beginPath();
@@ -182,6 +182,25 @@
         return dist / range * screenRadius;
     }
 
+    //This code should execute auto, everytime the variable changes.
+    $: if($sonarStore.sonarData){
+        console.log("Fire!")
+    }
+
+    //Simulating change of sonarData
+    async function sonarSim(){
+        async function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+        }
+        setInterval(async function(){
+            $sonarStore.sonarData.deg=(await getRandomInt(0,360)).toString()
+            $sonarStore.sonarData.range=(await getRandomInt(0,100)).toString()
+        },1000)
+    }
+    sonarSim()
+
     onMount(() => {
         console.log("RadarScreen mounted");
         context = canvasEl.getContext('2d');
@@ -199,6 +218,8 @@
         }
         //draw(context, deg, dist);
     });
+
+    
     
 </script>
 
