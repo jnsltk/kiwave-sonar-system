@@ -150,17 +150,23 @@
      * @param deg The direction of the distance measurement
      * @param dist The distance from the sensor
      */
-    const draw = (context, deg, dist) => {
+    const draw = (deg, dist) => {
+        if (canvasEl == null) {
+            return;
+        }
+        context = canvasEl.getContext('2d');
+
         // Fade out previous lines
         context.save();
         context.translate(screenRadius, screenRadius);
         context.moveTo(0, 0);
         context.arc(0, 0, screenRadius, 0, 2 * Math.PI);
-        context.fillStyle = "rgba(20, 20, 20, 0.03)";
+        context.fillStyle = "rgba(0, 0, 0, 0.03)";
         context.fill();
         context.restore();
 
         drawRadar(context);
+
         // If dist is greater than or equal to range, the whole line is green, else the object is red
         const coordinates = getCoordinates(deg, dist);
         const endCoordinates = getCoordinates(deg, range);
@@ -185,6 +191,7 @@
     //This code should execute auto, everytime the variable changes.
     $: if($sonarStore.sonarData){
         console.log("Fire!")
+        draw(deg, dist);
     }
 
     //Simulating change of sonarData
@@ -194,29 +201,34 @@
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
         }
+        // for (let i = 0; i < 360; i++) {
+        //     setTimeout(async function() {
+        //         $sonarStore.sonarData.deg=i.toString()
+        //         $sonarStore.sonarData.dist=(await getRandomInt(0,350)).toString()
+        //     }, 30*i)
+        // }
         setInterval(async function(){
             $sonarStore.sonarData.deg=(await getRandomInt(0,360)).toString()
-            $sonarStore.sonarData.range=(await getRandomInt(0,100)).toString()
-        },1000)
+            $sonarStore.sonarData.dist=(await getRandomInt(0,350)).toString()
+        },100)
     }
     sonarSim()
 
     onMount(() => {
         console.log("RadarScreen mounted");
-        context = canvasEl.getContext('2d');
 
         // Testing with a for loop
-        console.log(`${deg}, ${dist}`)
-        for (let i = 0; i < 360; i++) {
-            setTimeout(function() {
-                if (i == deg) {
-                    draw(context, i, dist);
-                } else {
-                    draw(context, i, 350);
-                };
-            }, 10*i);
-        }
-        //draw(context, deg, dist);
+        // console.log(`${deg}, ${dist}`)
+        // for (let i = 0; i < 360; i++) {
+        //     setTimeout(function() {
+        //         if (i == deg) {
+        //             draw(i, dist);
+        //         } else {
+        //             draw(i, 350);
+        //         };
+        //     }, 10*i);
+        // }
+        //draw(deg, dist);
     });
 
     
