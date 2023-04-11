@@ -17,7 +17,7 @@
         width: screenRadius*2,
         height: screenRadius*2
     };
-
+    
     let context;
     let deg;
     let dist;
@@ -27,7 +27,6 @@
     sonarStore.subscribe(sonarStore => {
         deg = sonarStore.sonarData.deg;
         dist = sonarStore.sonarData.dist;
-        // Set it to maximum range for now (in cm)
         range = sonarStore.sonarData.range;
     });
 
@@ -164,8 +163,9 @@
         drawRadar(context);
         // If dist is greater than or equal to range, the whole line is green, else the object is red
         const coordinates = getCoordinates(deg, dist);
+        const endCoordinates = getCoordinates(deg, range);
         if (dist >= range) {
-            drawLineTo(context, coordinates.x, coordinates.y);
+            drawLineTo(context, endCoordinates.x, endCoordinates.y);
         } else {
             drawLineTo(context, coordinates.x, coordinates.y);
             drawObjectFrom(context, deg, coordinates.x, coordinates.y);
