@@ -1,13 +1,16 @@
 <script>
     import { onMount } from 'svelte';
+    import { sonarStore } from "../../data/stores";
   
     let minVal = 0;
     let maxVal = 360;
-  
+    $: $sonarStore.sonarData.sStartDegree=minVal;
+    $: $sonarStore.sonarData.sStartDegree=maxVal;
+
     $: leftProgressStyle = `left: ${minVal / 360 * 100}%`;
     $: rightProgressStyle = `right: ${100 - (maxVal / 360 * 100)}%`;
     $: progressStyle = `left: ${minVal / 360 * 100}%; right: ${100 - (maxVal / 360 * 100)}%;`;
-  
+   
     onMount(() => {
   const rangeInput = document.querySelector(".range-input");
   rangeInput.addEventListener('input', () => {
@@ -30,11 +33,11 @@
     <h2>SELECT SECTOR</h2>
     <div class="degree-input">
       <div class="field">
-        <span>MIN</span>
+        <span>START DEGREE</span>
         <input type="number" class="input-min" min="0" max="345" bind:value={minVal}>
       </div>
       <div class="field">
-        <span>MAX</span>
+        <span>END DEGREE</span>
         <input type="number" class="input-max" min="15" max="360" bind:value={maxVal}>
       </div>
     </div>
@@ -93,7 +96,7 @@
     }
   
     .field input {
-      width: 70%;
+      width: 40%;
       height: 70%;
       outline: none;
       text-align: center;
