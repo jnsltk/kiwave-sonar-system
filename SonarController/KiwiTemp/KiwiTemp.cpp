@@ -2,10 +2,17 @@
 #include "Arduino.h"
 #include "math.h"
 
+/*
+Grove Temperature Sensor uses a thermistor to measure ambient temperature. The resistance of 
+thermistor changes based on ambient temperature. This resistance value alters the output of a 
+voltage divider which is measured by an analog input pin and converted to a temperature value. 
+The operating range is -40 to 125°C, with an accuracy of 1.5°C.
+*/
+
 KiwiTemp::KiwiTemp(int sigPin) {
     _sigPin = sigPin;
     thermistorValue = 4275;
-    //this is a constant ranging from 4250 to 4299 and the middle
+    //this is the Nominal B-Constant ranging from 4250 to 4299 and the middle
     //value which is 4275 is chosen. 
     R0 = 100000;
     //this is the value for the resistor used in the sesnor for the 

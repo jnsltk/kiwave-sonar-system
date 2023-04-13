@@ -12,7 +12,7 @@ class KiwiTemp {
     private:
     int _sigPin; //sigPin stands for the signal pin
     int thermistorValue;
-    //this is a constant ranging from 4250 to 4299 and the middle
+    //this is the Nominal B-Constant ranging from 4250 K to 4299 K and the middle
     //value which is 4275 is chosen. 
     int R0;
     //this is the value for the resistor used in the sesnor for the 
