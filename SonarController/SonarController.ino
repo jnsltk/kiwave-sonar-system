@@ -1,10 +1,43 @@
 #include "Arduino.h"
 #include "KiwiMQTT.h"
 #include "KiwiSecrets.h"
+#include "KiwiSonic.h"
+#include "KiwiTemp.h"
+#include "KiwiServo.h"
+#include "math.h"
+#include "Arduino.h"
+
+/*
+Pinout Instruction:
+1- Temperature sensor: use the Multifunctional pinout under the joystick
+2- First Ultrasonic sesnor: 
+----GND connected to 25 (which is GND) on the Wio
+----VCC connected to 1 (which is 3V3 (3.3 V)) on the Wio
+----SIG connected to 36 (which is D7)non the Wio
+3- Second Ultrasonic Sesnor: 
+----GND connected to 30 (which is GND) on the Wio
+----VCC connected to 17 (which is 3v3 (3.3 v)) on the Wio
+----SIG connected to 37 (which is D8) on the Wio
+4- Servo motor:
+----GND connected to 6 (which is GND) on the Wio
+----VCC connected to 2 (which is 5V) on the Wio
+----SIG connected to 16 (which is D2) on the Wio
+*/
+
+float temp;
+long distanceInCentimeters;
+KiwiSonic ultrasonicSensor1(D7, 50);
+KiwiSonic ultrasonicSensor2(D8, 50);
+KiwiTemp tempSensor(A0);
+KiwiServo servo(D2);
+
 
 KiwiMQTT wireless(ssid,secret);
 bool handsShaken=false;
-
+bool servoRun=false;
+int temperature=0;
+int from=0;
+int to=180;
 uint8_t SHK[3]={83,72,75}; //Send handshake
 uint8_t RHK[3]={82,72,75}; //Request handshake
 uint8_t CRK[3]={82,72,75}; //Received Confirm Request handshake
@@ -35,15 +68,35 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
         Serial.println("RCV: Confirmed Handshake");        
     } else if (memcmp(msgHeader,STP,sizeof(msgHeader))==0){
         Serial.println("RCV: Stop Sonar");        
-
+        servoRun=false;
         Serial.println("Stopping sonar");
     } else if(memcmp(msgHeader,STR,sizeof(msgHeader))==0){
         Serial.println("RCV: Start Sonar");        
-
+        servoRun=true;
         Serial.println("Starting sonar");
     } else if(memcmp(msgHeader,SSR,sizeof(msgHeader))==0){
-        Serial.println("RCV: Go To Sector");  
+        Serial.println("RCV: Go To Sector"); 
+        char charFrom[3];
+        char charTo[3]; 
+
+        int c=0;
+        for(int i=3;i<6;i++){
+          charFrom[c]=(char) (data[i]);
+          c++;
+        }
+        c=0;
+        for(int i=6;i<9;i++){
+          charTo[c]=(char) (data[i]);
+          c++;
+        }
         Serial.println("Sector Set");
+
+        String strFrom=String(charFrom);
+        String strTo=String(charTo);
+        from= (strFrom).toInt();
+        to=(strTo).toInt();
+        Serial.println(from);
+        Serial.println(to);
     }
 
 
@@ -58,6 +111,9 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
 
 void setup(){
 Serial.begin(9600);
+Serial.println("Measuring temperature");
+Serial.println("Recorded temperature: "+temperature);
+
 wireless.init();
 while(wireless.getWiFiStatus()!=WL_CONNECTED){
   Serial.println(".");
@@ -68,6 +124,31 @@ wireless.setServer("broker.hivemq.com", 1883);
 Serial.println("Server set");
 wireless.setCallback(callback);
 Serial.println("Callback set");
+
+}
+
+void record(){
+  int measure1=ultrasonicSensor1.calculateDistance(temperature);
+  int measure2=ultrasonicSensor2.calculateDistance(temperature);
+  Serial.println(temperature);
+  String measureData=String("MSRMT/1/")+ measure1+String("/2/")+ measure2;
+  Serial.println(measureData);
+}
+
+void spin(){
+  if(servoRun){
+  for(int i=from;i<to;i+=15){
+    servo.goTo(i);
+    record();
+    delay(25);
+  }
+  for(int i=to;i>from;i-=15){
+    servo.goTo(i);
+    record();
+      delay(25);
+
+  }
+  }
 }
 
 void loop(){
@@ -79,5 +160,7 @@ void loop(){
     Serial.println("Connected");
   }
   wireless.sweep();
-
+  spin();
+  temperature=tempSensor.measureTemp();
+  
 }

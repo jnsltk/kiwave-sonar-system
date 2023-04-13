@@ -48,7 +48,14 @@ divided by 1000000. That is where 10000 come from as (speed/1000000) * 1000 is s
 In the end we divide the result by 2 due to the fact that the time given is the time that 
 it takes for the wave to travel to and back from the object. If we do not divid by 2 in the
 end, we get double the distance between the object and the Ultrasonic sensor.
+
+time * speed = distance
+
+speed=cm 
+
 */
 long KiwiSonic::calculateDistance(float temperature) {
-  return ((ping() * (331.4 + (0.6 * temperature))) / 10000) / 2;
+  
+  float centimetersPerMilliSecond=(((331.4+(0.6 * temperature))/100)/1000);
+  return ((ping() * (centimetersPerMilliSecond)) / 2);
 }
