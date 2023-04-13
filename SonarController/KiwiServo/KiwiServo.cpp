@@ -27,7 +27,7 @@ KiwiServo::KiwiServo(int sigPin) {
     _delay = 25; //default value of delays. However, there is a setter that can change this
 }
 
-int KiwiServo::convertAngelToPulse(float angle) {
+int KiwiServo::convertAngleToPulse(float angle) {
     float a=2000/180;  //Angle mapper
     float b=500;  //minimum delay (corresponds to degree 0)
     float convertedAngle = angle*(150.0/180.0); //converting angles from range 0 to 180 to a 
@@ -39,7 +39,7 @@ int KiwiServo::convertAngelToPulse(float angle) {
 void KiwiServo::goTo(float angle) {
     digitalWrite(_sigPin, HIGH); //applying voltage to the servo by 
     //setting the signal pin high
-    delayMicroseconds(convertAngelToPulse(angle)); //delaying y the right amount of time in
+    delayMicroseconds(convertAngleToPulse(angle)); //delaying y the right amount of time in
     //microseconds, so that servo goes to the required angle defined in the method argument
     //this time delay could be identidies as a pulse, hence the name convertAngleToPulse
     //is used for converting the angle
