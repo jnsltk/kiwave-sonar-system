@@ -24,7 +24,6 @@ Pinout Instruction:
 ----SIG connected to 16 (which is D2) on the Wio
 */
 
-float temp;
 long distanceInCentimeters;
 KiwiSonic ultrasonicSensor1(D7, 50);
 KiwiSonic ultrasonicSensor2(D8, 50);
@@ -35,7 +34,7 @@ KiwiServo servo(D2);
 KiwiMQTT wireless(ssid,secret);
 bool handsShaken=false;
 bool servoRun=false;
-int temperature=0;
+float temperature=0;
 int from=0;
 int to=180;
 uint8_t SHK[3]={83,72,75}; //Send handshake
@@ -110,9 +109,12 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
 }
 
 void setup(){
-Serial.begin(9600);
+Serial.begin(115200);
+delay(5000);
 Serial.println("Measuring temperature");
-Serial.println("Recorded temperature: "+temperature);
+temperature=tempSensor.measureTemp();
+
+Serial.println(temperature);
 
 wireless.init();
 while(wireless.getWiFiStatus()!=WL_CONNECTED){
@@ -130,29 +132,28 @@ Serial.println("Callback set");
 void record(){
   int measure1=ultrasonicSensor1.calculateDistance(temperature);
   int measure2=ultrasonicSensor2.calculateDistance(temperature);
-  Serial.println(temperature);
+
+
   String measureData=String("MSRMT/1/")+ measure1+String("/2/")+ measure2;
   Serial.println(measureData);
 }
 
 void spin(){
   if(servoRun){
-  for(int i=from;i<to;i+=15){
+  for(int i=from;i<to;i+=1){
     servo.goTo(i);
     record();
-    delay(25);
+    delay(100);
   }
-  for(int i=to;i>from;i-=15){
+  for(int i=to;i>from;i-=1){
     servo.goTo(i);
     record();
-      delay(25);
-
+      delay(100);
   }
   }
 }
 
 void loop(){
-
   if(!wireless.getBrokerStatus()){
     Serial.println("Broker disconnected");
     delay(5000);
@@ -161,6 +162,5 @@ void loop(){
   }
   wireless.sweep();
   spin();
-  temperature=tempSensor.measureTemp();
   
 }
