@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "kiwiSonic.h"
+#include "KiwiSonic.h"
 
 KiwiSonic::KiwiSonic(int sigPin, int maxDelay) {
   _sigPin = sigPin;
