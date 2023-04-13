@@ -11,24 +11,23 @@
     },
     Used for communicating data from Mqtt component and radar screen
     */
-    
+   
     const screenRadius = 300;
-    const canvas = {
-        width: screenRadius*2,
-        height: screenRadius*2
+    const canvasDimensions = {
+        // Width and height is screenRadius x2 plus 15% padding to make space for labels
+        width: screenRadius*2*1.15,
+        height: screenRadius*2*1.15
     };
+    const objectColor = "#73936E";
+    const lineColor = "#101010";
+    const radarBackround = "#414440"
+    const lineToObjectColor = radarBackround;
     
     let context;
     let deg;
     let dist;
     let range;
     let canvasEl;
-    
-    sonarStore.subscribe(sonarStore => {
-        deg = sonarStore.sonarData.deg;
-        dist = sonarStore.sonarData.dist;
-        range = sonarStore.sonarData.range;
-    });
 
     /**
      * Draws the radar screen 
@@ -36,12 +35,15 @@
      */
      const drawRadar = (context) => {
         context.save();
-        context.translate(screenRadius, screenRadius);
+        context.translate(canvasDimensions.width / 2, canvasDimensions.height / 2);
         context.beginPath();
-        context.strokeStyle = 'grey';
-        context.lineWidth = 1;
+        context.strokeStyle = lineColor;
+        context.lineWidth = 2;
         // Draw concentric circles
         context.arc(0, 0, screenRadius, 0, 2 * Math.PI);
+        context.stroke();
+        context.beginPath();
+        context.lineWidth = 1;
         context.moveTo(screenRadius * 3/4, 0);
         context.arc(0, 0, screenRadius * 3/4, 0, 2 * Math.PI);
         context.moveTo(screenRadius * 2/4, 0);
@@ -80,42 +82,50 @@
     }
 
     /**
-     * Draws a green line from the center to the specified coordinates
+     * Draws 15 lines (because of the 15 degree measurement angle) from the center to the specified coordinates to erase 
+     * previous object measurments
      * @param context The graphical context
-     * @param x The x coordinate of the line's endpoint
-     * @param y The y coordinate of the line's endpoint
+     * @param deg The angle at which the object was detected
+     * @param dist The distance from the sensor
      */
-    const drawLineTo = (context, x, y) => {
-        context.save();
-        context.translate(screenRadius, screenRadius);
-        context.beginPath();
-        context.strokeStyle = 'green';
-        context.lineWidth = 3;
-        context.moveTo(0, 0);
-        context.lineTo(x, y);
-        context.stroke();
-        context.restore();
+    const drawLineTo = (context, deg, dist) => {
+        for (let i = parseInt(deg) - 7; i < parseInt(deg) + 8; i++) {
+            const endCoordinates = getCoordinates(i, dist);
+            context.save();
+            context.translate(canvasDimensions.width / 2, canvasDimensions.height / 2);
+            context.beginPath();
+            context.strokeStyle = lineToObjectColor;
+            context.lineWidth = 5;
+            context.moveTo(0, 0);
+            context.lineTo(endCoordinates.x, endCoordinates.y);
+            context.stroke();
+            context.restore();
+        };
     };
 
+
     /**
-     * Draws a red line from the specified coordinates to the edge of the radar screen, which represents a detected object
+     * Draws 15 lines (because of the 15 degree measurement angle) from the specified coordinates to the edge of the 
+     * radar screen, which represents a detected object
      * @param context The graphcial context
-     * @param deg The angle at which the object was detected, used to determine the edge of the screen in combination with range
-     * @param x The x coordinate of the detected object on the radar screen
-     * @param y The y coordinate of the detected object on the radar screen
+     * @param deg The angle at which the object was detected
+     * @param dist The distance from the sensor
      */
-    const drawObjectFrom = (context, deg, x, y) => {
+    const drawObjectFrom = (context, deg, dist) => {
         // Calculate coordinates for the endpoint for the line on the circle
-        let endCoordinates = getCoordinates(deg, range);
-        context.save();
-        context.translate(screenRadius, screenRadius);
-        context.beginPath();
-        context.strokeStyle = 'red';
-        context.lineWidth = 3;
-        context.moveTo(x, y);
-        context.lineTo(endCoordinates.x, endCoordinates.y);
-        context.stroke();
-        context.restore();
+        for (let i = parseInt(deg) - 7; i < parseInt(deg) + 8; i++) {
+            const startCoordinates = getCoordinates(i, dist);
+            const endCoordinates = getCoordinates(i, range);
+            context.save();
+            context.translate(canvasDimensions.width / 2, canvasDimensions.height / 2);
+            context.beginPath();
+            context.strokeStyle = objectColor;
+            context.lineWidth = 3;
+            context.moveTo(startCoordinates.x, startCoordinates.y);
+            context.lineTo(endCoordinates.x, endCoordinates.y);
+            context.stroke();
+            context.restore();
+        }
     };
 
     /**
@@ -127,11 +137,10 @@
      */
     const getCoordinates = (deg, dist) => {
         let mappedDist = mapDistance(dist, range);
-        // X = cos(deg) * dist
-        // Y = sin(deg) * dist
+        // Subtract 90 from the angle so it starts at 12 o' clock positon
         return {
-            x: Math.cos(toRadians(deg)) * mappedDist,
-            y: Math.sin(toRadians(deg)) * mappedDist
+            x: Math.cos(toRadians(deg - 90)) * mappedDist,
+            y: Math.sin(toRadians(deg - 90)) * mappedDist
         };
     }
 
@@ -156,26 +165,39 @@
         }
         context = canvasEl.getContext('2d');
 
-        // Fade out previous lines
+        if (dist > range) dist = range;
+        drawObjectFrom(context, deg, dist);
+        drawLineTo(context, deg, dist);
+
+        drawRadar(context);
+    }
+
+    /**
+     * Clears the radar screen, draws degree labels and sets the background color
+     */
+    const resetScreen = () => {
+        if (canvasEl == null) {
+            return;
+        }
+        context = canvasEl.getContext('2d');
+
         context.save();
-        context.translate(screenRadius, screenRadius);
-        context.moveTo(0, 0);
-        context.arc(0, 0, screenRadius, 0, 2 * Math.PI);
-        context.fillStyle = "rgba(0, 0, 0, 0.03)";
+        context.translate(canvasDimensions.width / 2, canvasDimensions.height / 2);
+        context.beginPath();
+        context.fillStyle = radarBackround;
+        context.arc(0, 0, screenRadius, 0, 2 * Math.PI);  
         context.fill();
+
+        // Draw labels
+        context.font = "0.8em sans";
+        context.fillText("0°", -5, - (screenRadius + 5));
+        context.fillText("90°", (screenRadius + 5), 5);
+        context.fillText("270°", - (screenRadius + 35), 5);
+        context.fillText("180°", -15, screenRadius + 17);
+
         context.restore();
 
         drawRadar(context);
-
-        // If dist is greater than or equal to range, the whole line is green, else the object is red
-        const coordinates = getCoordinates(deg, dist);
-        const endCoordinates = getCoordinates(deg, range);
-        if (dist >= range) {
-            drawLineTo(context, endCoordinates.x, endCoordinates.y);
-        } else {
-            drawLineTo(context, coordinates.x, coordinates.y);
-            drawObjectFrom(context, deg, coordinates.x, coordinates.y);
-        }
     }
     
     /**
@@ -187,18 +209,28 @@
     const mapDistance = (dist, range) => {
         return dist / range * screenRadius;
     }
+    /**
+     * Subscribes to the data in sonarStore and assigns them to local variables whenever updated
+     */
+    sonarStore.subscribe(sonarStore => {
+        deg = sonarStore.sonarData.deg;
+        dist = sonarStore.sonarData.dist;
+        range = sonarStore.sonarData.sRange;
+    });
 
-    //This code should execute auto, everytime the variable changes.
-    $: if($sonarStore.sonarData){
-        console.log("Fire!")
+    /**
+     * Calls the draw function everytime the value of either deg or dist changes in sonarStore
+    */
+    $: if($sonarStore.sonarData.deg || $sonarStore.sonarData.dist){
         draw(deg, dist);
     }
 
-    //Simulating change of sonarData
+    //TESTING - Simulating change of sonarData
     async function sonarSim(){
         async function getRandomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
+
         return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
         }
         // for (let i = 0; i < 360; i++) {
@@ -209,36 +241,22 @@
         // }
         setInterval(async function(){
             $sonarStore.sonarData.deg=(await getRandomInt(0,360)).toString()
-            $sonarStore.sonarData.dist=(await getRandomInt(0,350)).toString()
-        },100)
+            $sonarStore.sonarData.dist=(await getRandomInt(0,range)).toString()
+        },1000)
     }
+    $sonarStore.sonarData.sRange=350
     sonarSim()
 
     onMount(() => {
         console.log("RadarScreen mounted");
-
-        // Testing with a for loop
-        // console.log(`${deg}, ${dist}`)
-        // for (let i = 0; i < 360; i++) {
-        //     setTimeout(function() {
-        //         if (i == deg) {
-        //             draw(i, dist);
-        //         } else {
-        //             draw(i, 350);
-        //         };
-        //     }, 10*i);
-        // }
-        //draw(deg, dist);
+        resetScreen();
     });
 
     
     
 </script>
 
-<!-- Display current degree and corresponding distance from store.js for testing purposes -->
-<p>{deg}: {dist}</p>
-
-<canvas bind:this={canvasEl} width={canvas.width} height={canvas.height}></canvas>
+<canvas bind:this={canvasEl} width={canvasDimensions.width} height={canvasDimensions.height}></canvas>
 
 <style>
     
