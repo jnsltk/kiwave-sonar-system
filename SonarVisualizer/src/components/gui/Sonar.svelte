@@ -3,7 +3,6 @@
     This file shall bind all separate components into one single component.
     */
     
-    import { mqttSend, mqttSubscribe, initMqtt } from "../mqtt/MqttHandler";
     import Console from "./Console.svelte";
     import RadarScreen from "./RadarScreen.svelte";
     import ToggleButton from "./ToggleButton.svelte";
