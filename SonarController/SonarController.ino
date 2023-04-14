@@ -39,10 +39,7 @@ int maxRange1=999;
 int maxRange2=999;
 int from=0;
 int to=180;
-uint8_t SHK[3]={83,72,75}; //Send handshake
-uint8_t RHK[3]={82,72,75}; //Request handshake
-uint8_t CRK[3]={82,72,75}; //Received Confirm Request handshake
-uint8_t CHK[3]={67,72,75}; //Sent Confirm handshake
+
 uint8_t STP[3]={83,84,80}; //Stop
 uint8_t STR[3]={83,84,82}; //Start
 uint8_t SSR[3]={83,83,82}; //Set sector
@@ -56,18 +53,7 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
       Serial.println(msgHeader[i]);
     }
     Serial.println("//////");
-    if(memcmp(msgHeader,SHK,sizeof(msgHeader))==0){
-        Serial.println("RCV: Sent Handshake");
-        wireless.publish(CHK,3);
-        Serial.println("SND: Sent Confirm Handshake");
-    } else if (memcmp(msgHeader,RHK,sizeof(msgHeader))==0){
-        Serial.println("RCV: Request Handshake");
-        wireless.publish(SHK,3);
-        Serial.println("SND: Sent Handshake");      
-    } else if (memcmp(msgHeader,CRK,sizeof(msgHeader))==0){
-        handsShaken=true;
-        Serial.println("RCV: Confirmed Handshake");        
-    } else if (memcmp(msgHeader,STP,sizeof(msgHeader))==0){
+  if (memcmp(msgHeader,STP,sizeof(msgHeader))==0){
         Serial.println("RCV: Stop Sonar");        
         servoRun=false;
         Serial.println("Stopping sonar");
@@ -143,38 +129,44 @@ Serial.println(temperature);
 wireless.init();
 while(wireless.getWiFiStatus()!=WL_CONNECTED){
   Serial.println(".");
-  delay(5000);
+  delay(1000);
 }
 Serial.println("Wifi set.");
 wireless.setServer("broker.hivemq.com", 1883);
 Serial.println("Server set");
 wireless.setCallback(callback);
 Serial.println("Callback set");
-
 }
 
-void record(){
+void record(int degree){
   int measure1=ultrasonicSensor1.calculateDistance(temperature);
   int measure2=ultrasonicSensor2.calculateDistance(temperature);
   int reportedMeasurement1=measure1<maxRange1?measure1:-1;
   int reportedMeasurement2=measure2<maxRange2?measure2:-1;
 
-  String measureData=String("M/")+ reportedMeasurement1+String("/")+ reportedMeasurement2;
+  String measureData=String("M/")+ reportedMeasurement1+String("/")+ reportedMeasurement2+String("/")+degree;
 
   wireless.publish(measureData);
 
+}
+
+void affirm(){
+      servo.goTo(0);
+      delay(2000);
+      servo.goTo(180);
+      
 }
 
 void spin(){
   if(servoRun){
   for(int i=from;i<to;i+=15){
     servo.goTo(i);
-    record();
+    record(i);
     delay(200);
   }
   for(int i=to;i>from;i-=15){
     servo.goTo(i);
-    record();
+    record(i);
       delay(100);
   }
   }
@@ -183,9 +175,11 @@ void spin(){
 void loop(){
   if(!wireless.getBrokerStatus()){
     Serial.println("Broker disconnected");
-    delay(5000);
+    delay(1000);
     wireless.connect();
     Serial.println("Connected");
+    affirm();
+
   }
   wireless.sweep();
   spin();
