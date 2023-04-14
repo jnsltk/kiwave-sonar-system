@@ -27,7 +27,7 @@ bool KiwiMQTT::connect(){
         //_pubSubClient.publish("KiWaveSonarData",REQUEST_HANDSHAKE);
         //Serial.println("Published ");
 
-    _pubSubClient.subscribe("KiWaveSonarData");
+    _pubSubClient.subscribe("KiWaveSonarCommand");
         Serial.println("Subscribed");
 
   } else {
@@ -48,7 +48,12 @@ bool KiwiMQTT::setServer(char* broker,int port){
 void KiwiMQTT::setCallback(void (*callback)(char*, uint8_t*, unsigned int) ){
   _pubSubClient.setCallback(callback);
 }
-
+void KiwiMQTT::publish(String data){
+  int stringLength=data.length()+1;
+  char buff[stringLength];
+  data.toCharArray(buff, stringLength);
+  _pubSubClient.publish("KiWaveSonarData",buff);
+}
 void KiwiMQTT::publish(uint8_t* data,int dataLength){
 
   _pubSubClient.publish("KiWaveSonarData",(char*) data);

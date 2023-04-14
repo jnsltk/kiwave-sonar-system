@@ -6,12 +6,16 @@ KiwiSonic::KiwiSonic(int sigPin, int maxDelay) {
   _maxDelay = maxDelay;
 }
 
+
+
 //this method gives the duration of time taken to detect an object
 int KiwiSonic::ping() {
   pinMode(_sigPin, OUTPUT);  //first we need the signal pin as OUTPUT to tell the Ultrasonic
   //sesnor to transmit ultrasonic waves.
+  digitalWrite(_sigPin, LOW);
+  delayMicroseconds(2);
   digitalWrite(_sigPin, HIGH);  //by seeting the signal pin high we transmit waves
-  delay(_maxDelay);             //we transmit waves as lon as _maxDelay
+  delayMicroseconds(5);             //we transmit waves as lon as _maxDelay
   digitalWrite(_sigPin, LOW);   //we stop transmitting waves
   pinMode(_sigPin, INPUT);      //now e need to recieve the waves and give the time it took for
   //for them to go and come back. Since we will get an input, namely duration of the time
@@ -52,3 +56,4 @@ end, we get double the distance between the object and the Ultrasonic sensor.
 long KiwiSonic::calculateDistance(float temperature) {
   return ((ping() * (331.4 + (0.6 * temperature))) / 10000) / 2;
 }
+

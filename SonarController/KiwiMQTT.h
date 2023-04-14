@@ -10,6 +10,7 @@ class KiwiMQTT {
     bool setServer(char* broker,int port); //Connects to chosen MQTT broker.
     void setCallback(void (*callback)(char*, uint8_t*, unsigned int));
     void publish(uint8_t* data,int dataLength);
+    void publish(String data);
     void sweep();
     bool connect();
     bool getBrokerStatus();

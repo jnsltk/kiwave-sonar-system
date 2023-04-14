@@ -25,8 +25,8 @@ Pinout Instruction:
 */
 
 long distanceInCentimeters;
-KiwiSonic ultrasonicSensor1(D7, 50);
-KiwiSonic ultrasonicSensor2(D8, 50);
+KiwiSonic ultrasonicSensor1(D7, 100);
+KiwiSonic ultrasonicSensor2(D8, 100);
 KiwiTemp tempSensor(A0);
 KiwiServo servo(D2);
 
@@ -35,6 +35,8 @@ KiwiMQTT wireless(ssid,secret);
 bool handsShaken=false;
 bool servoRun=false;
 float temperature=0;
+int maxRange1=999;
+int maxRange2=999;
 int from=0;
 int to=180;
 uint8_t SHK[3]={83,72,75}; //Send handshake
@@ -44,7 +46,7 @@ uint8_t CHK[3]={67,72,75}; //Sent Confirm handshake
 uint8_t STP[3]={83,84,80}; //Stop
 uint8_t STR[3]={83,84,82}; //Start
 uint8_t SSR[3]={83,83,82}; //Set sector
-
+uint8_t SRR[3]={83,82,82}; //Set range
 
 
 void callback(char* topic, uint8_t* data, unsigned int msglen){
@@ -96,6 +98,28 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
         to=(strTo).toInt();
         Serial.println(from);
         Serial.println(to);
+    }else if(memcmp(msgHeader,SRR,sizeof(msgHeader))==0){
+        Serial.println("RCV: Set Range"); 
+        char charFrom[3];
+        char charTo[3]; 
+
+        int c=0;
+        for(int i=3;i<6;i++){
+          charFrom[c]=(char) (data[i]);
+          c++;
+        }
+        c=0;
+        for(int i=6;i<9;i++){
+          charTo[c]=(char) (data[i]);
+          c++;
+        }
+        Serial.println("Range Set");
+
+        String strFrom=String(charFrom);
+        String strTo=String(charTo);
+        maxRange1= (strFrom).toInt();
+        maxRange2=(strTo).toInt();
+        
     }
 
 
@@ -132,20 +156,23 @@ Serial.println("Callback set");
 void record(){
   int measure1=ultrasonicSensor1.calculateDistance(temperature);
   int measure2=ultrasonicSensor2.calculateDistance(temperature);
+  int reportedMeasurement1=measure1<maxRange1?measure1:-1;
+  int reportedMeasurement2=measure2<maxRange2?measure2:-1;
 
+  String measureData=String("M/")+ reportedMeasurement1+String("/")+ reportedMeasurement2;
 
-  String measureData=String("MSRMT/1/")+ measure1+String("/2/")+ measure2;
-  Serial.println(measureData);
+  wireless.publish(measureData);
+
 }
 
 void spin(){
   if(servoRun){
-  for(int i=from;i<to;i+=1){
+  for(int i=from;i<to;i+=15){
     servo.goTo(i);
     record();
-    delay(100);
+    delay(200);
   }
-  for(int i=to;i>from;i-=1){
+  for(int i=to;i>from;i-=15){
     servo.goTo(i);
     record();
       delay(100);
