@@ -19,6 +19,7 @@
 - Milad Tamaddondar
 - János Litkei
  
+[Introductory video](https://www.youtube.com/watch?v=9HAqAKBQyas) for the project:
 
 ## Project Background/ Problem Description
 The need for efficient, cost-effective, and non-invasive monitoring solutions has become increasingly important in various industries. The monitoring system offers a reliable and accessible solution to security and environmental concerns. The system can be used in home security, industrial safety, parking assistance, environmental monitoring, retail analytics, and traffic management. The project builds on existing technologies and offers a customizable and expandable monitoring solution for different applications.
@@ -40,6 +41,7 @@ The core concept of the system involves mounting two ultrasonic sensors on top o
 The servo motor is responsible for continuously monitoring its position in degrees, while the ultrasonic sensors communicate the degree and range data to the microcontroller, which then publishes this information over WiFi to the topic: KiWaveSonarData.
 
 To provide a user-friendly interface, the front-end utilizes SvelteJS and other JavaScript libraries to subscribe to the topic KiWaveSonarData. Upon receiving new information, the front-end parses and displays it in the form of a radar image that showcases the range and degree of any detected object relative to the sensors.
+
 
 ## Used Technologies
 - C++ 
