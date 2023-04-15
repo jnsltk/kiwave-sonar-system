@@ -12,8 +12,8 @@
     $: progressStyle = `left: ${minVal / 360 * 100}%; right: ${100 - (maxVal / 360 * 100)}%;`;
    
     onMount(() => {
-  const rangeInput = document.querySelector(".range-input");
-  rangeInput.addEventListener('input', () => {
+    const rangeInput = document.querySelector(".range-input");
+    rangeInput.addEventListener('input', () => {
     minVal = parseInt(rangeInput.querySelector('.range-min').value);
     maxVal = parseInt(rangeInput.querySelector('.range-max').value);
     if (maxVal - minVal < 15) {
@@ -155,5 +155,17 @@
         -webkit-appearance: none;
         pointer-events: auto;
     }
+    @media only screen and (max-width: 600px) {
+  .wrapper{
+    width: 85%;
+  }
+
+  h2{
+    font-size: 18px;
+  }
+  .field{
+    font-size: 13px;
+  }
+}
 
 </style>
