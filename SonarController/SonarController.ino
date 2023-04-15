@@ -13,7 +13,7 @@ Pinout Instruction:
 2- First Ultrasonic sesnor: 
 ----GND connected to 25 (which is GND) on the Wio
 ----VCC connected to 1 (which is 3V3 (3.3 V)) on the Wio
-----SIG connected to 36 (which is D7)non the Wio
+----SIG connected to 36 (which is D7) on the Wio
 3- Second Ultrasonic Sesnor: 
 ----GND connected to 30 (which is GND) on the Wio
 ----VCC connected to 17 (which is 3v3 (3.3 v)) on the Wio

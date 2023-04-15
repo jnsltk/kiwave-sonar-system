@@ -1,15 +1,12 @@
 <script>
     import { onMount } from 'svelte';
-    
+    import { sonarStore } from "../../data/stores";
     let sliderValue = 1;
     
     onMount(() => {
       const slider = document.getElementById('myRange');
-      slider.addEventListener('input', (event) => {
-        sliderValue = event.target.value;
-      });
       slider.addEventListener("mousemove", function(){
-        var x = slider.value;
+        var x = $sonarStore.sonarData.sRange;
         var color = 'linear-gradient(90deg, #D9D9D9 ' + 0.4*x + '%, #585858 ' + 0.4*x + '%)';
         slider.style.background = color;
       });
@@ -18,8 +15,8 @@
   
   <main>
     <div class="slideContainer">
-      <p>RANGE: <span>{sliderValue}</span> CM</p>
-      <input type="range" min="1" max="250" bind:value={sliderValue} id="myRange" class="slider"> 
+      <p>RANGE: <span>{$sonarStore.sonarData.sRange}</span> CM</p>
+      <input type="range" min="1" max="250" bind:value={$sonarStore.sonarData.sRange} id="myRange" class="slider"> 
     </div>
   </main>
     
@@ -29,7 +26,6 @@
         height: 90px;
         text-align: left;
     }
-
 
 
     p{
@@ -57,8 +53,8 @@
 
     .slider::-webkit-slider-thumb{
         -webkit-appearance: none;
-        width: 55px;
-        height: 55px;
+        width: 50px;
+        height: 50px;
         background-color:#D9D9D9;
         border-radius: 30px;
         border: 1px black solid;
