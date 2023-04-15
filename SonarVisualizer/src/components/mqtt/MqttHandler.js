@@ -1,37 +1,45 @@
-
-import mqtt_client from 'u8-mqtt/esm/web/index.js'
-const MQTT_SERVER='wss://test.mosquitto.org:8081' // Example MQTT websocket server
+import mqtt_client from 'u8-mqtt'
 let mqttClient;
 let mqttConnected=false;
 export async function mqttSend(topic,msg){
   if(!mqttConnected) throw Error("MQTT Client Not Connected!");
-  await mqttClient.json_send(
+  await mqttClient.send(
   topic,
-  { note: msg,
-    live: new Date().toISOString() })
+  msg)
   
 }
 
-export async function mqttSubscribe(topic,callback){
+ async function mqttSubscribe(topic,callback){
   if(!mqttConnected) throw Error("MQTT Client Not Connected!");
   if (!(callback instanceof Function)) throw Error("Invalid callback function!");
   mqttClient.subscribe_topic(
   topic,
   (pkt, params, ctx) => {
-    callback(pkt, pkt.json())
+    callback(pkt, pkt)
   })
 }
 
 
 
-export async function initMqtt(server){
+ async function initMqtt(server,port){
     mqttClient = mqtt_client()
-  .with_websock('wss://test.mosquitto.org:8081')
+  .with_websock('ws://'+server+':'+port+"/mqtt")
   .with_autoreconnect()
 
 await mqttClient.connect().then(async function(){
   mqttConnected=true; //On successful connection, allow sending and subscribing to topics.
 })
 
+
+
+
+}
+
+
+export async function startListener(callback){
+  await initMqtt("broker.hivemq.com","8000");
+  await mqttSubscribe("KiWaveSonarData",callback);
+  console.log("subbed")
+  
 }
 
