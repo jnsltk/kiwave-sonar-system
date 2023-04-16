@@ -7,7 +7,7 @@ class KiwiSonic {
         int ping();
         long calculateDistance(float temperature);
     private:
-        int _sigPin; //sigPin stands for the signal pin
+        int _sigPin; 
         int _maxDistance;
 };
 
