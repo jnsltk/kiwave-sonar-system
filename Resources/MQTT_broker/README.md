@@ -5,7 +5,7 @@ In order to have better performance it is necessary to use a private MQTT broker
 ## Connection details
 
 ### URL *(Using wss protocol)*
-```mqtt.jsnl.tk```
+```mqtt.jnsl.tk```
 
 ### Port:
 ```443```
