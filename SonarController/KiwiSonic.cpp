@@ -1,39 +1,36 @@
 #include "Arduino.h"
 #include "KiwiSonic.h"
 
-KiwiSonic::KiwiSonic(int sigPin, int maxDelay) {
+KiwiSonic::KiwiSonic(int sigPin,long maxDistance) {
+  //Setting private variables to passed arguments.
   _sigPin = sigPin;
-  _maxDelay = maxDelay;
+  _maxDistance = maxDistance;
 }
 
 
 
-//this method gives the duration of time taken to detect an object
+//Returns the time duration of transmitting waves and receiving an echo.
 int KiwiSonic::ping() {
-  pinMode(_sigPin, OUTPUT);  //first we need the signal pin as OUTPUT to tell the Ultrasonic
-  //sesnor to transmit ultrasonic waves.
-  digitalWrite(_sigPin, LOW);
+  /*
+  * For simplicity, certain variables are used as per the tutorial at:
+  * https://wiki.seeedstudio.com/Grove-Ultrasonic_Ranger/
+  * The reason why the entire library is not used is because we do not require its whole functionality, rather the only
+  * pieces of code that have been used is the number of microseconds to delay between method calls.
+  */
+  
+  pinMode(_sigPin, OUTPUT); //Set signal pin to "transmit mode".
+  digitalWrite(_sigPin, LOW); //Ensuring that we stop all outgoing signals. 
   delayMicroseconds(2);
-  digitalWrite(_sigPin, HIGH);  //by seeting the signal pin high we transmit waves
-  delayMicroseconds(5);             //we transmit waves as lon as _maxDelay
-  digitalWrite(_sigPin, LOW);   //we stop transmitting waves
-  pinMode(_sigPin, INPUT);      //now we need to recieve the waves and give the time it took for
-  //for them to go and come back. Since we will get an input, namely duration of the time
-  //it took for the waves to detect an object and come back, we set the signal pin to
-  //INPUT
-  return pulseIn(_sigPin, HIGH, _maxDelay * 1000L);  //_maxDelay * 1000L gives a time which
-  //is the longest time the ultrasonic awaits the trasmitted waves. It is put 1000 times longer
-  //than the time allocated for transmitting waves which is _maxdelay. (there is no reason for this)
-  //we could have as well chosen 100 instead of 1000
+  digitalWrite(_sigPin, HIGH);  //Transmitting waves
+  delayMicroseconds(5);        //Delay so that enough waves are transmitted.
+  digitalWrite(_sigPin, LOW);   //Stop transmitting
+  pinMode(_sigPin, INPUT);      //Set signal pin to "receive mode"
+  return pulseIn(_sigPin, HIGH); //Await echo. Returns time duration that it took to receive echo.
 }
 
-int KiwiSonic::getDelay() {
-  return _maxDelay;
-}
 
-void KiwiSonic::setDelay(int newDelay) {
-  _maxDelay = newDelay;
-}
+
+
 
 /*
 The ultrasonic's sesnor range is from 1 to 538 cm (in room temperature which is 23 degrees).
@@ -66,6 +63,7 @@ it takes for the wave to travel to and back from the object. If we do not divid 
 end, we get double the distance between the object and the Ultrasonic sensor.
 */
 long KiwiSonic::calculateDistance(float temperature) {
-  return ((ping() * (331.4 + (0.6 * temperature))) / 10000) / 2;
+  long distance=((ping() * (331.4 + (0.6 * temperature))) / 10000) / 2;
+  return distance>_maxDistance?-1:distance;
 }
 

@@ -25,8 +25,8 @@ Pinout Instruction:
 */
 
 long distanceInCentimeters;
-KiwiSonic ultrasonicSensor1(D7, 100);
-KiwiSonic ultrasonicSensor2(D8, 100);
+KiwiSonic ultrasonicSensor1(D7,350);
+KiwiSonic ultrasonicSensor2(D8,350);
 KiwiTemp tempSensor(A0);
 KiwiServo servo(D2);
 
@@ -125,9 +125,10 @@ Serial.println("Measuring temperature");
 temperature=tempSensor.measureTemp();
 
 Serial.println(temperature);
+  wireless.init();
 
-wireless.init();
 while(wireless.getWiFiStatus()!=WL_CONNECTED){
+
   Serial.println(".");
   delay(1000);
 }
@@ -140,6 +141,7 @@ Serial.println("Callback set");
 
 void record(int degree){
   int measure1=ultrasonicSensor1.calculateDistance(temperature);
+  delay(250);
   int measure2=ultrasonicSensor2.calculateDistance(temperature);
   int reportedMeasurement1=measure1<maxRange1?measure1:-1;
   int reportedMeasurement2=measure2<maxRange2?measure2:-1;

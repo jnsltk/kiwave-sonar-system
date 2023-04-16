@@ -29,7 +29,7 @@ KiwiServo::KiwiServo(int sigPin) {
     _sigPin = sigPin;
     pinMode(_sigPin, OUTPUT); //setting the signal pin as output as we need it to apply
     //volatge to the servo
-    _delay = setDelay(25); //default value of delays. However, there is a setter that can change this
+    setDelay(25); //default value of delays. However, there is a setter that can change this
 }
 
 int KiwiServo::convertAngleToPulse(float angle) {
@@ -52,19 +52,7 @@ void KiwiServo::goTo(float angle) {
     //applied to the servo
 }
 
-void KiwiServo::spin(int startAngle, int endAngle) {
-    this->goTo(startAngle); //going to the start abgle first
-    //thid for loop spins the servo from 0 to 180
-    for(int i = startAngle; i <= endAngle - 15; i++){
-      goTo(i);
-      delay(_delay);
-    }
-    //this fro loop spins the servo from 180 to 0
-    for(int i = endAngle - 15; i >= startAngle; i--){
-      goTo(i);
-      delay(_delay); 
-    }
-}
+
 
 void KiwiServo::setDelay(int newDelay) { _delay = newDelay; }
 
