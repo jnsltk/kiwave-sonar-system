@@ -5,7 +5,7 @@
 #include "rpcWiFi.h"
 class KiwiMQTT {
     public:
-    KiwiMQTT(char* ssid,char* secret);
+    KiwiMQTT(char* ssid,char* secret,String name);
     void init();
     bool setServer(char* broker,int port); 
     void setCallback(void (*callback)(char*, uint8_t*, unsigned int));

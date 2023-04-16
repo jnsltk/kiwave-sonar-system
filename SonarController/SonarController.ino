@@ -14,7 +14,7 @@
 //Instantiating temperature sensor, servo motor and MQTT objects.
   KiwiTemp tempSensor(A0);
   KiwiServo servo(D2);
-  KiwiMQTT wireless(ssid,secret);
+  KiwiMQTT wireless(ssid,secret,"KiWaveSonarv1");
 //Boolean flag to stop and start sonar.
   bool servoRun=false; 
 //Used to store current temperature
