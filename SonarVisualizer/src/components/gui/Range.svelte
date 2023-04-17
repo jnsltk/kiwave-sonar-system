@@ -68,6 +68,18 @@
         cursor: pointer;
     }
 
+    @media only screen and (max-width: 600px) {
+  .slideContainer {
+    width: 85%;
+    height: 100%;
+  }
+  
+  p {
+    font-size: 18px;
+  }
+  
+
+}
     
 
   @import url('https://fonts.googleapis.com/css2?family=Gloock&family=IBM+Plex+Sans:wght@700&display=swap');
