@@ -5,14 +5,6 @@
     import { sonarStore,sonarCommands } from "../../data/stores";
     let sliderValue = 1;
     
-    onMount(() => {
-      const slider = document.getElementById('myRange');
-      slider.addEventListener("mousemove", function(){
-        var x = $sonarStore.sonarData.sRange;
-        var color = 'linear-gradient(90deg, #D9D9D9 ' + 0.4*x + '%, #585858 ' + 0.4*x + '%)';
-        slider.style.background = color;
-      });
-    });
     let range="100";
     async function setRange(){
       //Adds padding zero's to conform to command structure
@@ -30,7 +22,7 @@
   <main>
     <div class="slideContainer">
       <p>RANGE: <span>{range}</span> CM</p>
-      <input on:change={()=>setRange()} type="range" min="1" max="250" bind:value={range} id="myRange" class="slider"> 
+      <input on:change={()=>setRange()} type="range" min="1" max="250" bind:value={range} id="myRange" class="slider"  style:background={`linear-gradient(90deg, #D9D9D9 ${0.4 * range}%, #585858 ${0.4 * range}%)`} > 
     </div>
   </main>
     
