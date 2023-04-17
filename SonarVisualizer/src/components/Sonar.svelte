@@ -8,6 +8,8 @@
     import ToggleButton from "./gui/ToggleButton.svelte";
     import Range from "./gui/Range.svelte";
     import TestButton from "./gui/TestButton.svelte";
+    import Sector from "./gui/Sector.svelte";
+    
 
 </script>
 
@@ -16,7 +18,7 @@
 <Console/>
 <ToggleButton/>
 <Range/>
-
+<Sector/>
 <TestButton/>
 <style>
 

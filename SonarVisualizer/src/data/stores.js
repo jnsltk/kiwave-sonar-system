@@ -15,8 +15,8 @@ export let sonarCommands=writable({
     //Data for sonar as per agreed description
     "sonarData":{
         "runSonar":false,
-        "sDeg1":"",
-        "sDeg2":"",        
+        "sDeg1":"0",
+        "sDeg2":"180",        
         "sRange": "350",
         "ts":0 //Reported at timestamp
     },
