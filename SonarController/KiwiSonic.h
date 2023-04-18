@@ -3,14 +3,12 @@
 #include "Arduino.h"
 class KiwiSonic {
     public:
-        KiwiSonic(int sigPin,int maxDelay);
+        KiwiSonic(int sigPin,long maxDistance);
         int ping();
-        void setDelay(int newDelay);
-        int getDelay();
         long calculateDistance(float temperature);
     private:
-        int _sigPin; //sigPin stands for the signal pin
-        int _maxDelay;
+        int _sigPin; 
+        int _maxDistance;
 };
 
 #endif

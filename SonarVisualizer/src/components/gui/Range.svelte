@@ -1,22 +1,28 @@
 <script>
+// @ts-nocheck
+
     import { onMount } from 'svelte';
-    import { sonarStore } from "../../data/stores";
+    import { sonarStore,sonarCommands } from "../../data/stores";
     let sliderValue = 1;
     
-    onMount(() => {
-      const slider = document.getElementById('myRange');
-      slider.addEventListener("mousemove", function(){
-        var x = $sonarStore.sonarData.sRange;
-        var color = 'linear-gradient(90deg, #D9D9D9 ' + 0.4*x + '%, #585858 ' + 0.4*x + '%)';
-        slider.style.background = color;
-      });
-    });
+    let range="100";
+    async function setRange(){
+      //Adds padding zero's to conform to command structure
+      let paddingToAdd=3-range.toString().length;
+      let processedRange="";
+      for(let i=0;i<paddingToAdd;i++){
+        processedRange+="0";
+      }
+      processedRange+=range.toString();
+      $sonarCommands.sonarData.sRange=processedRange;
+
+    }
   </script>
   
   <main>
     <div class="slideContainer">
-      <p>RANGE: <span>{$sonarStore.sonarData.sRange}</span> CM</p>
-      <input type="range" min="1" max="250" bind:value={$sonarStore.sonarData.sRange} id="myRange" class="slider"> 
+      <p>RANGE: <span>{range}</span> CM</p>
+      <input on:change={()=>setRange()} type="range" min="1" max="250" bind:value={range} id="myRange" class="slider"  style:background={`linear-gradient(90deg, #D9D9D9 ${0.4 * range}%, #585858 ${0.4 * range}%)`} > 
     </div>
   </main>
     
@@ -68,6 +74,18 @@
         cursor: pointer;
     }
 
+    @media only screen and (max-width: 600px) {
+  .slideContainer {
+    width: 85%;
+    height: 100%;
+  }
+  
+  p {
+    font-size: 18px;
+  }
+  
+
+}
     
 
   @import url('https://fonts.googleapis.com/css2?family=Gloock&family=IBM+Plex+Sans:wght@700&display=swap');
