@@ -2,14 +2,14 @@
   // @ts-nocheck
   
    
-import Sonar from './components/gui/Sonar.svelte';
-import Range from './components/gui/Range.svelte';
-    import MqttTest from './components/mqtt/MqttTest.svelte';
+import Sonar from './components/Sonar.svelte';
+    import MqttHandler from './components/mqtt/MqttHandler.svelte';
 
   </script>
   
   <main>
-    <MqttTest/>
+    <MqttHandler/>
+    <Sonar/>
   </main>
   
   <style>
