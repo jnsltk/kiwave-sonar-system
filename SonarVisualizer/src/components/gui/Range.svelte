@@ -57,20 +57,13 @@
         opacity: 1;
     }
 
-    .slider::-webkit-slider-thumb{
+    .slider::-webkit-slider-thumb, .slider::-moz-range-thumb{
         -webkit-appearance: none;
         width: 50px;
         height: 50px;
         background-color:#D9D9D9;
         border-radius: 30px;
         border: 1px black solid;
-        cursor: pointer;
-    }
-
-    .slider::-moz-range-thumb{
-        width: 40px;
-        height: 40px;
-        background-color:#D9D9D9;
         cursor: pointer;
     }
 
