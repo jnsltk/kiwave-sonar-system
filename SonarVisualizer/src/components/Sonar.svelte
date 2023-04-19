@@ -9,7 +9,8 @@
     import Range from "./gui/Range.svelte";
     import TestButton from "./gui/TestButton.svelte";
     import Sector from "./gui/Sector.svelte";
-    
+    import ScanButton from "./gui/ScanButton.svelte";
+  
 
 </script>
 
@@ -19,7 +20,7 @@
 <ToggleButton/>
 <Range/>
 <Sector/>
-<TestButton/>
+<ScanButton/>
 <style>
 
 
