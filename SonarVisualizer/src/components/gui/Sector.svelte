@@ -173,5 +173,17 @@
         -webkit-appearance: none;
         pointer-events: auto;
     }
+    @media only screen and (max-width: 600px) {
+  .wrapper{
+    width: 85%;
+  }
+
+  h2{
+    font-size: 18px;
+  }
+  .field{
+    font-size: 13px;
+  }
+}
 
 </style>
