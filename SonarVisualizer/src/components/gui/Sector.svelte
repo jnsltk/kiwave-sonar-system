@@ -164,7 +164,7 @@
         cursor: pointer;
         pointer-events: none;
     }
-    input[type="range"]::-webkit-slider-thumb, input[type="range"]::-moz-range-thumb{
+    input[type="range"]::-webkit-slider-thumb{
         border-radius: 30px;
 		width: 50px;
 		height: 50px;
@@ -174,7 +174,15 @@
     pointer-events: auto;
     }
 
-  
+    
+    input[type="range"]::-moz-range-thumb{
+    border-radius: 30px;
+		width: 50px;
+		height: 50px;
+		background-color: #D9D9D9;
+		border: 1px black solid;
+    pointer-events: auto;
+    }
     
     @media only screen and (max-width: 600px) {
   .wrapper{
