@@ -92,14 +92,6 @@
       margin-top: 40px;
     }
   
-    p {
-      font-family: 'Gloock', serif;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-weight: bold;
-      color: black;
-      font-size: 20px;
-    }
-  
     .degree-input {
       width: 100%;
       display: flex;
