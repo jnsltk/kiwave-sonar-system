@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { sonarStore } from "../../data/stores";
+    import { sonarCommands, sonarStore } from "../../data/stores";
     
     /*
     Sonar store can be accessible at all times and contains the mapping: 
@@ -24,8 +24,10 @@
     const lineToObjectColor = radarBackround;
     
     let context;
-    let deg;
-    let dist;
+    let deg1;
+    let deg2;
+    let dist1;
+    let dist2;
     let range;
     let canvasEl;
 
@@ -213,43 +215,33 @@
      * Subscribes to the data in sonarStore and assigns them to local variables whenever updated
      */
     sonarStore.subscribe(sonarStore => {
-        deg = sonarStore.sonarData.deg;
-        dist = sonarStore.sonarData.dist;
-        range = sonarStore.sonarData.sRange;
+        deg1 = sonarStore.sonarData.rDeg1;
+        deg2 = sonarStore.sonarData.rDeg2;
+        dist1 = sonarStore.sonarData.rRange1;
+        dist2 = sonarStore.sonarData.rRange2;
     });
+
+    sonarCommands.subscribe(sonarCommands => {
+        range = sonarCommands.sonarData.sRange;
+    })
 
     /**
      * Calls the draw function everytime the value of either deg or dist changes in sonarStore
     */
-    $: if($sonarStore.sonarData.deg || $sonarStore.sonarData.dist){
-        draw(deg, dist);
+    $: if($sonarStore.sonarData.rDeg1 || 
+            $sonarStore.sonarData.rDeg2 || 
+            $sonarStore.sonarData.rRange1 ||
+            $sonarStore.sonarData.rRange2
+            ){
+        draw(deg1, dist1);
+        draw(deg2, dist2);
     }
-
-    //TESTING - Simulating change of sonarData
-    async function sonarSim(){
-        async function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-
-        return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-        }
-        // for (let i = 0; i < 360; i++) {
-        //     setTimeout(async function() {
-        //         $sonarStore.sonarData.deg=i.toString()
-        //         $sonarStore.sonarData.dist=(await getRandomInt(0,350)).toString()
-        //     }, 30*i)
-        // }
-        setInterval(async function(){
-            $sonarStore.sonarData.deg=(await getRandomInt(0,360)).toString()
-            $sonarStore.sonarData.dist=(await getRandomInt(0,range)).toString()
-        },1000)
-    }
-    $sonarStore.sonarData.sRange=350
-    sonarSim()
 
     onMount(() => {
         console.log("RadarScreen mounted");
         resetScreen();
+        draw(deg1, dist1);
+        draw(deg2, dist2);
     });
 
     

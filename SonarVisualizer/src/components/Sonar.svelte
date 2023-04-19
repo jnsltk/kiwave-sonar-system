@@ -15,13 +15,21 @@
 </script>
 
 <!-- The order is arbitrary, feel free to modify. Ideally, create columns in separate divs -->
-<RadarScreen/>
-<Console/>
-<ToggleButton/>
-<Range/>
-<Sector/>
-<ScanButton/>
+<div class="container">
+    <div class="screen">
+        <RadarScreen/>
+    </div>
+    <div class="controls">
+        <Console/>
+        <ToggleButton/>
+        <Range/>
+        <Sector/>
+        <TestButton/>
+    </div>
+</div>
 <style>
-
+    .container {
+        display: flex;
+    }
 
 </style>
