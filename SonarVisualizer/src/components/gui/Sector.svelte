@@ -92,14 +92,6 @@
       margin-top: 40px;
     }
   
-    p {
-      font-family: 'Gloock', serif;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-weight: bold;
-      color: black;
-      font-size: 20px;
-    }
-  
     .degree-input {
       width: 100%;
       display: flex;
@@ -170,8 +162,31 @@
 		height: 50px;
 		background-color: #D9D9D9;
 		border: 1px black solid;
-        -webkit-appearance: none;
-        pointer-events: auto;
+    -webkit-appearance: none;
+    pointer-events: auto;
     }
+
+    
+    input[type="range"]::-moz-range-thumb{
+    border-radius: 30px;
+		width: 50px;
+		height: 50px;
+		background-color: #D9D9D9;
+		border: 1px black solid;
+    pointer-events: auto;
+    }
+    
+    @media only screen and (max-width: 600px) {
+  .wrapper{
+    width: 85%;
+  }
+
+  h2{
+    font-size: 18px;
+  }
+  .field{
+    font-size: 13px;
+  }
+}
 
 </style>
