@@ -34,14 +34,7 @@
     }
 
 
-    p{
-        font-family: 'Gloock', serif;
-        font-family: 'IBM Plex Sans', sans-serif;
-        font-weight: bold;
-        color: black;
-        font-size: 20px;
-        margin-left: 10px;
-    }
+
     .slider{
         -webkit-appearance: none;
         width: 100%;
@@ -86,11 +79,8 @@
     font-size: 18px;
   }
   
-
 }
     
-
-  @import url('https://fonts.googleapis.com/css2?family=Gloock&family=IBM+Plex+Sans:wght@700&display=swap');
 
 
 </style>
