@@ -25,6 +25,7 @@
         <Range/>
         <Sector/>
         <TestButton/>
+        <ScanButton/>
     </div>
 </div>
 <style>

@@ -3,8 +3,8 @@
     import mqtt_client from 'u8-mqtt'
     import {sonarStore,sonarCommands} from "../../data/stores.js";
 
-    const BROKER="broker.hivemq.com";
-    const BROKER_PORT="8000";
+    const BROKER="mqtt.jnsl.tk";
+    const BROKER_PORT="443";
     const REPORTING_TOPIC="KiWaveSonarData";
     const COMMANDING_TOPIC="KiWaveSonarCommand";
     const STOP_COMMAND="STP";
@@ -33,7 +33,7 @@
 
     async function initMqtt(server,port){
         mqttClient = mqtt_client()
-      .with_websock('ws://'+server+':'+port+"/mqtt")
+      .with_websock('wss://'+server+':'+port+"/mqtt")
       .with_autoreconnect()
       await mqttClient.connect().then(async function(){
         mqttConnected=true; //On successful connection, allow sending and subscribing to topics.
@@ -79,19 +79,20 @@
       //Setting degrees and ranges if any of the store variables change.
         $: if(storeCopy.sDeg1!=$sonarCommands.sonarData.sDeg1){
           console.log("Sending degrees!")
-          mqttSend("KiWaveSonarCommand","SSR"+($sonarStore.sonarData.sDeg1)+($sonarStore.sonarData.sDeg2));
+          mqttSend("KiWaveSonarCommand","SSR"+($sonarCommands.sonarData.sDeg1)+($sonarCommands.sonarData.sDeg2));
           storeCopy.sDeg1=$sonarCommands.sonarData.sDeg1
         }
         $: if(storeCopy.sDeg2!=$sonarCommands.sonarData.sDeg2){
           console.log("Sending degrees!")
-          mqttSend("KiWaveSonarCommand","SSR"+($sonarStore.sonarData.sDeg1)+($sonarStore.sonarData.sDeg2));
+          mqttSend("KiWaveSonarCommand","SSR"+($sonarCommands.sonarData.sDeg1)+($sonarCommands.sonarData.sDeg2));
           storeCopy.sDeg2=$sonarCommands.sonarData.sDeg2
         }
         $: if(storeCopy.sRange!=$sonarCommands.sonarData.sRange){
           console.log("Sending range!")
 
           if($sonarCommands.sonarData.sRange.length!=3) throw Error("sRange invalid format! Expected: XXX length: 3 Received: "+$sonarStore.sonarData.sRange);
-          mqttSend("KiWaveSonarCommand","SRR"+($sonarStore.sonarData.sRange)+($sonarStore.sonarData.sRange));
+          mqttSend("KiWaveSonarCommand","SRR"+($sonarCommands.sonarData.sRange)+($sonarCommands.sonarData.sRange));
+          console.log(("KiWaveSonarCommand","SRR"+($sonarCommands.sonarData.sRange)+($sonarCommands.sonarData.sRange)))
           storeCopy.sRange=$sonarCommands.sonarData.sRange
         }     
 
