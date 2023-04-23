@@ -18,8 +18,8 @@ import MqttHandler from './components/mqtt/MqttHandler.svelte';
   
   <style>
     .kiwave-logo{
-      width: 300px;
-      height: 200px;
+      width: 150px;
+      height: 80px;
     }
   </style>
   
