@@ -24,12 +24,16 @@
         <ToggleButton/>
         <Range/>
         <Sector/>
-        <TestButton/>
+        <ScanButton/>
     </div>
 </div>
 <style>
     .container {
         display: flex;
     }
-
+    @media only screen and (max-width: 600px) {
+        .container {
+            flex-direction: column;
+        }
+    }
 </style>
