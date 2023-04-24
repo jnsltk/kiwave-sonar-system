@@ -24,10 +24,6 @@
         <ToggleButton/>
         <Range/>
         <Sector/>
-<<<<<<< HEAD
-        <TestButton/>
-=======
->>>>>>> 3191caa1d4a9555d28dd1b166d5161ace03960fd
         <ScanButton/>
     </div>
 </div>
