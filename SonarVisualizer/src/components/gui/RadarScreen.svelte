@@ -12,16 +12,22 @@
     Used for communicating data from Mqtt component and radar screen
     */
    
-    const screenRadius = 300;
-    const canvasDimensions = {
-        // Width and height is screenRadius x2 plus 15% padding to make space for labels
-        width: screenRadius*2*1.15,
-        height: screenRadius*2*1.15
-    };
     const objectColor = "#73936E";
     const lineColor = "#101010";
     const radarBackround = "#414440"
     const lineToObjectColor = radarBackround;
+
+    let screenWidth;
+    $: screenRadius = (screenWidth < 600) ? 150 : 300;
+    $: if (screenRadius) {
+        updateCanvasDimensions();
+        resetScreen();
+    }
+    let canvasDimensions = {
+        // Width and height is screenRadius x2 plus 15% padding to make space for labels
+        width: screenRadius*2*1.15,
+        height: screenRadius*2*1.15
+    };
     
     let context;
     let deg1;
@@ -30,6 +36,17 @@
     let dist2;
     let range;
     let canvasEl;
+
+    /**
+     * Updates the contents of the canvasDimensions object with the recalculated values based on screenRadius
+     */
+    const updateCanvasDimensions = () => {
+        canvasDimensions = {
+            // Width and height is screenRadius x2 plus 15% padding to make space for labels
+            width: screenRadius*2*1.15,
+            height: screenRadius*2*1.15
+    }; 
+    }
 
     /**
      * Draws the radar screen 
@@ -181,6 +198,8 @@
         if (canvasEl == null) {
             return;
         }
+        canvasEl.width = canvasDimensions.width;
+        canvasEl.height = canvasDimensions.width;
         context = canvasEl.getContext('2d');
 
         context.save();
@@ -254,7 +273,9 @@
     
 </script>
 
-<canvas bind:this={canvasEl} width={canvasDimensions.width} height={canvasDimensions.height}></canvas>
+<svelte:window bind:outerWidth={screenWidth}/>
+
+<canvas bind:this={canvasEl}></canvas>
 
 <style>
     
