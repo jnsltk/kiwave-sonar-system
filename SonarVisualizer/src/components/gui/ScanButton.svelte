@@ -1,40 +1,21 @@
 <script>
-    'use strict';
-
-    import { createEventDispatcher } from 'svelte';
     import { sonarCommands } from "../../data/stores";
-                
-    export let scan = false; // SCANNING -> status: true   NOT SCANNING -> status: false (by default).       
-
-    const dispatch = createEventDispatcher();
-
    async function toggleScan() {
-    scan = !scan;
-
     $sonarCommands.sonarData.runSonar=!$sonarCommands.sonarData.runSonar;
-
-    dispatch('scan',{
-        scanning : scan
-    });
-
    }
 
 </script>
 
 <main>
-    {#if scan === false}
-        <button class='my-button' on:click= {toggleScan}>START  &nbsp;SCANNING</button>
+    {#if !$sonarCommands.sonarData.runSonar}
+        <button class='my-button' on:click={()=>toggleScan()}>START SCANNING</button>
     {:else}
-        <button class='my-button' on:click={toggleScan}>STOP &nbsp;SCANNING</button>
+        <button class='my-button' on:click={()=>toggleScan()}>STOP SCANNING</button>
     {/if}
 </main>
 
 <style>
-    :global(*){
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box; 
-    }
+
 
     .my-button{
         margin-top: 25px;
@@ -45,8 +26,7 @@
         border-radius: 10px;
         border: none;
         text-align: center;
-        font-size: 1em;
-        font-family: 'IBM Plex Sans';
+
         font-weight: bold;
         transition: all 0.3s ease;
     }
@@ -54,6 +34,7 @@
     .my-button:hover{
         opacity: 0.8;
         box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+        cursor: pointer;
     }
 
     

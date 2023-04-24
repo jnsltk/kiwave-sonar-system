@@ -33,8 +33,6 @@
         text-align: left;
     }
 
-
-
     .slider{
         -webkit-appearance: none;
         width: 100%;

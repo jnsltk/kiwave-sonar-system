@@ -252,9 +252,15 @@
             $sonarStore.sonarData.rRange1 ||
             $sonarStore.sonarData.rRange2
             ){
-        draw(deg1, dist1);
-        draw(deg2, dist2);
+        if(dist1>-1) draw(deg1, dist1);
+        if(dist2>-1) draw(deg2, dist2);
+
     }
+    setInterval(async function(){
+        draw(deg1,99999);
+        draw(deg2,99999);
+
+    },5000)
 
     onMount(() => {
         console.log("RadarScreen mounted");
