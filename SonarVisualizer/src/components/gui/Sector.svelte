@@ -3,12 +3,12 @@
     import { sonarCommands } from "../../data/stores";
   
     let minVal = 0;
-    let maxVal = 360;
+    let maxVal = 180;
 
 
-    $: leftProgressStyle = `left: ${minVal / 360 * 100}%`;
-    $: rightProgressStyle = `right: ${100 - (maxVal / 360 * 100)}%`;
-    $: progressStyle = `left: ${minVal / 360 * 100}%; right: ${100 - (maxVal / 360 * 100)}%;`;
+    $: leftProgressStyle = `left: ${minVal / 180 * 100}%`;
+    $: rightProgressStyle = `right: ${100 - (maxVal / 180 * 100)}%`;
+    $: progressStyle = `left: ${minVal / 180 * 100}%; right: ${100 - (maxVal / 180 * 100)}%;`;
    
     async function processDeg(inputDeg){
       let paddingToAdd=3-inputDeg.toString().length;
@@ -35,7 +35,7 @@
     if (maxVal - minVal < 15) {
         if (minVal === 0) {
           maxVal = 15;
-        } else if (maxVal === 360) {
+        } else if (maxVal === 180) {
           minVal = 345;
         } else {
           maxVal = minVal + 15;
@@ -51,20 +51,20 @@
     <div class="degree-input">
       <div class="field">
         <span>START DEGREE</span>
-        <input on:change={()=>setSector()} type="number" class="input-min" min="0" max="345" bind:value={minVal}>
+        <input on:change={()=>setSector()} type="number" class="input-min" min="0" max="180" bind:value={minVal}>
       </div>
       <div class="field">
         <span>END DEGREE</span>
 
-        <input on:change={()=>setSector()} type="number" class="input-max" min="15" max="360" bind:value={maxVal}>
+        <input on:change={()=>setSector()} type="number" class="input-max" min="15" max="180" bind:value={maxVal}>
       </div>
     </div>
     <div class="slider">
       <div class="progress" style={progressStyle}></div>
     </div>
     <div class="range-input">
-      <input  on:change={()=>setSector()} type="range" class="range-min" min="0" max="360" bind:value={minVal}>
-      <input  on:change={()=>setSector()} type="range" class="range-max" min="0" max="360" bind:value={maxVal}>
+      <input  on:change={()=>setSector()} type="range" class="range-min" min="0" max="180" bind:value={minVal}>
+      <input  on:change={()=>setSector()} type="range" class="range-max" min="0" max="180" bind:value={maxVal}>
     </div>
   </div>
   
