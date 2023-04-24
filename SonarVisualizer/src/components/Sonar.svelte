@@ -1,39 +1,86 @@
 <script>
     /*
-    This file shall bind all separate components into one single component.
+    This file binds all separate components into one single component.
     */
     
     import Console from "./gui/Console.svelte";
     import RadarScreen from "./gui/RadarScreen.svelte";
-    import ToggleButton from "./gui/ToggleButton.svelte";
     import Range from "./gui/Range.svelte";
-    import TestButton from "./gui/TestButton.svelte";
     import Sector from "./gui/Sector.svelte";
     import ScanButton from "./gui/ScanButton.svelte";
+
   
 
 </script>
 
-<!-- The order is arbitrary, feel free to modify. Ideally, create columns in separate divs -->
+
+
 <div class="container">
+
     <div class="screen">
         <RadarScreen/>
     </div>
+
     <div class="controls">
+        <img src="KiWave.png" class="kiwave-logo" alt="KiWave logo">
         <Console/>
-        <ToggleButton/>
         <Range/>
         <Sector/>
         <ScanButton/>
     </div>
 </div>
 <style>
+
     .container {
         display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
     }
+
+    .screen {
+        display: flex;
+        align-items: center;
+        padding-top: 30px;
+        padding-right: 50px;
+    }
+
+    .controls {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    .kiwave-logo{
+      width: 130px;
+      height: 45px;
+      align-self: center;
+      padding-bottom: 50px;
+    }
+
     @media only screen and (max-width: 600px) {
         .container {
             flex-direction: column;
+        } 
+        .screen {
+            padding-right: 0;
+        }   
+    }
+    @media only screen and (max-width: 1000px) {
+        .container {
+            flex-direction: column;
         }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .screen {
+            padding-right: 0;
+        }  
+
     }
 </style>

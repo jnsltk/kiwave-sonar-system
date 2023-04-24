@@ -18,17 +18,18 @@
 
 
     .my-button{
-        margin-top: 25px;
-        color: #F5F5F5;
+        color: #f8f0f0;
         background-color: #333333;
-        width: 400px;
-        height: 100px;
+        width: 70vh;
+        height: 80px;
         border-radius: 10px;
         border: none;
         text-align: center;
-
-        font-weight: bold;
+        margin-top: 100px;
         transition: all 0.3s ease;
+        font-family: 'IBM Plex Sans', sans-serif;
+        font-weight: bold;
+        font-size: 20px;
     }
 
     .my-button:hover{
@@ -40,8 +41,8 @@
     
     @media only screen and (max-width: 600px){
         .my-button{
-            width: 90%;
-            font-size: 20px;
+            width: 50vh;
+            font-size: 18px;
         }
     }
 

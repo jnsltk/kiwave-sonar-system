@@ -32,11 +32,16 @@
     minVal = parseInt(rangeInput.querySelector('.range-min').value);
     // @ts-ignore
     maxVal = parseInt(rangeInput.querySelector('.range-max').value);
+    /*
+    * Making sure the sector can not be set to less than 15 degrees
+    * since it is the smallest range in which the ultrasonic sensors can
+    * detect objects.
+    */
     if (maxVal - minVal < 15) {
         if (minVal === 0) {
           maxVal = 15;
         } else if (maxVal === 180) {
-          minVal = 345;
+          minVal = 180-15;
         } else {
           maxVal = minVal + 15;
         }
@@ -71,8 +76,9 @@
   
   <style>
     .wrapper {
-      width: 500px;
+      width: 70vh;
       text-align: start;
+      transition: all 0.2s ease;
     }
   
     .field {
@@ -129,8 +135,8 @@
 		height: 40px;
 		top: 50%;
 		background-color: #585858;
-        border-radius: 30px;
-        border: 1px black solid;
+    border-radius: 30px;
+    border: 1px black solid;
 	}
 
     .slider .progress{
@@ -167,7 +173,9 @@
     pointer-events: auto;
     }
 
-    
+    /*
+    * Moz is required to make the slider usable for Firefox web browsers
+    */
     input[type="range"]::-moz-range-thumb{
     border-radius: 30px;
 		width: 50px;
@@ -179,15 +187,16 @@
     
     @media only screen and (max-width: 600px) {
   .wrapper{
-    width: 85%;
+    width: 50vh;
   }
 
   h2{
     font-size: 18px;
   }
   .field{
-    font-size: 13px;
+    font-size: 12px;
   }
+
 }
 
 </style>

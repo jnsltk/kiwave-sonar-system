@@ -2,21 +2,11 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
   background-color: #DAE1D5;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
 
 p{
-  font-family: 'Gloock', serif;
   font-family: 'IBM Plex Sans', sans-serif;
   font-weight: bold;
   color: black;

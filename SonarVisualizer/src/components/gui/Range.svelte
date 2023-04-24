@@ -5,6 +5,7 @@
     import { sonarStore,sonarCommands } from "../../data/stores";
     let sliderValue = 1;
     
+    //The range that is given automatically is 100
     let range="100";
     async function setRange(){
       //Adds padding zero's to conform to command structure
@@ -22,15 +23,17 @@
   <main>
     <div class="slideContainer">
       <p>RANGE: <span>{range}</span> CM</p>
-      <input on:change={()=>setRange()} type="range" min="1" max="250" bind:value={range} id="myRange" class="slider"  style:background={`linear-gradient(90deg, #D9D9D9 ${0.4 * range}%, #585858 ${0.4 * range}%)`} > 
+      <!-- Coloring the left side of the range value-->
+      <input on:change={()=>setRange()} type="range" min="1" max="250" bind:value={range} id="myRange" class="slider"  style:background={`linear-gradient(90deg, #D9D9D9 ${100/250 * range}%, #585858 ${100/250 * range}%)`} > 
     </div>
   </main>
     
 <style>
     .slideContainer{
-        width: 500px;
+        width: 70vh;
         height: 90px;
         text-align: left;
+        transition: all 0.2s ease;
     }
 
     .slider{
@@ -58,6 +61,9 @@
         cursor: pointer;
     }
 
+    /*
+    * Moz is required to make the slider usable for Firefox web browsers.
+    */
     .slider::-moz-range-thumb{
         width: 50px;
         height: 50px;
@@ -68,10 +74,9 @@
     }
 
     @media only screen and (max-width: 600px) {
-  .slideContainer {
-    width: 85%;
-    height: 100%;
-  }
+    .slideContainer {
+      width: 50vh;
+    }
   
   p {
     font-size: 18px;

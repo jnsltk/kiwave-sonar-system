@@ -18,14 +18,14 @@
     const lineToObjectColor = radarBackround;
 
     let screenWidth;
-    $: screenRadius = (screenWidth < 600) ? 150 : 300;
+    $: screenRadius = (screenWidth < 600) ? 200 : 300;
     $: if (screenRadius) {
         updateCanvasDimensions();
         resetScreen();
     }
     let canvasDimensions = {
         // Width and height is screenRadius x2 plus 15% padding to make space for labels
-        width: screenRadius*2*1.15,
+        width: screenRadius*2*1.25,
         height: screenRadius*2*1.15
     };
     
@@ -43,7 +43,7 @@
     const updateCanvasDimensions = () => {
         canvasDimensions = {
             // Width and height is screenRadius x2 plus 15% padding to make space for labels
-            width: screenRadius*2*1.15,
+            width: screenRadius*2*1.25,
             height: screenRadius*2*1.15
     }; 
     }
@@ -252,15 +252,9 @@
             $sonarStore.sonarData.rRange1 ||
             $sonarStore.sonarData.rRange2
             ){
-        if(dist1>-1) draw(deg1, dist1);
-        if(dist2>-1) draw(deg2, dist2);
-
+        draw(deg1, dist1);
+        draw(deg2, dist2);
     }
-    setInterval(async function(){
-        draw(deg1,99999);
-        draw(deg2,99999);
-
-    },5000)
 
     onMount(() => {
         console.log("RadarScreen mounted");
