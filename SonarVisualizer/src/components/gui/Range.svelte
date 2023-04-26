@@ -64,11 +64,12 @@
     * Moz is required to make the slider usable for Firefox web browsers.
     */
     .slider::-moz-range-thumb{
-        width: 30px;
-        height: 30px;
-        background-color:#D9D9D9;
+        width: 20px;
+        height: 20px;
+        background-color:#c3c1c1;
         border-radius: 30px;
         cursor: pointer;
+        border: 0;
     }
   
   p {

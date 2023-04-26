@@ -38,15 +38,14 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: center;
+
     }
 
     .screen {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 30px;
-        padding-right: 50px;
+        justify-content: center;
     }
 
     .controls {
@@ -65,7 +64,7 @@
 
     .group-sliders {
         padding: 1.8rem;
-        border-radius: 30px;
+        border-radius: 20px;
         box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
         width:80%;
     }

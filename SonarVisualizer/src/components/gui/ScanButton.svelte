@@ -6,23 +6,22 @@
 
 </script>
 
-<main>
-    {#if !$sonarCommands.sonarData.runSonar}
-        <button class='my-button' on:click={()=>toggleScan()}>Start scanning</button>
-    {:else}
-        <button class='my-button' on:click={()=>toggleScan()}>STOP SCANNING</button>
-    {/if}
-</main>
 
-<style>
+    {#if !$sonarCommands.sonarData.runSonar}
+        <button class='my-button' class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()}>Start scanning</button>
+    {:else}
+        <button class='my-button' class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()}>Stop scanning</button>
+    {/if}
+
+    <style>
 
 
     .my-button{
         color: #f8f0f0;
         background-color: #007AFF;
-        width: 80%;
+        width: 85%;
         height: 80px;
-        border-radius: 30px;
+        border-radius: 20px;
         border: none;
         text-align: center;
         margin-top: 50px;
@@ -37,12 +36,10 @@
         cursor: pointer;
     }
 
-    
-    @media only screen and (max-width: 600px){
-        .my-button{
-            width: 50vh;
-            font-size: 18px;
-        }
+    .selected {
+        background-color: #D9D9D9;
+        color: #007AFF;
+        box-shadow: unset;
     }
 
 

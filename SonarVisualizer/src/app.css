@@ -6,8 +6,12 @@ body {
   margin: 0;
   display: flex;
   background-color: #eef1ec;
+  justify-content: center;
 }
 
+#app{
+  width: 100%;
+}
 
 p{
   color: black;

@@ -112,12 +112,12 @@
       text-align: center;
       font-size: 16px;
       margin-left: 12px;
-      border-radius: 30px;
+      border-radius: 20px;
       border: 0px black solid;
       -moz-appearance: none;
       -webkit-box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
--moz-box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
-box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
+      -moz-box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
+      box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
     }
   
     input[type="number"]::-webkit-outer-spin-button,
@@ -158,8 +158,9 @@ box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
         cursor: pointer;
         pointer-events: none;
     }
+    
     input[type="range"]::-webkit-slider-thumb{
-        border-radius: 30px;
+    border-radius: 30px;
 		width: 20px;
 		height: 20px;
 		background-color:#c3c1c1;
@@ -173,10 +174,11 @@ box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
     */
     input[type="range"]::-moz-range-thumb{
     border-radius: 30px;
-		width: 30px;
-		height: 0px;
+		width: 20px;
+		height: 20px;
 		background-color:#c3c1c1;
     pointer-events: auto;
+    border: 0;
     
     }
     
