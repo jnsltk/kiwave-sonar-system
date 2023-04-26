@@ -18,11 +18,12 @@
 <div class="container">
 
     <div class="screen">
+        <img src="KiWave.png" class="kiwave-logo" alt="KiWave logo">
         <RadarScreen/>
     </div>
 
     <div class="controls">
-        <img src="KiWave.png" class="kiwave-logo" alt="KiWave logo">
+    
         <Console/>
         <Range/>
         <Sector/>
@@ -40,6 +41,7 @@
 
     .screen {
         display: flex;
+        flex-direction: column;
         align-items: center;
         padding-top: 30px;
         padding-right: 50px;
@@ -56,9 +58,8 @@
 
     .kiwave-logo{
       width: 130px;
-      height: 45px;
-      align-self: center;
-      padding-bottom: 50px;
+      height: 40px;
+      padding-bottom: 10px;
     }
 
     @media only screen and (max-width: 600px) {
@@ -80,7 +81,7 @@
         }
         .screen {
             padding-right: 0;
-        }  
+        } 
 
     }
 </style>
