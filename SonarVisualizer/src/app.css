@@ -19,3 +19,17 @@ p{
   margin-left: 10px;
 }
 
+.dark-mode {
+  background-color: #2a2a2a;
+}
+
+.dark-mode p{
+  color: white;
+}
+
+.dark-mode span p {
+  color: white;
+}
+
+
+

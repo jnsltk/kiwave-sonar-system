@@ -3,17 +3,16 @@
     This file binds all separate components into one single component.
     */
     
-    import Console from "./gui/Console.svelte";
+
     import RadarScreen from "./gui/RadarScreen.svelte";
     import Range from "./gui/Range.svelte";
     import Sector from "./gui/Sector.svelte";
     import ScanButton from "./gui/ScanButton.svelte";
 
+
   
 
 </script>
-
-
 
 <div class="container">
 
@@ -21,12 +20,12 @@
         <img src="KiWave.png" class="kiwave-logo" alt="KiWave logo">
         <RadarScreen/>
     </div>
-
-    <div class="controls">
     
-        <div class="group-sliders">
-        <Range/>
-        <Sector/>
+    <div class="controls">
+       
+        <div class="group-sliders" id ="group-sliders">
+            <Range/>
+            <Sector/>
         </div>
   
         <ScanButton/>
@@ -91,4 +90,6 @@
         } 
 
     }
+
+
 </style>

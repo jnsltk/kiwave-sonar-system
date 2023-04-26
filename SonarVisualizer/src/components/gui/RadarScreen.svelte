@@ -10,9 +10,6 @@
         "ts":0 //Reported at timestamp
     },
     Used for communicating data from Mqtt component and radar screen
-        const objectColor = "#73936E";
-    const lineColor = "#8f948d";
-    const radarBackround = "#d5d7d4"
     */
    
     const objectColor = "#585858";
@@ -280,5 +277,10 @@
     canvas {
         filter: drop-shadow(2px 4px 40px #c3c1c1);
     }
+
+    @media (prefers-color-scheme: dark) {
+  /* Styles for dark mode go here */
+
+}
     
 </style>

@@ -55,11 +55,15 @@
     <p>Select sector</p>
     <div class="degree-input">
       <div class="field">
-        <span>Start degree</span>
+        <span>
+          <p>Start degree</p>
+          </span>
         <input on:change={()=>setSector()} type="number" class="input-min" min="0" max="180" bind:value={minVal}>
       </div>
       <div class="field">
-        <span>End degree</span>
+        <span>
+          <p>End degree</p>
+         </span>
 
         <input on:change={()=>setSector()} type="number" class="input-max" min="15" max="180" bind:value={maxVal}>
       </div>
@@ -80,16 +84,9 @@
       text-align: start;
       transition: all 0.2s ease;
     }
-  
-    .field {
-      color: black;
+
+    span p{
       font-size: 14px;
-    }
-  
-    p {
-      color: black;
-      font-size: 20px;
-      margin-left: 10px;
     }
   
     .degree-input {
@@ -135,12 +132,12 @@
 	}
 
     .slider .progress{
-        height: 10px;
-        left: 0%;
-        right: 0%;
-        position: absolute;
-        border-radius: 30px;
-        background:#007AFF ;
+    height: 10px;
+    left: 0%;
+    right: 0%;
+    position: absolute;
+    border-radius: 30px;
+    background:#007AFF ;
     }
 
     .range-input{
