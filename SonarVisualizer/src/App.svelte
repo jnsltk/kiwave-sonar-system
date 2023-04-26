@@ -7,9 +7,7 @@ import MqttHandler from './components/mqtt/MqttHandler.svelte';
 
   </script>
   
-  <main>
-
-    
+  <main>    
     <MqttHandler/>
     <Sonar/>
     

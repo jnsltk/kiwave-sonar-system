@@ -1,15 +1,17 @@
+html,body {
+  font-family: 'Inter', sans-serif !important;
+}
 
 body {
   margin: 0;
   display: flex;
-  background-color: #DAE1D5;
+  background-color: #eef1ec;
 }
 
 
 p{
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-weight: bold;
   color: black;
   font-size: 20px;
   margin-left: 10px;
 }
+

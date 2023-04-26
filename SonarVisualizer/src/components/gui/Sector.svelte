@@ -52,14 +52,14 @@
 </script>
   
   <div class="wrapper">
-    <h2>SELECT SECTOR</h2>
+    <p>Select sector</p>
     <div class="degree-input">
       <div class="field">
-        <span>START DEGREE</span>
+        <span>Start degree</span>
         <input on:change={()=>setSector()} type="number" class="input-min" min="0" max="180" bind:value={minVal}>
       </div>
       <div class="field">
-        <span>END DEGREE</span>
+        <span>End degree</span>
 
         <input on:change={()=>setSector()} type="number" class="input-max" min="15" max="180" bind:value={maxVal}>
       </div>
@@ -76,27 +76,20 @@
   
   <style>
     .wrapper {
-      width: 70vh;
+      width: 100%;
       text-align: start;
       transition: all 0.2s ease;
     }
   
     .field {
-      font-family: 'Gloock', serif;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-weight: bold;
       color: black;
       font-size: 14px;
     }
   
-    h2 {
-      font-family: 'Gloock', serif;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-weight: bold;
+    p {
       color: black;
       font-size: 20px;
       margin-left: 10px;
-      margin-top: 40px;
     }
   
     .degree-input {
@@ -117,11 +110,14 @@
       height: 70%;
       outline: none;
       text-align: center;
-      font-size: 18px;
+      font-size: 16px;
       margin-left: 12px;
-      border-radius: 5px;
-      border: 1px black solid;
+      border-radius: 30px;
+      border: 0px black solid;
       -moz-appearance: none;
+      -webkit-box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
+-moz-box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
+box-shadow: inset 0px 0px 28px 0px rgba(0,0,0,0.22);
     }
   
     input[type="number"]::-webkit-outer-spin-button,
@@ -132,20 +128,19 @@
 	.slider {
 		position: relative;
 		width: 100%;
-		height: 40px;
+		height: 10px;
 		top: 50%;
-		background-color: #585858;
+		background-color:#D9D9D9 ;
     border-radius: 30px;
-    border: 1px black solid;
 	}
 
     .slider .progress{
-        height: 40px;
+        height: 10px;
         left: 0%;
         right: 0%;
         position: absolute;
         border-radius: 30px;
-        background: #D9D9D9;
+        background:#007AFF ;
     }
 
     .range-input{
@@ -156,7 +151,7 @@
         background: none;
         -webkit-appearance: none;
         position:absolute;
-        top: -43px;
+        top: -28px;
         height: 40px;
         width: 100%;
         border-radius: 30px;
@@ -165,12 +160,12 @@
     }
     input[type="range"]::-webkit-slider-thumb{
         border-radius: 30px;
-		width: 50px;
-		height: 50px;
-		background-color: #D9D9D9;
-		border: 1px black solid;
+		width: 20px;
+		height: 20px;
+		background-color:#c3c1c1;
     -webkit-appearance: none;
     pointer-events: auto;
+    
     }
 
     /*
@@ -178,16 +173,16 @@
     */
     input[type="range"]::-moz-range-thumb{
     border-radius: 30px;
-		width: 50px;
-		height: 50px;
-		background-color: #D9D9D9;
-		border: 1px black solid;
+		width: 30px;
+		height: 0px;
+		background-color:#c3c1c1;
     pointer-events: auto;
+    
     }
     
     @media only screen and (max-width: 600px) {
   .wrapper{
-    width: 50vh;
+    width: 100%;
   }
 
   h2{
