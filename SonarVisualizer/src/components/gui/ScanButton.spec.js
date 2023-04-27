@@ -1,17 +1,20 @@
-import { render } from '@testing-library/svelte';
+import { render , fireEvent, getByTitle, getByText, waitFor} from '@testing-library/svelte';
 import ScanButton from './ScanButton.svelte';
-import { toggleScan } from './ScanButton.svelte'
 
 describe('ScanButton', () => {
 
-    test('running', () => {
+    test('response to click scan button', async () => {
  
-        const scanButton = render(ScanButton);
+        const {getByText, getByTestId} = render(ScanButton);
 
-        let result = toggleScan();
+        const scanButton = getByText('Start scanning');
 
-        expect(result).toEqual('Starting!');
+        expect(scanButton).toBeInTheDocument();
+        expect(scanButton.textContent).toMatch('Start scanning');
 
+        await fireEvent.click(scanButton); // clicking the button
+
+        expect(scanButton.textContent).toMatch('Stop scanning');
     });
 
 });
