@@ -10,22 +10,25 @@
         "ts":0 //Reported at timestamp
     },
     Used for communicating data from Mqtt component and radar screen
+        const objectColor = "#73936E";
+    const lineColor = "#8f948d";
+    const radarBackround = "#d5d7d4"
     */
    
-    const objectColor = "#73936E";
-    const lineColor = "#101010";
-    const radarBackround = "#414440"
+    const objectColor = "#585858";
+    const lineColor = "#8f948d";
+    const radarBackround = "#d5d7d4"
     const lineToObjectColor = radarBackround;
 
     let screenWidth;
-    $: screenRadius = (screenWidth < 600) ? 150 : 300;
+    $: screenRadius = (screenWidth < 600) ? 190 : 300;
     $: if (screenRadius) {
         updateCanvasDimensions();
         resetScreen();
     }
     let canvasDimensions = {
         // Width and height is screenRadius x2 plus 15% padding to make space for labels
-        width: screenRadius*2*1.15,
+        width: screenRadius*2*1.25,
         height: screenRadius*2*1.15
     };
     
@@ -43,7 +46,7 @@
     const updateCanvasDimensions = () => {
         canvasDimensions = {
             // Width and height is screenRadius x2 plus 15% padding to make space for labels
-            width: screenRadius*2*1.15,
+            width: screenRadius*2*1.25,
             height: screenRadius*2*1.15
     }; 
     }
@@ -57,7 +60,7 @@
         context.translate(canvasDimensions.width / 2, canvasDimensions.height / 2);
         context.beginPath();
         context.strokeStyle = lineColor;
-        context.lineWidth = 2;
+        context.lineWidth = 1;
         // Draw concentric circles
         context.arc(0, 0, screenRadius, 0, 2 * Math.PI);
         context.stroke();
@@ -210,11 +213,13 @@
         context.fill();
 
         // Draw labels
+        context.fillStyle = lineColor;
         context.font = "0.8em sans";
         context.fillText("0°", -5, - (screenRadius + 5));
         context.fillText("90°", (screenRadius + 5), 5);
         context.fillText("270°", - (screenRadius + 35), 5);
         context.fillText("180°", -15, screenRadius + 17);
+        
 
         context.restore();
 
@@ -252,15 +257,9 @@
             $sonarStore.sonarData.rRange1 ||
             $sonarStore.sonarData.rRange2
             ){
-        if(dist1>-1) draw(deg1, dist1);
-        if(dist2>-1) draw(deg2, dist2);
-
+        draw(deg1, dist1);
+        draw(deg2, dist2);
     }
-    setInterval(async function(){
-        draw(deg1,99999);
-        draw(deg2,99999);
-
-    },5000)
 
     onMount(() => {
         console.log("RadarScreen mounted");
@@ -278,5 +277,8 @@
 <canvas bind:this={canvasEl}></canvas>
 
 <style>
+    canvas {
+        filter: drop-shadow(2px 4px 40px #c3c1c1);
+    }
     
 </style>

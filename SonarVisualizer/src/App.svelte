@@ -7,19 +7,13 @@ import MqttHandler from './components/mqtt/MqttHandler.svelte';
 
   </script>
   
-  <main>
-
-      <img src="KiWave.png" class="kiwave-logo" alt="KiWave logo">
-    
+  <main>    
     <MqttHandler/>
     <Sonar/>
     
   </main>
   
   <style>
-    .kiwave-logo{
-      width: 150px;
-      height: 80px;
-    }
+
   </style>
   
