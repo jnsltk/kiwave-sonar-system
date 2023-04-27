@@ -17,6 +17,7 @@
     const objectColor = "#585858";
     const lineColor = "#8f948d";
    
+    //Change background color based on whether the dark mode is switched on or off
     $: radarBackround = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
 
     const lineToObjectColor = radarBackround;
