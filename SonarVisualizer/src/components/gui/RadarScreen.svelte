@@ -1,7 +1,9 @@
 <script>
     import { onMount } from "svelte";
     import { sonarCommands, sonarStore } from "../../data/stores";
-    
+    import {darkModeSwitch} from "../../data/stores";
+
+
     /*
     Sonar store can be accessible at all times and contains the mapping: 
     "sonarData":{
@@ -14,9 +16,10 @@
    
     const objectColor = "#585858";
     const lineColor = "#8f948d";
-    const radarBackround = "#d5d7d4"
-    const lineToObjectColor = radarBackround;
+   
+    $: radarBackround = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
 
+    const lineToObjectColor = radarBackround;
     let screenWidth;
     $: screenRadius = (screenWidth < 600) ? 190 : 300;
     $: if (screenRadius) {
@@ -264,8 +267,6 @@
         draw(deg1, dist1);
         draw(deg2, dist2);
     });
-
-    
     
 </script>
 
@@ -277,6 +278,7 @@
     canvas {
         filter: drop-shadow(2px 4px 40px #c3c1c1);
     }
+
 
     @media (prefers-color-scheme: dark) {
   /* Styles for dark mode go here */

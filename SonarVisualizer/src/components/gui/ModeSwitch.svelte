@@ -1,17 +1,17 @@
 <script>
+    import {darkModeSwitch} from "../../data/stores";
     export let darkMode = false;
-     async function toggleMode() {
+     async function toggleMode() {;
         darkMode = !darkMode;
         const mainElement = document.querySelector('main');
-        const groupSliders = document.getElementById('group-sliders');
 
         if(darkMode) {
             mainElement.classList.add('dark-mode');
-            groupSliders.classList.add('group-sliders-dark-mode');
+            $darkModeSwitch.isDark = true;
         }
         else {
             mainElement.classList.remove('dark-mode');
-            groupSliders.classList.remove('group-sliders-dark-mode');
+            $darkModeSwitch.isDark = false;
         }
    }
 

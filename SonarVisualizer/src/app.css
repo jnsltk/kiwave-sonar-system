@@ -31,5 +31,23 @@ p{
   color: white;
 }
 
+.dark-mode .group-sliders{
+  background-color: #3b3b3b;
+}
+
+.dark-mode .kiwave-dark{
+  width: 110px !important;
+  height: auto;
+  padding-top: 10px;
+}
+
+.dark-mode .kiwave-light{
+ display: none;
+}
+
+.dark-mode canvas {
+  filter: drop-shadow(0px 0px 20px #1a1919) !important;
+}
+
 
 
