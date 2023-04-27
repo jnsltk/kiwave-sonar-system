@@ -4,7 +4,7 @@
     */
     
     import Console from "./gui/Console.svelte";
-    import RadarScreen from "./gui/RadarScreen.svelte";
+    import RadarScreen from "./gui/RadarScreen/RadarScreen.svelte";
     import ToggleButton from "./gui/ToggleButton.svelte";
     import Range from "./gui/Range.svelte";
     import TestButton from "./gui/TestButton.svelte";
@@ -19,6 +19,7 @@
     <div class="screen">
         <RadarScreen/>
     </div>
+    <!--
     <div class="controls">
         <Console/>
         <ToggleButton/>
@@ -26,6 +27,7 @@
         <Sector/>
         <ScanButton/>
     </div>
+    -->
 </div>
 <style>
     .container {
