@@ -1,10 +1,30 @@
 <script>
     import { onMount } from 'svelte';
     import { sonarCommands } from "../../data/stores";
+  import { escape } from 'svelte/internal';
   
     let minVal = 0;
     let maxVal = 180;
 
+    //checks for out of range inputs
+    const inputRegex = new RegExp("^(0|[1-9][0-9]?|1[0-7][0-9]|180)$");
+
+    $: if(!inputRegex.test(maxVal)){
+      maxVal = 180;
+    }
+    if(!inputRegex.test(minVal)){
+      minVal = 0; 
+    }
+
+    $: if (maxVal - minVal < 15) {
+        if (minVal === 0) {
+          maxVal = 15;
+        } else if (maxVal === 180) {
+          minVal = 180-15;
+        } else {
+          maxVal = minVal + 15;
+        }
+      }
 
     $: leftProgressStyle = `left: ${minVal / 180 * 100}%`;
     $: rightProgressStyle = `right: ${100 - (maxVal / 180 * 100)}%`;
