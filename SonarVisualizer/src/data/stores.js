@@ -21,3 +21,8 @@ export let sonarCommands=writable({
         "ts":0 //Reported at timestamp
     },
 })
+
+export let darkModeSwitch=writable({
+    //Data for darkmode switch
+    "isDark" : false
+})

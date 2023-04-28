@@ -3,30 +3,31 @@
     This file binds all separate components into one single component.
     */
     
-    import Console from "./gui/Console.svelte";
+
     import RadarScreen from "./gui/RadarScreen.svelte";
     import Range from "./gui/Range.svelte";
     import Sector from "./gui/Sector.svelte";
     import ScanButton from "./gui/ScanButton.svelte";
 
+
   
 
 </script>
 
-
-
 <div class="container">
 
     <div class="screen">
-        <img src="KiWave.png" class="kiwave-logo" alt="KiWave logo">
+        <img src="KiWave-dark.png" class="kiwave-dark" alt="KiWave logo">
+        <img src="KiWave-light.png" class="kiwave-light" alt="KiWave logo">
+        
         <RadarScreen/>
     </div>
-
-    <div class="controls">
     
-        <div class="group-sliders">
-        <Range/>
-        <Sector/>
+    <div class="controls">
+       
+        <div class="group-sliders" id ="group-sliders">
+            <Range/>
+            <Sector/>
         </div>
   
         <ScanButton/>
@@ -56,17 +57,28 @@
         align-items: center;
 
     }
-
-    .kiwave-logo{
+ 
+    .kiwave-dark{
+      width: 0;
+    }
+    .kiwave-light{
       width: 110px;
       height: auto;
+      padding-top: 10px;
     }
+   
+   
 
     .group-sliders {
         padding: 1.8rem;
         border-radius: 20px;
         box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
         width:80%;
+    }
+
+    .group-sliders-dark {
+    background-color: #333;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 16px 0px, rgba(0, 0, 0, 0.3) 0px 0px 0px 1px;
     }
 
     @media only screen and (max-width: 600px) {
@@ -91,4 +103,6 @@
         } 
 
     }
+
+
 </style>
