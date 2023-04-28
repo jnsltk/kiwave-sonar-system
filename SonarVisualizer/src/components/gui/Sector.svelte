@@ -12,7 +12,8 @@
     $: if(!inputRegex.test(maxVal)){
       maxVal = 180;
     }
-    if(!inputRegex.test(minVal)){
+
+    $: if(!inputRegex.test(minVal)){
       minVal = 0; 
     }
 
