@@ -19,7 +19,7 @@
     <div class="screen">
         <RadarScreen/>
     </div>
-    <!--
+    
     <div class="controls">
         <Console/>
         <ToggleButton/>
@@ -27,7 +27,7 @@
         <Sector/>
         <ScanButton/>
     </div>
-    -->
+   
 </div>
 <style>
     .container {

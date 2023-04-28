@@ -4,6 +4,7 @@
     import { Canvas } from 'svelte-canvas';
     import Background from "./Background.svelte";
     import Object from "./Object.svelte";
+  import SectorLines from "./SectorLines.svelte";
     
     /*
     Sonar store can be accessible at all times and contains the mapping: 
@@ -18,7 +19,8 @@
     let width;
     let height;
 
-    $: screenRadius = (width / 2) * 0.85;
+    $: canvasWidth = (width > 600) ? (width / 3) : (width * 0.95);
+    $: screenRadius = (canvasWidth / 2) * 0.9;
 
     onMount(() => {
         console.log("RadarScreen mounted");
@@ -49,14 +51,15 @@
     sonarSim();
 </script>
 
-<div bind:clientWidth={width} bind:clientHeight={height}>
-    <Canvas 
-        {width} 
-        {height} >
-        <Background {screenRadius} />
-        <Object {screenRadius}/>
-    </Canvas>
-</div>
+<svelte:window bind:outerWidth={width}/>
+
+<Canvas 
+    width={canvasWidth} 
+    height={canvasWidth} >
+    <Background {screenRadius} />
+    <Object {screenRadius}/>
+    <SectorLines {screenRadius} />
+</Canvas>
 
 <style>
     
