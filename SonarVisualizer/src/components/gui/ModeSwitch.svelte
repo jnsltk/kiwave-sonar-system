@@ -4,15 +4,18 @@
      async function toggleMode() {;
         darkMode = !darkMode;
         const mainElement = document.querySelector('main');
+        const bodyElement = document.querySelector('body');
 
         //If darkMode is on, then it the styling with .dark-mode are applied.
         if(darkMode) {
             mainElement.classList.add('dark-mode');
+            bodyElement.classList.add('dark-mode');
             $darkModeSwitch.isDark = true;
         }
         //If darkMode is off, then it the styling with .dark-mode are not applied.
         else {
             mainElement.classList.remove('dark-mode');
+            bodyElement.classList.remove('dark-mode');
             $darkModeSwitch.isDark = false;
         }
    }
