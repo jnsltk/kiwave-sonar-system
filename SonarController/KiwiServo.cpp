@@ -1,14 +1,4 @@
 /*
-* The servo motor moves when the voltage is applied to its signal pin.
-* After experimentation and research it was found that 180 degrees correspond to a delay of 2500 microseconds
-*
-* The lowest delay to the servo is 500 microseconds which corresponds to 0 degrees
-*
-* We rescale the wanted angle to a number between 500 and 2500 which is then used as the argument for the delay.
-* This will move the servo to the wanted position.
-*
-* We have used 150 as the actual maximum degree due to concerns of damaging the servo. During experimentation,
-* the servo motor behaved oddly and overheated when moved to 180 degrees.
 */
 
 #include "Arduino.h"
@@ -36,6 +26,8 @@ void KiwiServo::goTo(float angle) {
     //Stopping signal transmission to servo
     digitalWrite(_sigPin, LOW);
 }
+
+
 
 void KiwiServo::setDelay(int newDelay) { _delay = newDelay; }
 

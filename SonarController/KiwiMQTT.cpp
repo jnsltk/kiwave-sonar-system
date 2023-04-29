@@ -11,9 +11,9 @@ KiwiMQTT::KiwiMQTT(char* ssid,char* secret) {
     _pubSubClient=PubSubClient(_wifiClient);
  }
 
-void KiwiMQTT::sweep(){
   //The call to the loop function results in a polling for the latest updates from the broker.
-  _pubSubClient.loop();
+bool KiwiMQTT::sweep(){
+  return _pubSubClient.loop();
 }
 int KiwiMQTT::getWiFiStatus(){
   //Returning the status of the WiFi connection.
@@ -33,7 +33,7 @@ void KiwiMQTT::connect(){
     _pubSubClient.subscribe("KiWaveSonarCommand");
         Serial.println("Subscribed");
 
-  }
+  } 
   
 }
 void KiwiMQTT::init(){
@@ -59,4 +59,7 @@ void KiwiMQTT::publish(String data){
   data.toCharArray(buff, stringLength);
   _pubSubClient.publish("KiWaveSonarData",buff);
 }
+void KiwiMQTT::publish(uint8_t* data,int dataLength){
 
+  _pubSubClient.publish("KiWaveSonarData",(char*) data);
+}

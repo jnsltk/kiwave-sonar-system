@@ -6,11 +6,12 @@
 class KiwiMQTT {
     public:
     KiwiMQTT(char* ssid,char* secret);
-    void init();
-    void setServer(char* broker,int port); 
+    void init(); //Connects to chosen MQTT broker .
+    void setServer(char* broker,int port); //Connects to chosen MQTT broker.
     void setCallback(void (*callback)(char*, uint8_t*, unsigned int));
+    void publish(uint8_t* data,int dataLength);
     void publish(String data);
-    void sweep();
+    bool sweep();
     void connect();
     bool getBrokerStatus();
     int getWiFiStatus();
@@ -19,6 +20,8 @@ class KiwiMQTT {
     WiFiClient _wifiClient;
     char* _ssid;
     char* _secret;
+    String _name;
+
 };
 
 #endif
