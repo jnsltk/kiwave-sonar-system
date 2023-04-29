@@ -3,13 +3,12 @@
 #include "KiwiMQTT.h"
 #include "PubSubClient.h"
 
-KiwiMQTT::KiwiMQTT(char* ssid,char* secret,String name) {
+KiwiMQTT::KiwiMQTT(char* ssid,char* secret) {
   //Setting private variables.
     _ssid=ssid;
     _secret=secret; 
     _wifiClient=WiFiClient();
     _pubSubClient=PubSubClient(_wifiClient);
-    _name=name;
  }
 
 void KiwiMQTT::sweep(){
@@ -26,15 +25,14 @@ bool KiwiMQTT::getBrokerStatus(){
   return _pubSubClient.connected();
 }
 
-bool KiwiMQTT::connect(){
+void KiwiMQTT::connect(){
+  String name="KiWaveSonarv1";
   //Connecting to the broker with username.
-  if(_pubSubClient.connect(_name.c_str())){
+  if(_pubSubClient.connect(name.c_str())){
       //Subscribing to the topic that controls the sonar.
     _pubSubClient.subscribe("KiWaveSonarCommand");
         Serial.println("Subscribed");
 
-  } else {
-    return false;
   }
   
 }
@@ -44,7 +42,7 @@ void KiwiMQTT::init(){
     WiFi.begin(_ssid,_secret);
   }
 
-bool KiwiMQTT::setServer(char* broker,int port){
+void KiwiMQTT::setServer(char* broker,int port){
   //Setting the broker.
   _pubSubClient.setServer(broker,port);
   

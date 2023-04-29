@@ -5,7 +5,6 @@
 #include "KiwiTemp.h"
 #include "KiwiServo.h"
 #include "math.h"
-#include "Arduino.h"
 
 
 //Instantiating two objects of ultrasonic sensors and passing in there max range.
@@ -14,7 +13,7 @@
 //Instantiating temperature sensor, servo motor and MQTT objects.
   KiwiTemp tempSensor(A0);
   KiwiServo servo(D2);
-  KiwiMQTT wireless(ssid,secret,"KiWaveSonarv1");
+  KiwiMQTT wireless(ssid,secret);
 //Boolean flag to stop and start sonar.
   bool servoRun=false; 
 //Used to store current temperature
@@ -120,7 +119,7 @@ void setup(){
       delay(1000);
     }
   Serial.println("Wifi set.");
-  wireless.setServer("broker.hivemq.com", 1883);
+  wireless.setServer("mqtt-http.jnsl.tk", 1883);
   Serial.println("Server set");
   wireless.setCallback(callback);
   Serial.println("Callback set");
@@ -173,9 +172,10 @@ void loop(){
     Serial.println("Connected");
     //Calling the affirm method to show to whoever, that the sonar is connected.
       affirm();
-  }
+  } else {
   //Look for new messages
     wireless.sweep();
   //Spin the sonar and record measurements
     spin();
+    }
 }
