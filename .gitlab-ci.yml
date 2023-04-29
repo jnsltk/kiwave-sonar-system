@@ -14,8 +14,4 @@ build-job:
   # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run test
-  # We save node_modules as an artifact, so it is not lost after the job has run
-  artifacts:
-   paths:
-    - node_modules
   
