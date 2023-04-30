@@ -4,7 +4,7 @@
 
     export let screenRadius;
 
-    const lineColor = "#8f948d";
+    const lineColor = "#5a5c59";
 
     /**
      * Renders the SectorLines component to the canvas, consisting of the lines and concentric circles dividing up the RadarScreen.
