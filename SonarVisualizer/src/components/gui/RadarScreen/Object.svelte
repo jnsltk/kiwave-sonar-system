@@ -1,7 +1,7 @@
 <script>
     import { Layer } from "svelte-canvas";
     import { getCoordinates } from "./utils";
-    import { sonarCommands, sonarStore } from "../../../data/stores";
+    import { sonarCommands, sonarStore, darkModeSwitch } from "../../../data/stores";
 
     export let screenRadius;
 
@@ -12,9 +12,9 @@
     $: range = parseInt($sonarCommands.sonarData.sRange);
     let history = [];
 
-    const objectColor = "#585858";
     const activeSectorColor = "#007AFF"
-    const lineToObjectColor = "#D5D7D4";
+    $: objectColor = $darkModeSwitch.isDark ? "#585858" : "#767676";
+    $: lineToObjectColor = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
         
     /**
      * Draws 15 lines (because of the 15 degree measurement angle) from the center to the specified coordinates to erase 
@@ -47,7 +47,7 @@
             context.translate(width / 2, height / 2);
             context.beginPath();
             context.strokeStyle = activeSectorColor;
-            context.lineWidth = 2;
+            context.lineWidth = 4;
             context.moveTo(0, 0);
             context.lineTo(endCoordinates.x, endCoordinates.y);
             context.stroke();
@@ -90,7 +90,7 @@
             context.translate(width / 2, height / 2);
             context.beginPath();
             context.strokeStyle = activeSectorColor;
-            context.lineWidth = 2;
+            context.lineWidth = 4;
             context.moveTo(startCoordinates.x, startCoordinates.y);
             context.lineTo(endCoordinates.x, endCoordinates.y);
             context.stroke();
@@ -107,15 +107,15 @@
      * @param height Canvas height 
      */
     $: render = ({ context, width, height }) => {
-        history.forEach(element => {
-            if (element.dist1 > range) element.dist1 = range;
-            drawObjectFrom(context, element.deg1, element.dist1, width, height, false);
-            drawLineTo(context, element.deg1, element.dist1, width, height, false);
+        for (let i = 0; i < history.length; i++) {
+            if (history[i].dist1 > range) history[i].dist1 = range;
+            drawObjectFrom(context, history[i].deg1, history[i].dist1, width, height, false);
+            drawLineTo(context, history[i].deg1, history[i].dist1, width, height, false);
 
-            if (element.dist2 > range) element.dist2 = range;
-            drawObjectFrom(context, element.deg2, element.dist2, width, height, false);
-            drawLineTo(context, element.deg2, element.dist2, width, height, false);
-        });
+            if (history[i].dist2 > range) history[i].dist2 = range;
+            drawObjectFrom(context, history[i].deg2, history[i].dist2, width, height, false);
+            drawLineTo(context, history[i].deg2, history[i].dist2, width, height, false);
+        }
 
         if (dist1 > range) dist1 = range;
         drawObjectFrom(context, deg1, dist1, width, height, true);

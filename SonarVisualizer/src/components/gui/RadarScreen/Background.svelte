@@ -1,10 +1,11 @@
 <script>
     import { Layer } from "svelte-canvas";
+    import { darkModeSwitch } from "../../../data/stores";
 
     export let screenRadius;
 
     const lineColor = "#8f948d";
-    const radarBackround = "#d5d7d4";
+    $: radarBackround = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
     
     /**
      * Renders the Background component to the canvas, which consists of the background circle and the labels showing different angles.
