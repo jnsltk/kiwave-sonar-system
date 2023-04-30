@@ -6,6 +6,13 @@
     const lineColor = "#8f948d";
     const radarBackround = "#d5d7d4";
     
+    /**
+     * Renders the Background component to the canvas, which consists of the background circle and the labels showing different angles.
+     * By declaring this function reactively, we make sure svelte-canvas re-render anytime the values the function depends on change.
+     * @param context The 2D rendering context of the Canvas element
+     * @param width Canvas width
+     * @param height Canvas height 
+     */
     $: render = ({ context, width, height }) => {
         context.save();
         context.translate(width / 2, height / 2);

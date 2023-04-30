@@ -4,7 +4,7 @@
     import { Canvas } from 'svelte-canvas';
     import Background from "./Background.svelte";
     import Object from "./Object.svelte";
-  import SectorLines from "./SectorLines.svelte";
+    import SectorLines from "./SectorLines.svelte";
     
     /*
     Sonar store can be accessible at all times and contains the mapping: 
@@ -17,10 +17,11 @@
     */
    
     let width;
-    let height;
 
+    // Set the canvas width in proportion with the client window's outer width, also depending on the breakpoint at 600 pixels
     $: canvasWidth = (width > 600) ? (width / 3) : (width * 0.95);
-    $: screenRadius = (canvasWidth / 2) * 0.9;
+    // Set the radius of the radar screen in proportion of the width of the canvas, leaving larger margin on mobile for the labels
+    $: screenRadius = (width > 600) ? (canvasWidth / 2) * 0.9 : (canvasWidth / 2) * 0.85;
 
     onMount(() => {
         console.log("RadarScreen mounted");
