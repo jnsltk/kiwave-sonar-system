@@ -77,7 +77,7 @@
       //For logging purposes
         console.log($sonarStore.sonarData)
 
-    },250);
+    },300);
 
     //Callback function of mqtt connection. Runs every time we get a new message.
     async function mqttCallback(data){
