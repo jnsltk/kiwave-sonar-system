@@ -9,8 +9,9 @@ export const toRadians = (deg) => {
 
 /**
  * Maps distance from sensor to radar screen
- * @param dist - The distance from the sensor
- * @param range - The current maximum distance the radar is set to
+ * @param dist The distance from the sensor
+ * @param range The current maximum distance the radar is set to
+ * @param screenRadius The radius of the RadarScreen in pixels
  * @return {number} - The distance mapped to the radar screen
  */
 export const mapDistance = (dist, range, screenRadius) => {
@@ -22,6 +23,8 @@ export const mapDistance = (dist, range, screenRadius) => {
  * @typedef {Object} Point
  * @param deg The direction of the distance meaurement
  * @param dist The distance from the sensor
+ * @param range The current measuring range set by the user
+ * @param screenRadius The radius of the RadarScreen in pixels
  * @return {Point} The object containing the x and y coordinates
  */
 export const getCoordinates = (deg, dist, range, screenRadius) => {

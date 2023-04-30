@@ -6,6 +6,14 @@
 
     const lineColor = "#8f948d";
 
+    /**
+     * Renders the SectorLines component to the canvas, consisting of the lines and concentric circles dividing up the RadarScreen.
+     * By declaring this function reactively, we make sure svelte-canvas re-render anytime the values the function depends on change.
+     * @param context The 2D rendering context of the Canvas element
+     * @param width Canvas width
+     * @param height Canvas height 
+     */
+
     $: render = ({ context, width, height }) => {
         context.save();
 
