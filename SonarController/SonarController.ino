@@ -139,12 +139,6 @@ void record(int degree){
 
 }
 
-void affirm(){
-      servo.goTo(0);
-      safeDelay(2000);
-      servo.goTo(180);
-}
-
 void spin(){
   if(servoRun){
   for(int i=from;i<to;i+=15){
@@ -164,10 +158,8 @@ void spin(){
 void loop(){
   if(!wireless.getBrokerStatus()){
     Serial.println("Broker disconnected");
-    safeDelay(1000);
     wireless.connect();
     Serial.println("Connected");
-    affirm(); //c
   } else {
     long currentTime=millis(); //Retrieving the number ms the Wio terminal has been alive.
     if((currentTime-lastUpdateTime)>=updateInterval){
@@ -179,7 +171,9 @@ void loop(){
       lastUpdateTime=currentTime; //Updating the variable that keeps track how often we fetch new messages.
       result=wireless.sweep(); //Fetching new messages from MQTT broker.
       Serial.println(result);
+      if(result==1){
+          spin(); //Perform rotation in accorance to the specified sector.
+      }
     }
-    spin(); //Perform rotation in accorance to the specified sector.
   }
 }

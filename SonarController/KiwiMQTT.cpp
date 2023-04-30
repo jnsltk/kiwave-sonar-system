@@ -9,6 +9,9 @@ KiwiMQTT::KiwiMQTT(char* ssid,char* secret) {
     _secret=secret; 
     _wifiClient=WiFiClient();
     _pubSubClient=PubSubClient(_wifiClient);
+    //Modi
+    _pubSubClient.setSocketTimeout(20);
+    _pubSubClient.setKeepAlive(20);
  }
 
   //The call to the loop function results in a polling for the latest updates from the broker.
