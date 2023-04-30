@@ -9,7 +9,7 @@ KiwiMQTT::KiwiMQTT(char* ssid,char* secret) {
     _secret=secret; 
     _wifiClient=WiFiClient();
     _pubSubClient=PubSubClient(_wifiClient);
-    //Modi
+    //Modifiying keep alive to prevent connection drop
     _pubSubClient.setSocketTimeout(20);
     _pubSubClient.setKeepAlive(20);
  }
