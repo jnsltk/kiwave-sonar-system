@@ -8,7 +8,8 @@ export let sonarStore=writable({
         "rRange1": "0",
         "rRange2": "0",
         "ts":0 //Reported at timestamp
-    },    "sonarStatus":{
+    },    
+    "sonarStatus":{
         "lastCommandReceived":false,
         "isOnline":false
     }
