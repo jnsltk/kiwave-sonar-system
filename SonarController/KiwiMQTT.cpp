@@ -10,8 +10,8 @@ KiwiMQTT::KiwiMQTT(char* ssid,char* secret) {
     _wifiClient=WiFiClient();
     _pubSubClient=PubSubClient(_wifiClient);
     //Modifiying keep alive to prevent connection drop
-    _pubSubClient.setSocketTimeout(20);
-    _pubSubClient.setKeepAlive(20);
+    _pubSubClient.setSocketTimeout(5);
+    _pubSubClient.setKeepAlive(10);
  }
 
   //The call to the loop function results in a polling for the latest updates from the broker.
