@@ -9,6 +9,7 @@
     const RECEIVED_CONFIRMATION="RCVD";
     const CONNECTED_CONFIRMATION="CNCTD"
     const MEASUREMENT_ANGLE=15;
+    const MAX_QUEUE_LENGTH=300;
     let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
@@ -64,42 +65,41 @@
     }
     let busy=false;
     let previousDeg=0;
+    let previousQueueLength=0;
+    let fetchInterval=25;
     async function shiftAndDrawEntry(){
       if(busy) return;
       busy=true;
-      do{
         let entry=measurementsQueue.shift();
         if(entry==undefined){
           busy=false;
           return;
         }
-          if(previousDeg<entry.rDeg1){
-          for(let i=15;i>0;i--){
-            $sonarStore.sonarData.rRange1=entry.rRange1;
-            $sonarStore.sonarData.rRange2=entry.rRange2;
-            $sonarStore.sonarData.rDeg1=entry.rDeg1-i;
-          //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
-            $sonarStore.sonarData.rDeg2=entry.rDeg2-i;
-            await sleep(20);
-          }
-        } else {
-          for(let i=15;i>0;i--){
-            $sonarStore.sonarData.rRange1=entry.rRange1;
-            $sonarStore.sonarData.rRange2=entry.rRange2;
-            $sonarStore.sonarData.rDeg1=entry.rDeg1+i;
-          //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
-            $sonarStore.sonarData.rDeg2=entry.rDeg2+i;
-            await sleep(20);
-          }
-        }
-        previousDeg=entry.rDeg1
-      } while(measurementsQueue.length!=0);
+        if(entry.rRange1==-1) entry.rRange1=Infinity;
+        if(entry.rRange2==-1) entry.rRange2=Infinity;
+        $sonarStore.sonarData.rRange1=entry.rRange1;
+        $sonarStore.sonarData.rRange2=entry.rRange2;
+        $sonarStore.sonarData.rDeg1=entry.rDeg1;
+        $sonarStore.sonarData.rDeg2=entry.rDeg2;
       busy=false;
     }
-    setInterval(async function(){
+    async function queueShifter(){
+      let shifter=setInterval(async function(){
       await shiftAndDrawEntry()
+      if(measurementsQueue.length==0){
+        fetchInterval+=0.1;
+        clearInterval(shifter);
 
-    },200);
+        queueShifter()
+      } else if(measurementsQueue.length>MAX_QUEUE_LENGTH) {
+        fetchInterval-=0.1;
+        clearInterval(shifter);
+        queueShifter()
+      }
+     },fetchInterval);
+
+    }
+    queueShifter()
 
     //Callback function of mqtt connection. Runs every time we get a new message.
     async function mqttCallback(data){
@@ -111,13 +111,31 @@
       const parsedArray=parsedData.split("/");
          
         for(let i=1;i<parsedArray.length;i+=3){
-          let queueEntry={
-            "rRange1":parseInt(parsedArray[i]),
-            "rRange2":parseInt(parsedArray[i+1]),
-            "rDeg1":(360-parseInt(parsedArray[i+2])),
-            "rDeg2":(360-parseInt(parsedArray[i+2]))-180
+          let rRange1=parseInt(parsedArray[i])
+          let rRange2=parseInt(parsedArray[i+1])
+          let initDeg=(360-parseInt(parsedArray[i+2]));
+          if(previousDeg<(360-parseInt(parsedArray[i+2]))){
+            for(let i=initDeg-MEASUREMENT_ANGLE;i<initDeg;i++){
+              let queueEntry={
+                "rRange1":rRange1,
+                "rRange2":rRange2,
+                "rDeg1":i,
+                "rDeg2":i-180
+              }
+              measurementsQueue.push(queueEntry);
+            }
+          } else {
+            for(let i=initDeg+MEASUREMENT_ANGLE;i>initDeg;i--){
+              let queueEntry={
+                "rRange1":rRange1,
+                "rRange2":rRange2,
+                "rDeg1":i,
+                "rDeg2":i-180
+              }
+              measurementsQueue.push(queueEntry);
+            }
           }
-          measurementsQueue.push(queueEntry);
+          previousDeg=initDeg;
         }
 
     }

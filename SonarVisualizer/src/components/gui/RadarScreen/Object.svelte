@@ -16,6 +16,7 @@
     $: objectColor = $darkModeSwitch.isDark ? "#585858" : "#767676";
     $: lineToObjectColor = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
         
+
     /**
      * Draws 15 lines (because of the 15 degree measurement angle) from the center to the specified coordinates to erase 
      * previous object measurments. If called on the currently measured (active) sector, the line corresponding to the 
@@ -28,8 +29,7 @@
      * @param currentlyActive Boolean flag indicating whether the function is called on the currently measured (active) sector
      */
     const drawLineTo = (context, deg, dist, width, height, currentlyActive) => {
-        for (let i = parseInt(deg) - 7; i < parseInt(deg) + 8; i++) {
-            const endCoordinates = getCoordinates(i, dist, $sonarCommands.sonarData.sRange, screenRadius);
+            const endCoordinates = getCoordinates(deg, dist, $sonarCommands.sonarData.sRange, screenRadius);
             context.save();
             context.translate(width / 2, height / 2);
             context.beginPath();
@@ -39,7 +39,7 @@
             context.lineTo(endCoordinates.x, endCoordinates.y);
             context.stroke();
             context.restore();
-        };
+    
         // Draws the highlighted line last so it's not drawn on and covered
         if (currentlyActive) {
             const endCoordinates = getCoordinates(deg, dist, $sonarCommands.sonarData.sRange, screenRadius);
@@ -124,14 +124,19 @@
         if (dist2 > range) dist2 = range;
         drawObjectFrom(context, deg2, dist2, width, height, true);
         drawLineTo(context, deg2, dist2, width, height, true);
-
+        if(history.length>360){
+            history=[];
+        }
         history.push({
             "deg1": deg1,
             "deg2": deg2,
             "dist1": dist1,
             "dist2": dist2
         })
+        
     }
+
+
 </script>
 
 <Layer {render} />
