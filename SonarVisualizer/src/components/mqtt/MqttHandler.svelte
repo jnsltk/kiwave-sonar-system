@@ -1,6 +1,6 @@
 <script>
     // @ts-nocheck
-    import mqtt_client from 'u8-mqtt'
+    import mqtt_client from '../../mqtt' // or v4.min.js or v5.min.js    import {sonarStore,sonarCommands} from "../../data/stores.js";
     import {sonarStore,sonarCommands} from "../../data/stores.js";
 
     const BROKER="mqtt.jnsl.tk";
@@ -8,6 +8,7 @@
     const REPORTING_TOPIC="KiWaveSonarData";
     const RECEIVED_CONFIRMATION="RCVD";
     const CONNECTED_CONFIRMATION="CNCTD"
+    const MEASUREMENT_ANGLE=15;
     let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
@@ -58,26 +59,47 @@
       }
       return false;
     }
-
-    setInterval(async function(){
+    const sleep = (milliseconds) => {
+      return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+    let busy=false;
+    let previousDeg=0;
+    async function shiftAndDrawEntry(){
+      if(busy) return;
+      busy=true;
+      do{
         let entry=measurementsQueue.shift();
         if(entry==undefined){
-          $sonarStore.sonarStatus.isOnline=false;
+          busy=false;
           return;
         }
+          if(previousDeg<entry.rDeg1){
+          for(let i=15;i>0;i--){
+            $sonarStore.sonarData.rRange1=entry.rRange1;
+            $sonarStore.sonarData.rRange2=entry.rRange2;
+            $sonarStore.sonarData.rDeg1=entry.rDeg1-i;
+          //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
+            $sonarStore.sonarData.rDeg2=entry.rDeg2-i;
+            await sleep(20);
+          }
+        } else {
+          for(let i=15;i>0;i--){
+            $sonarStore.sonarData.rRange1=entry.rRange1;
+            $sonarStore.sonarData.rRange2=entry.rRange2;
+            $sonarStore.sonarData.rDeg1=entry.rDeg1+i;
+          //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
+            $sonarStore.sonarData.rDeg2=entry.rDeg2+i;
+            await sleep(20);
+          }
+        }
+        previousDeg=entry.rDeg1
+      } while(measurementsQueue.length!=0);
+      busy=false;
+    }
+    setInterval(async function(){
+      await shiftAndDrawEntry()
 
-      //The servo rotates CCW which is why we need to invert the received degrees.
-
-      //Updating the store with the new data.
-        $sonarStore.sonarData.rRange1=entry.rRange1;
-        $sonarStore.sonarData.rRange2=entry.rRange2;
-        $sonarStore.sonarData.rDeg1=entry.rDeg1;
-      //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
-        $sonarStore.sonarData.rDeg2=entry.rDeg2;
-      //For logging purposes
-        console.log($sonarStore.sonarData)
-
-    },300);
+    },200);
 
     //Callback function of mqtt connection. Runs every time we get a new message.
     async function mqttCallback(data){
