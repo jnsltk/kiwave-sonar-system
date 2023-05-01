@@ -75,6 +75,8 @@
           busy=false;
           return;
         }
+        if(entry.rRange1==-1) entry.rRange1=Infinity;
+        if(entry.rRange2==-1) entry.rRange2=Infinity;
         $sonarStore.sonarData.rRange1=entry.rRange1;
         $sonarStore.sonarData.rRange2=entry.rRange2;
         $sonarStore.sonarData.rDeg1=entry.rDeg1;
