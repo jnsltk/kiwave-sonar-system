@@ -9,7 +9,7 @@
     const RECEIVED_CONFIRMATION="RCVD";
     const CONNECTED_CONFIRMATION="CNCTD"
     const MEASUREMENT_ANGLE=15;
-    const MAX_QUEUE_LENGTH=30;
+    const MAX_QUEUE_LENGTH=300;
     let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
@@ -89,10 +89,13 @@
       if(measurementsQueue.length==0){
         fetchInterval+=0.1;
         clearInterval(shifter);
+        console.log("Fetch interval: "+fetchInterval)
+
         queueShifter()
       } else if(measurementsQueue.length>MAX_QUEUE_LENGTH) {
         fetchInterval+=0.1;
         clearInterval(shifter);
+        console.log("Fetch interval: "+fetchInterval)
         queueShifter()
       }
      },fetchInterval);
