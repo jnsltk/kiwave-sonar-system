@@ -3,18 +3,20 @@
 #include "KiwiMQTT.h"
 #include "PubSubClient.h"
 
-KiwiMQTT::KiwiMQTT(char* ssid,char* secret,String name) {
+KiwiMQTT::KiwiMQTT(char* ssid,char* secret) {
   //Setting private variables.
     _ssid=ssid;
     _secret=secret; 
     _wifiClient=WiFiClient();
     _pubSubClient=PubSubClient(_wifiClient);
-    _name=name;
+    //Modifiying keep alive to prevent connection drop
+    _pubSubClient.setSocketTimeout(20);
+    _pubSubClient.setKeepAlive(20);
  }
 
-void KiwiMQTT::sweep(){
   //The call to the loop function results in a polling for the latest updates from the broker.
-  _pubSubClient.loop();
+bool KiwiMQTT::sweep(){
+  return _pubSubClient.loop();
 }
 int KiwiMQTT::getWiFiStatus(){
   //Returning the status of the WiFi connection.
@@ -26,16 +28,15 @@ bool KiwiMQTT::getBrokerStatus(){
   return _pubSubClient.connected();
 }
 
-bool KiwiMQTT::connect(){
+void KiwiMQTT::connect(){
+  String name="KiWaveSonarv1";
   //Connecting to the broker with username.
-  if(_pubSubClient.connect(_name.c_str())){
+  if(_pubSubClient.connect(name.c_str())){
       //Subscribing to the topic that controls the sonar.
     _pubSubClient.subscribe("KiWaveSonarCommand");
         Serial.println("Subscribed");
 
-  } else {
-    return false;
-  }
+  } 
   
 }
 void KiwiMQTT::init(){
@@ -44,7 +45,7 @@ void KiwiMQTT::init(){
     WiFi.begin(_ssid,_secret);
   }
 
-bool KiwiMQTT::setServer(char* broker,int port){
+void KiwiMQTT::setServer(char* broker,int port){
   //Setting the broker.
   _pubSubClient.setServer(broker,port);
   
@@ -61,4 +62,7 @@ void KiwiMQTT::publish(String data){
   data.toCharArray(buff, stringLength);
   _pubSubClient.publish("KiWaveSonarData",buff);
 }
+void KiwiMQTT::publish(uint8_t* data,int dataLength){
 
+  _pubSubClient.publish("KiWaveSonarData",(char*) data);
+}
