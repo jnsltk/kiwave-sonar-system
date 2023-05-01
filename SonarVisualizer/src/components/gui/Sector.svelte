@@ -1,31 +1,62 @@
 <script>
     import { onMount } from 'svelte';
     import { sonarCommands } from "../../data/stores";
-  import { escape } from 'svelte/internal';
   
     let minVal = 0;
     let maxVal = 180;
 
-    //checks for out of range inputs
-    const inputRegex = new RegExp("^(0|[1-9][0-9]?|1[0-7][0-9]|180)$");
+    let inputMin;
+    let inputMax;
 
-    $: if(!inputRegex.test(maxVal)){
-      maxVal = 180;
+    let newMinVal;
+    let newMaxVal;
+
+    $: minValRange = minVal;
+    $: maxValRange =  maxVal;
+
+  //check new max input  
+  function checkMaxVal(inputElem) {
+    let newMaxVal = parseInt(inputElem.value);
+
+    if (newMaxVal > 180) {
+      newMaxVal = 180;
     }
 
-    $: if(!inputRegex.test(minVal)){
-      minVal = 0; 
-    }
-
-    $: if (maxVal - minVal < 15) {
-        if (minVal === 0) {
-          maxVal = 15;
-        } else if (maxVal === 180) {
-          minVal = 180-15;
-        } else {
-          maxVal = minVal + 15;
-        }
+    if (newMaxVal - minVal < 15) {
+      if (minVal === 0) {
+        newMaxVal = 15;
+      } else if (newMaxVal === 180) {
+        minVal = 180 - 15;
+      } else {
+        newMaxVal = minVal + 15;
       }
+    }
+
+    inputElem.value = newMaxVal;
+    maxVal = newMaxVal;
+  }
+
+  // checks new min value
+  function checkMinVal(inputElem) {
+    let newMinVal = parseInt(inputElem.value);
+
+    if (newMinVal < 0) {
+      newMinVal = 0;
+    }
+
+    if (maxVal - newMinVal < 15) {
+      if (newMinVal === 0) {
+        maxVal = 15;
+      } else if (maxVal === 180) {
+        newMinVal = 180 - 15;
+      } else {
+        maxVal = newMinVal + 15;
+      }
+    }
+
+    inputElem.value = newMinVal;
+    minVal = newMinVal;
+  }
 
     $: leftProgressStyle = `left: ${minVal / 180 * 100}%`;
     $: rightProgressStyle = `right: ${100 - (maxVal / 180 * 100)}%`;
@@ -77,20 +108,20 @@
     <div class="degree-input">
       <div class="field">
         <span>Start degree</span>
-        <input on:change={()=>setSector()} type="number" class="input-min" min="0" max="180" bind:value={minVal}>
+        <input on:change={()=>setSector()}  on:blur={(e)=>checkMinVal(e.target)} type="number" class="input-min" min="0" max="180"  value={minVal} bind:this={inputMin}>
       </div>
       <div class="field">
         <span>End degree</span>
 
-        <input on:change={()=>setSector()} type="number" class="input-max" min="15" max="180" bind:value={maxVal}>
+        <input on:change={()=>setSector()} on:blur={(e)=>checkMaxVal(e.target)} type="number"  class="input-max" min="15" max="180" value={maxVal} bind:this={inputMax}>
       </div>
     </div>
     <div class="slider">
       <div class="progress" style={progressStyle}></div>
     </div>
     <div class="range-input">
-      <input  on:change={()=>setSector()} type="range" class="range-min" min="0" max="180" bind:value={minVal}>
-      <input  on:change={()=>setSector()} type="range" class="range-max" min="0" max="180" bind:value={maxVal}>
+      <input  on:change={()=>setSector()} type="range" class="range-min" min="0" max="180" bind:value={minValRange}>
+      <input  on:change={()=>setSector()} type="range" class="range-max" min="0" max="180" bind:value={maxValRange}>
     </div>
   </div>
   
