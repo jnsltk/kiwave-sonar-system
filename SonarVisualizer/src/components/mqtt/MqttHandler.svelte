@@ -67,7 +67,6 @@
     async function shiftAndDrawEntry(){
       if(busy) return;
       busy=true;
-      console.log("rubg")
       let entry=measurementsQueue.shift();
       if(entry==undefined){
         busy=false;
