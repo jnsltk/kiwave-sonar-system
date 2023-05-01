@@ -67,39 +67,39 @@
     async function shiftAndDrawEntry(){
       if(busy) return;
       busy=true;
-      let entry=measurementsQueue.shift();
-      if(entry==undefined){
-        busy=false;
-
-        return;
-      }
-        if(previousDeg<entry.rDeg1){
-        for(let i=15;i>0;i--){
-          $sonarStore.sonarData.rRange1=entry.rRange1;
-          $sonarStore.sonarData.rRange2=entry.rRange2;
-          $sonarStore.sonarData.rDeg1=entry.rDeg1-i;
-        //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
-          $sonarStore.sonarData.rDeg2=entry.rDeg2-i;
-          await sleep(10);
+      do{
+        let entry=measurementsQueue.shift();
+        if(entry==undefined){
+          busy=false;
+          return;
         }
-      } else {
-        for(let i=15;i>0;i--){
-          $sonarStore.sonarData.rRange1=entry.rRange1;
-          $sonarStore.sonarData.rRange2=entry.rRange2;
-          $sonarStore.sonarData.rDeg1=entry.rDeg1+i;
-        //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
-          $sonarStore.sonarData.rDeg2=entry.rDeg2+i;
-          await sleep(10);
+          if(previousDeg<entry.rDeg1){
+          for(let i=15;i>0;i--){
+            $sonarStore.sonarData.rRange1=entry.rRange1;
+            $sonarStore.sonarData.rRange2=entry.rRange2;
+            $sonarStore.sonarData.rDeg1=entry.rDeg1-i;
+          //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
+            $sonarStore.sonarData.rDeg2=entry.rDeg2-i;
+            await sleep(20);
+          }
+        } else {
+          for(let i=15;i>0;i--){
+            $sonarStore.sonarData.rRange1=entry.rRange1;
+            $sonarStore.sonarData.rRange2=entry.rRange2;
+            $sonarStore.sonarData.rDeg1=entry.rDeg1+i;
+          //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
+            $sonarStore.sonarData.rDeg2=entry.rDeg2+i;
+            await sleep(20);
+          }
         }
-      }
-      previousDeg=entry.rDeg1
-
-        busy=false;
+        previousDeg=entry.rDeg1
+      } while(measurementsQueue.length!=0);
+      busy=false;
     }
     setInterval(async function(){
       await shiftAndDrawEntry()
 
-    },300);
+    },200);
 
     //Callback function of mqtt connection. Runs every time we get a new message.
     async function mqttCallback(data){
