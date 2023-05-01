@@ -8,9 +8,6 @@
     let inputMin;
     let inputMax;
 
-    let newMinVal;
-    let newMaxVal;
-
     $: minValRange = minVal;
     $: maxValRange =  maxVal;
 
@@ -58,8 +55,6 @@
     minVal = newMinVal;
   }
 
-    $: leftProgressStyle = `left: ${minVal / 180 * 100}%`;
-    $: rightProgressStyle = `right: ${100 - (maxVal / 180 * 100)}%`;
     $: progressStyle = `left: ${minVal / 180 * 100}%; right: ${100 - (maxVal / 180 * 100)}%;`;
    
     async function processDeg(inputDeg){
