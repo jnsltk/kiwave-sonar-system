@@ -6,6 +6,16 @@ before_script:
   - cd SonarVisualizer
   - npm install
 
+#run npm run build on the GUI to ensure that it compiles.
+build-job:
+  #we want the the docker runner to execute this as the image can be run on a docker runner only
+  tags:
+    - docker
+  # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
+  script:
+    - npm run build
+  
+
 # we build the first job which configures dependencies on the Gitlab runner
 test-job:
   #we want the the docker runner to execute this as the image can be run on a docker runner only
