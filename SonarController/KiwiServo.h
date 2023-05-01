@@ -1,7 +1,6 @@
 #ifndef KiwiServo_h
 #define KiwiServo_h
 #include "Arduino.h"
-
 class KiwiServo {
     public:
     KiwiServo(int sigPin);

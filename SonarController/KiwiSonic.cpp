@@ -1,12 +1,16 @@
 #include "Arduino.h"
 #include "KiwiSonic.h"
-
 KiwiSonic::KiwiSonic(int sigPin,long maxDistance) {
   //Setting private variables to passed arguments.
   _sigPin = sigPin;
   _maxDistance = maxDistance;
 }
-
+static void safeDelayMicro(int us){
+  long timeRunning=millis()*1000;
+   while(((millis()*1000)-timeRunning)<us){
+    //Perform non-blocking delay.
+   }
+}
 
 
 //Returns the time duration of transmitting waves and receiving an echo.
@@ -20,13 +24,17 @@ int KiwiSonic::ping() {
   
   pinMode(_sigPin, OUTPUT); //Set signal pin to "transmit mode".
   digitalWrite(_sigPin, LOW); //Ensuring that we stop all outgoing signals. 
-  delayMicroseconds(2);
+  safeDelayMicro(4);
   digitalWrite(_sigPin, HIGH);  //Transmitting waves
-  delayMicroseconds(5);        //Delay so that enough waves are transmitted.
+  safeDelayMicro(10);        //Delay so that enough waves are transmitted.
   digitalWrite(_sigPin, LOW);   //Stop transmitting
   pinMode(_sigPin, INPUT);      //Set signal pin to "receive mode"
   return pulseIn(_sigPin, HIGH); //Await echo. Returns time duration that it took to receive echo.
 }
+
+
+
+
 
 /*
 *
@@ -41,7 +49,6 @@ int KiwiSonic::ping() {
 * 
 */
 long KiwiSonic::calculateDistance(float temperature) {
-  //
   long distance=((ping() * (331.4 + (0.6 * temperature))) / 10000) / 2;
   return distance>_maxDistance?-1:distance;
 }
