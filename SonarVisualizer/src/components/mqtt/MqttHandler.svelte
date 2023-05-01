@@ -1,6 +1,6 @@
 <script>
     // @ts-nocheck
-    import mqtt_client from 'u8-mqtt'
+    import mqtt_client from '../../mqtt' // or v4.min.js or v5.min.js    import {sonarStore,sonarCommands} from "../../data/stores.js";
     import {sonarStore,sonarCommands} from "../../data/stores.js";
 
     const BROKER="mqtt.jnsl.tk";
