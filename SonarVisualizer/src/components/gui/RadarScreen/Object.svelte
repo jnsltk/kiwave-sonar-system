@@ -69,19 +69,18 @@
      */
     const drawObjectFrom = (context, deg, dist, width, height, currentlyActive) => {
         // Calculate coordinates for the endpoint for the line on the circle
-        for (let i = parseInt(deg) - 7; i < parseInt(deg) + 8; i++) {
-            const startCoordinates = getCoordinates(i, dist, $sonarCommands.sonarData.sRange, screenRadius);
-            const endCoordinates = getCoordinates(i, $sonarCommands.sonarData.sRange, $sonarCommands.sonarData.sRange, screenRadius);
+            const startCoordinates = getCoordinates(deg, dist, $sonarCommands.sonarData.sRange, screenRadius);
+            const endCoordinates = getCoordinates(deg, $sonarCommands.sonarData.sRange, $sonarCommands.sonarData.sRange, screenRadius);
             context.save();
             context.translate(width / 2, height / 2);
             context.beginPath();
             context.strokeStyle = objectColor;
-            context.lineWidth = 2;
+            context.lineWidth = 5;
             context.moveTo(startCoordinates.x, startCoordinates.y);
             context.lineTo(endCoordinates.x, endCoordinates.y);
             context.stroke();
             context.restore();
-        }
+        
         // Draws the highlighted line last so it's not drawn on and covered
         if (currentlyActive) {
             const startCoordinates = getCoordinates(deg, dist, $sonarCommands.sonarData.sRange, screenRadius);
