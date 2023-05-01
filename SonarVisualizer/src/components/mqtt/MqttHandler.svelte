@@ -6,11 +6,9 @@
     const BROKER="mqtt.jnsl.tk";
     const BROKER_PORT="443";
     const REPORTING_TOPIC="KiWaveSonarData";
-    const COMMANDING_TOPIC="KiWaveSonarCommand";
-    const STOP_COMMAND="STP";
-    const START_COMMAND="STR";
-    const SET_SECTOR_COMMAND="SSR";
-    const SET_RANGE_COMMAND="SRR";
+    const RECEIVED_CONFIRMATION="RCVD";
+    const CONNECTED_CONFIRMATION="CNCTD"
+    let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
     let mqttConnected=false;
@@ -48,22 +46,58 @@
       await mqttSubscribe(REPORTING_TOPIC,callback);
     }
 
+    async function interpretPotentialConfirmation(data){
+      if(data.includes(RECEIVED_CONFIRMATION)){
+        $sonarStore.sonarStatus.lastCommandReceived=true;
+        console.log("Last command was received by sonar.");
+        return true;
+      } else if (data.includes(CONNECTED_CONFIRMATION)){
+        $sonarStore.sonarStatus.isOnline=true;
+        console.log("Sonar is online.");
+        return true;
+      }
+      return false;
+    }
+
+    setInterval(async function(){
+        let entry=measurementsQueue.shift();
+        if(entry==undefined){
+          $sonarStore.sonarStatus.isOnline=false;
+          return;
+        }
+
+      //The servo rotates CCW which is why we need to invert the received degrees.
+
+      //Updating the store with the new data.
+        $sonarStore.sonarData.rRange1=entry.rRange1;
+        $sonarStore.sonarData.rRange2=entry.rRange2;
+        $sonarStore.sonarData.rDeg1=entry.rDeg1;
+      //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
+        $sonarStore.sonarData.rDeg2=entry.rDeg2;
+      //For logging purposes
+        console.log($sonarStore.sonarData)
+
+    },300);
+
     //Callback function of mqtt connection. Runs every time we get a new message.
     async function mqttCallback(data){
       //Decoding bytes to string.
         const parsedData = new TextDecoder().decode(data.payload);
+        console.log(parsedData)
+        if(await interpretPotentialConfirmation(parsedData)) return;
       //Splitting by predetermined splitter.
-        const parsedArray=parsedData.split("/");
-      //The servo rotates CCW which is why we need to invert the received degrees.
-        parsedArray[3]=360-parseInt(parsedArray[3]);
-      //Updating the store with the new data.
-        $sonarStore.sonarData.rRange1=parseInt(parsedArray[1]);
-        $sonarStore.sonarData.rRange2=parseInt(parsedArray[2]);
-        $sonarStore.sonarData.rDeg1=parseInt(parsedArray[3]);
-      //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
-        $sonarStore.sonarData.rDeg2=parseInt(parsedArray[3])-180;
-      //For logging purposes
-        console.log($sonarStore.sonarData)
+      const parsedArray=parsedData.split("/");
+         
+        for(let i=1;i<parsedArray.length;i+=3){
+          let queueEntry={
+            "rRange1":parseInt(parsedArray[i]),
+            "rRange2":parseInt(parsedArray[i+1]),
+            "rDeg1":(360-parseInt(parsedArray[i+2])),
+            "rDeg2":(360-parseInt(parsedArray[i+2]))-180
+          }
+          measurementsQueue.push(queueEntry);
+        }
+
     }
 
     async function copyStore(){

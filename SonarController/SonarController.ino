@@ -21,6 +21,7 @@ long lastUpdateTime=0;
 const long updateInterval=5000;
 int from=0;
 int to=180;
+int maxMeasurements=5;
 void safeDelay(int ms){
   long timeRunning=millis();
    while((millis()-timeRunning)<ms){
@@ -33,6 +34,10 @@ uint8_t STR[3]={83,84,82}; //Start
 uint8_t SSR[3]={83,83,82}; //Set sector
 uint8_t SRR[3]={83,82,82}; //Set range
 
+int sonar1Measurement[5]={-1,-1,-1,-1,-1};
+int sonar2Measurement[5]={-1,-1,-1,-1,-1};
+int degrees[5]={-1,-1,-1,-1,-1};
+int measurementsMade=0;
 
 void callback(char* topic, uint8_t* data, unsigned int msglen){
   //We know that the msg header is the first three bytes.
@@ -48,14 +53,19 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
   if (memcmp(msgHeader,STP,sizeof(msgHeader))==0){
         Serial.println("RCV: Stop Sonar");        
         servoRun=false;
+        wireless.publish("RCVD");
+
         Serial.println("Stopping sonar");
     } else if(memcmp(msgHeader,STR,sizeof(msgHeader))==0){
         Serial.println("RCV: Start Sonar");        
         servoRun=true;
+        wireless.publish("RCVD");
+
         Serial.println("Starting sonar");
     } else if(memcmp(msgHeader,SSR,sizeof(msgHeader))==0){
         Serial.println("RCV: Go To Sector"); 
-        
+        wireless.publish("RCVD");
+
         char charFrom[3];
         char charTo[3]; 
 
@@ -81,6 +91,7 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
         Serial.println("RCV: Set Range"); 
         char charFrom[3];
         char charTo[3]; 
+        wireless.publish("RCVD");
 
         int c=0;
         for(int i=3;i<6;i++){
@@ -126,16 +137,31 @@ wireless.setCallback(callback);
 Serial.println("Callback set");
 }
 
+void sendBundle(){
+  String bundle=String("M");
+  for(int i=0;i<maxMeasurements;i++){
+    bundle=bundle+String("/")+sonar1Measurement[i]+String("/")+sonar2Measurement[i]+String("/")+degrees[i];
+  }
+  wireless.publish(bundle);
+}
+
 void record(int degree){
+  if(measurementsMade>=maxMeasurements){
+    sendBundle();
+    measurementsMade=0;    
+  }
+  
   int measure1=ultrasonicSensor1.calculateDistance(temperature);
   safeDelay(250);
   int measure2=ultrasonicSensor2.calculateDistance(temperature);
   int reportedMeasurement1=measure1<maxRange1?measure1:-1;
   int reportedMeasurement2=measure2<maxRange2?measure2:-1;
+  sonar1Measurement[measurementsMade]=reportedMeasurement1;
+  sonar2Measurement[measurementsMade]=reportedMeasurement2;
+  degrees[measurementsMade]=degree;
+  measurementsMade=measurementsMade+1;
 
-  String measureData=String("M/")+ reportedMeasurement1+String("/")+ reportedMeasurement2+String("/")+degree;
 
-  wireless.publish(measureData);
 
 }
 
@@ -160,6 +186,8 @@ void loop(){
     Serial.println("Broker disconnected");
     wireless.connect();
     Serial.println("Connected");
+    //Short for connected. We send this to let front-end know we received command.
+    wireless.publish("CNCTD");
   } else {
     long currentTime=millis(); //Retrieving the number ms the Wio terminal has been alive.
     if((currentTime-lastUpdateTime)>=updateInterval){
