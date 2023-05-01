@@ -5,9 +5,56 @@
     let minVal = 0;
     let maxVal = 180;
 
+    let inputMin;
+    let inputMax;
 
-    $: leftProgressStyle = `left: ${minVal / 180 * 100}%`;
-    $: rightProgressStyle = `right: ${100 - (maxVal / 180 * 100)}%`;
+    $: minValRange = minVal;
+    $: maxValRange =  maxVal;
+
+  //check new max input  
+  function checkMaxVal(inputElem) {
+    let newMaxVal = parseInt(inputElem.value);
+
+    if (newMaxVal > 180) {
+      newMaxVal = 180;
+    }
+
+    if (newMaxVal - minVal < 15) {
+      if (minVal === 0) {
+        newMaxVal = 15;
+      } else if (newMaxVal === 180) {
+        minVal = 180 - 15;
+      } else {
+        newMaxVal = minVal + 15;
+      }
+    }
+
+    inputElem.value = newMaxVal;
+    maxVal = newMaxVal;
+  }
+
+  // checks new min value
+  function checkMinVal(inputElem) {
+    let newMinVal = parseInt(inputElem.value);
+
+    if (newMinVal < 0) {
+      newMinVal = 0;
+    }
+
+    if (maxVal - newMinVal < 15) {
+      if (newMinVal === 0) {
+        maxVal = 15;
+      } else if (maxVal === 180) {
+        newMinVal = 180 - 15;
+      } else {
+        maxVal = newMinVal + 15;
+      }
+    }
+
+    inputElem.value = newMinVal;
+    minVal = newMinVal;
+  }
+
     $: progressStyle = `left: ${minVal / 180 * 100}%; right: ${100 - (maxVal / 180 * 100)}%;`;
    
     async function processDeg(inputDeg){
@@ -55,25 +102,23 @@
     <p>Select sector</p>
     <div class="degree-input">
       <div class="field">
-        <span>
-          <p>Start degree</p>
-          </span>
-        <input on:change={()=>setSector()} type="number" class="input-min" min="0" max="180" bind:value={minVal}>
+        <span>Start degree</span>
+        <input on:change={()=>setSector()}  on:blur={(e)=>checkMinVal(e.target)} type="number" class="input-min" min="0" max="180"  value={minVal} bind:this={inputMin}>
       </div>
       <div class="field">
         <span>
           <p>End degree</p>
          </span>
 
-        <input on:change={()=>setSector()} type="number" class="input-max" min="15" max="180" bind:value={maxVal}>
+        <input on:change={()=>setSector()} on:blur={(e)=>checkMaxVal(e.target)} type="number"  class="input-max" min="15" max="180" value={maxVal} bind:this={inputMax}>
       </div>
     </div>
     <div class="slider">
       <div class="progress" style={progressStyle}></div>
     </div>
     <div class="range-input">
-      <input  on:change={()=>setSector()} type="range" class="range-min" min="0" max="180" bind:value={minVal}>
-      <input  on:change={()=>setSector()} type="range" class="range-max" min="0" max="180" bind:value={maxVal}>
+      <input  on:change={()=>setSector()} type="range" class="range-min" min="0" max="180" bind:value={minValRange}>
+      <input  on:change={()=>setSector()} type="range" class="range-max" min="0" max="180" bind:value={maxValRange}>
     </div>
   </div>
   

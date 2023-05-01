@@ -1,6 +1,5 @@
 import { render , fireEvent, getByTitle, getByText, waitFor} from '@testing-library/svelte';
-import ScanButton from './ScanButton.svelte';
-
+import ScanButton from "../components/gui/ScanButton.svelte";
 describe('ScanButton', () => {
 
     test('response to click scan button', async () => {
