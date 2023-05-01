@@ -1,17 +1,19 @@
 <script>
     import { sonarCommands } from "../../data/stores";
-   async function toggleScan() {
-    $sonarCommands.sonarData.runSonar=!$sonarCommands.sonarData.runSonar;
-   }
 
+    let status = 'Start';
+
+
+    async function toggleScan() {
+        $sonarCommands.sonarData.runSonar=!$sonarCommands.sonarData.runSonar;
+
+        !$sonarCommands.sonarData.runSonar ? status = 'Start' : status = 'Stop';
+
+    }
+   
 </script>
-
-
-    {#if !$sonarCommands.sonarData.runSonar}
-        <button class='my-button' class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()}>Start scanning</button>
-    {:else}
-        <button class='my-button' class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()}>Stop scanning</button>
-    {/if}
+ 
+    <button class='my-button' class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()}>{status} scanning</button>
 
     <style>
 
