@@ -21,6 +21,7 @@
     .scan-button{
         color: #f8f0f0;
         background-color: #007AFF;
+        font-family: 'Inter', sans-serif;
         width: 85%;
         height: 80px;
         border-radius: 20px;
