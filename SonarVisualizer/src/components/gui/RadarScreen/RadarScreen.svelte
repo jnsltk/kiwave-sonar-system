@@ -6,6 +6,7 @@
     import SectorLines from "./SectorLines.svelte";
   import { getDegDist } from "./utils";
   import { sonarCommands } from "../../../data/stores";
+  import Tooltip from "./Tooltip.svelte";
     
     /*
     Sonar store can be accessible at all times and contains the mapping: 
@@ -19,6 +20,10 @@
    
     let width;
     let canvas;
+    let tooltipX;
+    let tooltipY;
+    let displayTooltip;
+    let tooltipVal;
 
     // Set the canvas width in proportion with the client window's outer width, also depending on the breakpoint at 600 pixels
     $: canvasWidth = (width > 1000) ? (width / 2.3)
@@ -44,13 +49,21 @@
 
 </script>
 
-<svelte:window bind:outerWidth={width}/>
+<svelte:window 
+    bind:outerWidth={width} 
+    on:click={(e) => {
+            console.log(e)
+        }}/>
 
 <div id="canvas" bind:this={canvas}>
     <Canvas
         on:click={(e) => {
             let mousePos = getMousePosition(e, canvas);
-            console.log(getDegDist(mousePos.x, mousePos.y, parseInt($sonarCommands.sonarData.sRange), screenRadius));
+            tooltipX = e.clientX;
+            tooltipY = e.clientY;
+            tooltipVal = getDegDist(mousePos.x, mousePos.y, parseInt($sonarCommands.sonarData.sRange), screenRadius);
+            displayTooltip = (tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange)) ? true : false;
+            console.log(tooltipVal, parseInt($sonarCommands.sonarData.sRange), displayTooltip)
         }}
         width={canvasWidth} 
         height={canvasWidth} >
@@ -58,6 +71,11 @@
         <Object {screenRadius}/>
         <SectorLines {screenRadius} />
     </Canvas>
+    <Tooltip 
+        x={tooltipX} 
+        y={tooltipY}
+        value={tooltipVal}
+        displayTooltip={displayTooltip}/>
 </div>
 
 <style>
