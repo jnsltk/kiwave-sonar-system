@@ -43,6 +43,11 @@
         };
     }
 
+    const isInCanvas = (e, canvas) => {
+        const rect = canvas.getBoundingClientRect();
+        return !((rect.x + rect.width) < e.clientX || rect.y + rect.height < e.clientY || rect.x > e.clientX || rect.y > e.clientY);
+    }
+
     onMount(() => {
         console.log("RadarScreen mounted");
     });
@@ -52,7 +57,7 @@
 <svelte:window 
     bind:outerWidth={width} 
     on:click={(e) => {
-            console.log(e)
+            displayTooltip = isInCanvas(e, canvas) && tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange);
         }}/>
 
 <div id="canvas" bind:this={canvas}>
@@ -62,7 +67,7 @@
             tooltipX = e.clientX;
             tooltipY = e.clientY;
             tooltipVal = getDegDist(mousePos.x, mousePos.y, parseInt($sonarCommands.sonarData.sRange), screenRadius);
-            displayTooltip = (tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange)) ? true : false;
+            displayTooltip = (tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange));
             console.log(tooltipVal, parseInt($sonarCommands.sonarData.sRange), displayTooltip)
         }}
         width={canvasWidth} 
