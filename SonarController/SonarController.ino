@@ -13,6 +13,8 @@ KiwiTemp tempSensor(A0);
 KiwiServo servo(D2);
 KiwiMQTT wireless(ssid,secret);
 bool servoRun=false;
+bool track=false;
+bool objectFound=false;
 bool result=false;
 float temperature=0;
 int maxRange1=999;
@@ -145,7 +147,7 @@ void sendBundle(){
   wireless.publish(bundle);
 }
 
-void record(int degree){
+bool record(int degree){
   if(measurementsMade>=maxMeasurements){
     sendBundle();
     measurementsMade=0;    
@@ -160,21 +162,38 @@ void record(int degree){
   sonar2Measurement[measurementsMade]=reportedMeasurement2;
   degrees[measurementsMade]=degree;
   measurementsMade=measurementsMade+1;
-
-
-
+  if(track && reportedMeasurement1>-1 || reportedMeasurement2>-1){
+    return true;
+  }
+  return false;
 }
 
 void spin(){
+  if(!track){
+    from=0;
+    to=180;
+  }
   if(servoRun){
   for(int i=from;i<to;i+=15){
     servo.goTo(i);
-    record(i);
+    if(record(i)){
+      if(track){
+        while(record(i)){
+          safeDelay(100);
+        }
+      }
+    }
     safeDelay(100);
   }
   for(int i=to;i>from;i-=15){
     servo.goTo(i);
-    record(i);
+    if(record(i)){
+      if(track){
+        while(record(i)){
+          safeDelay(100);
+        }
+      }
+    }
     safeDelay(100);
   }
   }
@@ -187,7 +206,7 @@ void loop(){
     wireless.connect();
     Serial.println("Connected");
     //Short for connected. We send this to let front-end know we received command.
-    wireless.publish("CNCTD");
+   
   } else {
     long currentTime=millis(); //Retrieving the number ms the Wio terminal has been alive.
     if((currentTime-lastUpdateTime)>=updateInterval){
@@ -198,6 +217,7 @@ void loop(){
       Serial.println("Sweep");
       lastUpdateTime=currentTime; //Updating the variable that keeps track how often we fetch new messages.
       result=wireless.sweep(); //Fetching new messages from MQTT broker.
+      wireless.publish("CNCTD");
       Serial.println(result);
       if(result==1){
           spin(); //Perform rotation in accorance to the specified sector.
