@@ -13,6 +13,8 @@ KiwiTemp tempSensor(A0);
 KiwiServo servo(D2);
 KiwiMQTT wireless(ssid,secret);
 bool servoRun=false;
+bool track=false;
+bool objectFound=false;
 bool result=false;
 float temperature=0;
 int maxRange1=999;
@@ -33,7 +35,8 @@ uint8_t STP[3]={83,84,80}; //Stop
 uint8_t STR[3]={83,84,82}; //Start
 uint8_t SSR[3]={83,83,82}; //Set sector
 uint8_t SRR[3]={83,82,82}; //Set range
-
+uint8_t TRK[3]={84,82,75}; //Track
+uint8_t SRK[3]={83,82,75}; //Stop Track
 int sonar1Measurement[5]={-1,-1,-1,-1,-1};
 int sonar2Measurement[5]={-1,-1,-1,-1,-1};
 int degrees[5]={-1,-1,-1,-1,-1};
@@ -59,6 +62,18 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
     } else if(memcmp(msgHeader,STR,sizeof(msgHeader))==0){
         Serial.println("RCV: Start Sonar");        
         servoRun=true;
+        wireless.publish("RCVD");
+
+        Serial.println("Starting sonar");
+    } else if(memcmp(msgHeader,TRK,sizeof(msgHeader))==0){
+        Serial.println("RCV: Tracking mode");        
+        track=true;
+        wireless.publish("RCVD");
+
+        Serial.println("Starting sonar");
+    }else if(memcmp(msgHeader,SRK,sizeof(msgHeader))==0){
+        Serial.println("RCV: Stop Tracking mode");        
+        track=false;
         wireless.publish("RCVD");
 
         Serial.println("Starting sonar");
@@ -145,7 +160,7 @@ void sendBundle(){
   wireless.publish(bundle);
 }
 
-void record(int degree){
+bool record(int degree){
   if(measurementsMade>=maxMeasurements){
     sendBundle();
     measurementsMade=0;    
@@ -160,25 +175,79 @@ void record(int degree){
   sonar2Measurement[measurementsMade]=reportedMeasurement2;
   degrees[measurementsMade]=degree;
   measurementsMade=measurementsMade+1;
-
-
-
+  if(track && reportedMeasurement2>-1){
+    return true;
+  } 
+  return false;
 }
 
 void spin(){
   if(servoRun){
   for(int i=from;i<to;i+=15){
     servo.goTo(i);
-    record(i);
+    if(record(i)){
+      if(track){
+        int degree=i;
+        bool keepTracking=true;
+        while(keepTracking){
+          safeDelay(100);
+          wireless.publish("TRK");
+          wireless.sweep();          
+          bool res=record(degree);
+          if(!res){
+            if((degree-15)>0){
+              servo.goTo(degree-15);
+              if(record(degree-15)){
+                  degree=degree-15;
+              } else if((degree+15)<180) {
+              servo.goTo(degree+15);
+                if(record(degree+15)){
+                  degree=degree+15;
+                } else {
+                    keepTracking=false;
+                }
+              }
+            } else if((degree+15)<180) {
+              servo.goTo(degree+15);
+                if(record(degree+15)){
+                  degree=degree+15;
+                } else if((degree-15)>0){
+              servo.goTo(degree-15);
+                  if(record(degree-15)){
+                    degree=degree-15;
+                  } else {
+                    keepTracking=false;
+                  }
+                }
+            }
+          }
+        }
+  
+
+        }
+   
+      }
+    }
     safeDelay(100);
-  }
-  for(int i=to;i>from;i-=15){
+      for(int i=to;i>from;i-=15){
     servo.goTo(i);
-    record(i);
+    if(record(i)){
+      if(track){
+        while(record(i)){
+          safeDelay(100);
+          wireless.publish("TRK");
+          wireless.sweep(); 
+
+        }
+
+      }
+    }
     safeDelay(100);
+    }
   }
+
   }
-}
+
 
 
 void loop(){
@@ -187,7 +256,7 @@ void loop(){
     wireless.connect();
     Serial.println("Connected");
     //Short for connected. We send this to let front-end know we received command.
-    wireless.publish("CNCTD");
+   
   } else {
     long currentTime=millis(); //Retrieving the number ms the Wio terminal has been alive.
     if((currentTime-lastUpdateTime)>=updateInterval){
@@ -198,6 +267,7 @@ void loop(){
       Serial.println("Sweep");
       lastUpdateTime=currentTime; //Updating the variable that keeps track how often we fetch new messages.
       result=wireless.sweep(); //Fetching new messages from MQTT broker.
+      wireless.publish("CNCTD");
       Serial.println(result);
       if(result==1){
           spin(); //Perform rotation in accorance to the specified sector.
