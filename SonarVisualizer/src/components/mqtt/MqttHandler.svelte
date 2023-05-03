@@ -12,7 +12,7 @@
     const TRACK_MODE="TRK";
     const MAX_QUEUE_LENGTH=300;
     const MIN_INTERVAL=25;
-    const MAX_INTERVAL=100;
+    const MAX_INTERVAL=75;
     let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
@@ -74,7 +74,7 @@
     let busy=false;
     let previousDeg=0;
     let previousQueueLength=0;
-    let fetchInterval=25;
+    let fetchInterval=MIN_INTERVAL;
     async function shiftAndDrawEntry(){
       if(busy) return;
       busy=true;
