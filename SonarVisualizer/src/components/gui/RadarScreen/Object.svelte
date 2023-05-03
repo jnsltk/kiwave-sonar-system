@@ -13,7 +13,7 @@
     let history = [];
 
     const activeSectorColor = "#007AFF"
-    $: objectColor = $darkModeSwitch.isDark ? "#d5d7d4" : "#767676";
+    $: objectColor = $darkModeSwitch.isDark ? "#c3c1c1" : "#767676";
     $: lineToObjectColor = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
         
 
