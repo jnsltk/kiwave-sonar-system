@@ -1,23 +1,26 @@
 <script>
   // @ts-nocheck
   
-  
+import {slide,fade } from "svelte/transition";
 import Sonar from './components/Sonar.svelte';
 import MqttHandler from './components/mqtt/MqttHandler.svelte';
 import ModeSwitch from './components/gui/ModeSwitch.svelte';
 import LoadingScene from './components/gui/LoadingScene.svelte';
 import {sonarStore} from "./data/stores";
 
-const isSonarOnline = $sonarStore.sonarStatus.isOnline;
+$: isSonarOnline = $sonarStore.sonarStatus.isOnline;
 
 </script>
 
 <main> 
    <MqttHandler/>
   {#if isSonarOnline}
+  <div transition:fade>
     <Sonar/>
+  </div>
   {:else}
-    <div class="loader">
+   <!-- If the sonar is not connected, show the loading scene -->
+    <div class="loader" transition:fade>
       <LoadingScene/>
     </div>
   {/if}
