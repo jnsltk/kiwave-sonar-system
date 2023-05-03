@@ -71,10 +71,7 @@
         cursor: pointer;
         border: 0;
     }
-  
-  p {
-    font-size: 18px;
-  }
+
   
     
 

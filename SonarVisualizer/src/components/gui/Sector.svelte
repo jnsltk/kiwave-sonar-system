@@ -102,7 +102,7 @@
     <p>Select sector</p>
     <div class="degree-input">
       <div class="field">
-        <span>Start degree</span>
+        <span><p>Start degree</p></span>
         <input on:change={()=>setSector()}  on:blur={(e)=>checkMinVal(e.target)} type="number" class="input-min" min="0" max="180"  value={minVal} bind:this={inputMin}>
       </div>
       <div class="field">

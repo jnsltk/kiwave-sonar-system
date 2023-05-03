@@ -21,12 +21,13 @@
     .scan-button{
         color: #f8f0f0;
         background-color: #007AFF;
+        font-family: 'Inter', sans-serif;
         width: 85%;
         height: 80px;
         border-radius: 20px;
         border: none;
         text-align: center;
-        margin-top: 1rem;
+        margin-top: 3rem;
         margin-bottom: 1rem;
         transition: all 0.2s ease;
         font-size: 20px;
@@ -34,8 +35,9 @@
     }
 
     @media screen and (max-width:600px){
-       .scan-button{ width:100%; 
-        margin-bottom: 0px;
+       .scan-button{ 
+        width:90%; 
+        margin-bottom: 50px;
         }
     }
 
