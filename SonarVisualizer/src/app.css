@@ -45,7 +45,7 @@ p{
  display: none;
 }
 
-.dark-mode canvas {
+.dark-mode #canvas {
   filter: drop-shadow(0px 0px 20px #1a1919) !important;
 }
 

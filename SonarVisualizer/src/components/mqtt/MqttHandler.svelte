@@ -9,8 +9,10 @@
     const RECEIVED_CONFIRMATION="RCVD";
     const CONNECTED_CONFIRMATION="CNCTD"
     const MEASUREMENT_ANGLE=15;
-    let lastKeepAliveReceived=0;
-    let considerDisconnectedAfter=10;
+    const TRACK_MODE="TRK";
+    const MAX_QUEUE_LENGTH=300;
+    const MIN_INTERVAL=25;
+    const MAX_INTERVAL=75;
     let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
@@ -67,6 +69,11 @@
         lastKeepAliveReceived=parseInt(Date.now()/1000)
         console.log("Sonar is online.");
         return true;
+      }else if (data.includes(TRACK_MODE)){
+        $sonarStore.sonarData.isTracking=true;        
+        $sonarStore.sonarData.trackingReportedAt=parseInt((Date.now()/1000));
+
+        return true;
       }
       return false;
     }
@@ -75,42 +82,45 @@
     }
     let busy=false;
     let previousDeg=0;
+    let previousQueueLength=0;
+    let fetchInterval=MIN_INTERVAL;
     async function shiftAndDrawEntry(){
       if(busy) return;
       busy=true;
-      do{
         let entry=measurementsQueue.shift();
         if(entry==undefined){
           busy=false;
           return;
         }
-          if(previousDeg<entry.rDeg1){
-          for(let i=15;i>0;i--){
-            $sonarStore.sonarData.rRange1=entry.rRange1;
-            $sonarStore.sonarData.rRange2=entry.rRange2;
-            $sonarStore.sonarData.rDeg1=entry.rDeg1-i;
-          //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
-            $sonarStore.sonarData.rDeg2=entry.rDeg2-i;
-            await sleep(20);
-          }
-        } else {
-          for(let i=15;i>0;i--){
-            $sonarStore.sonarData.rRange1=entry.rRange1;
-            $sonarStore.sonarData.rRange2=entry.rRange2;
-            $sonarStore.sonarData.rDeg1=entry.rDeg1+i;
-          //Subtracting 180 from this, since this sensor is positioned opposite of previous sensor.
-            $sonarStore.sonarData.rDeg2=entry.rDeg2+i;
-            await sleep(20);
-          }
-        }
-        previousDeg=entry.rDeg1
-      } while(measurementsQueue.length!=0);
+        if(entry.rRange1==-1) entry.rRange1=Infinity;
+        if(entry.rRange2==-1) entry.rRange2=Infinity;
+        $sonarStore.sonarData.rRange1=entry.rRange1;
+        $sonarStore.sonarData.rRange2=entry.rRange2;
+        $sonarStore.sonarData.rDeg1=entry.rDeg1;
+        $sonarStore.sonarData.rDeg2=entry.rDeg2;
       busy=false;
     }
-    setInterval(async function(){
+    async function queueShifter(){
+      let shifter=setInterval(async function(){
       await shiftAndDrawEntry()
+      if(measurementsQueue.length==0){
+        if(fetchInterval<MAX_INTERVAL){
+          fetchInterval+=1;
+          clearInterval(shifter);
+          queueShifter()
+        }
+      } else if(measurementsQueue.length>MAX_QUEUE_LENGTH) {
+        if(fetchInterval>MIN_INTERVAL){
+          fetchInterval-=1;
+          clearInterval(shifter);
+          queueShifter()
+        }
 
-    },200);
+      }
+     },fetchInterval);
+
+    }
+    queueShifter()
 
     //Callback function of mqtt connection. Runs every time we get a new message.
     async function mqttCallback(data){
@@ -122,13 +132,35 @@
       const parsedArray=parsedData.split("/");
          
         for(let i=1;i<parsedArray.length;i+=3){
-          let queueEntry={
-            "rRange1":parseInt(parsedArray[i]),
-            "rRange2":parseInt(parsedArray[i+1]),
-            "rDeg1":(360-parseInt(parsedArray[i+2])),
-            "rDeg2":(360-parseInt(parsedArray[i+2]))-180
+          let rRange1=parseInt(parsedArray[i])
+          let rRange2=parseInt(parsedArray[i+1])
+          let initDeg=(360-parseInt(parsedArray[i+2]));
+          if(previousDeg<(360-parseInt(parsedArray[i+2]))){
+            for(let i=initDeg-MEASUREMENT_ANGLE;i<initDeg;i++){
+              let queueEntry={
+                "rRange1":rRange1,
+                "rRange2":rRange2,
+                "rDeg1":i,
+                "rDeg2":i-180
+              }
+              if(!measurementsQueue.includes(queueEntry)){
+                measurementsQueue.push(queueEntry);
+              }
+            }
+          } else {
+            for(let i=initDeg+MEASUREMENT_ANGLE;i>initDeg;i--){
+              let queueEntry={
+                "rRange1":rRange1,
+                "rRange2":rRange2,
+                "rDeg1":i,
+                "rDeg2":i-180
+              }
+              if(!measurementsQueue.includes(queueEntry)){
+                measurementsQueue.push(queueEntry);
+              }
+            }
           }
-          measurementsQueue.push(queueEntry);
+          previousDeg=initDeg;
         }
 
     }
@@ -163,7 +195,13 @@
           storeCopy.sRange=$sonarCommands.sonarData.sRange
         }     
 
-    
+        $: if(storeCopy.trackMode!=$sonarCommands.sonarData.trackMode){
+          let command=($sonarCommands.sonarData.trackMode===false?"TRK":"SRK")
+          mqttSend("KiWaveSonarCommand",command);
+          storeCopy.trackMode=$sonarCommands.sonarData.trackMode;
+
+        }
+
       
       //Command to start and stop the sonar over MQTT
       $: if(storeCopy.runSonar!=$sonarCommands.sonarData.runSonar){

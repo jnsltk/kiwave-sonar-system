@@ -7,6 +7,8 @@ export let sonarStore=writable({
         "rDeg2": "0", //Distance of sonar      
         "rRange1": "0",
         "rRange2": "0",
+        "isTracking":false,
+        "trackingReportedAt":0,
         "ts":0 //Reported at timestamp
     },    
     "sonarStatus":{
@@ -19,6 +21,7 @@ export let sonarCommands=writable({
     //Data for sonar as per agreed description
     "sonarData":{
         "runSonar":false,
+        "trackMode":true,
         "sDeg1":"0",
         "sDeg2":"180",        
         "sRange": "350",
