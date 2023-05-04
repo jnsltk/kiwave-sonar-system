@@ -17,6 +17,14 @@
     let storeCopy={};
     let mqttClient;
     let mqttConnected=false;
+
+      setInterval(() => {
+        let timePassed=parseInt(Date.now()/1000)-lastKeepAliveReceived;
+        if(timePassed>10){
+          $sonarStore.sonarStatus.isOnline=false;
+        }
+      }, 500);
+
        async function mqttSend(topic,msg){
         if(!mqttConnected) console.log("Ignoring send request due to no connection to broker.");
         await mqttClient.send(
@@ -58,6 +66,7 @@
         return true;
       } else if (data.includes(CONNECTED_CONFIRMATION)){
         $sonarStore.sonarStatus.isOnline=true;
+        lastKeepAliveReceived=parseInt(Date.now()/1000)
         console.log("Sonar is online.");
         return true;
       }else if (data.includes(TRACK_MODE)){
