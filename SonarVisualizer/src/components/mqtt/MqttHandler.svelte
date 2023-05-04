@@ -9,7 +9,10 @@
     const RECEIVED_CONFIRMATION="RCVD";
     const CONNECTED_CONFIRMATION="CNCTD"
     const MEASUREMENT_ANGLE=15;
+    const TRACK_MODE="TRK";
     const MAX_QUEUE_LENGTH=300;
+    const MIN_INTERVAL=25;
+    const MAX_INTERVAL=75;
     let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
@@ -57,6 +60,11 @@
         $sonarStore.sonarStatus.isOnline=true;
         console.log("Sonar is online.");
         return true;
+      }else if (data.includes(TRACK_MODE)){
+        $sonarStore.sonarData.isTracking=true;        
+        $sonarStore.sonarData.trackingReportedAt=parseInt((Date.now()/1000));
+
+        return true;
       }
       return false;
     }
@@ -66,7 +74,7 @@
     let busy=false;
     let previousDeg=0;
     let previousQueueLength=0;
-    let fetchInterval=25;
+    let fetchInterval=MIN_INTERVAL;
     async function shiftAndDrawEntry(){
       if(busy) return;
       busy=true;
@@ -87,14 +95,18 @@
       let shifter=setInterval(async function(){
       await shiftAndDrawEntry()
       if(measurementsQueue.length==0){
-        fetchInterval+=0.1;
-        clearInterval(shifter);
-
-        queueShifter()
+        if(fetchInterval<MAX_INTERVAL){
+          fetchInterval+=1;
+          clearInterval(shifter);
+          queueShifter()
+        }
       } else if(measurementsQueue.length>MAX_QUEUE_LENGTH) {
-        fetchInterval-=0.1;
-        clearInterval(shifter);
-        queueShifter()
+        if(fetchInterval>MIN_INTERVAL){
+          fetchInterval-=1;
+          clearInterval(shifter);
+          queueShifter()
+        }
+
       }
      },fetchInterval);
 
@@ -122,7 +134,9 @@
                 "rDeg1":i,
                 "rDeg2":i-180
               }
-              measurementsQueue.push(queueEntry);
+              if(!measurementsQueue.includes(queueEntry)){
+                measurementsQueue.push(queueEntry);
+              }
             }
           } else {
             for(let i=initDeg+MEASUREMENT_ANGLE;i>initDeg;i--){
@@ -132,7 +146,9 @@
                 "rDeg1":i,
                 "rDeg2":i-180
               }
-              measurementsQueue.push(queueEntry);
+              if(!measurementsQueue.includes(queueEntry)){
+                measurementsQueue.push(queueEntry);
+              }
             }
           }
           previousDeg=initDeg;
@@ -170,7 +186,13 @@
           storeCopy.sRange=$sonarCommands.sonarData.sRange
         }     
 
-    
+        $: if(storeCopy.trackMode!=$sonarCommands.sonarData.trackMode){
+          let command=($sonarCommands.sonarData.trackMode===false?"TRK":"SRK")
+          mqttSend("KiWaveSonarCommand",command);
+          storeCopy.trackMode=$sonarCommands.sonarData.trackMode;
+
+        }
+
       
       //Command to start and stop the sonar over MQTT
       $: if(storeCopy.runSonar!=$sonarCommands.sonarData.runSonar){

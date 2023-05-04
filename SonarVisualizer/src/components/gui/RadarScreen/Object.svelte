@@ -16,7 +16,8 @@
     $: objectColor = $darkModeSwitch.isDark ? "#c3c1c1" : "#767676";
     $: lineToObjectColor = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
         
-
+    $: objectColorAdj = $darkModeSwitch.isDark ? "rgba(213, 215, 212, *OPC*)" : "rgba(118, 118, 118, *OPC*)";
+    $: lineToObjectColorAdj = $darkModeSwitch.isDark ? "rgba(59, 59, 59, *OPC*)" : "rgba(213, 215, 212, *OPC*)";
     /**
      * Draws 15 lines (because of the 15 degree measurement angle) from the center to the specified coordinates to erase 
      * previous object measurments. If called on the currently measured (active) sector, the line corresponding to the 
@@ -28,12 +29,12 @@
      * @param height Canvas height 
      * @param currentlyActive Boolean flag indicating whether the function is called on the currently measured (active) sector
      */
-    const drawLineTo = (context, deg, dist, width, height, currentlyActive) => {
+    const drawLineTo = (context, deg, dist, width, height, currentlyActive,color) => {
             const endCoordinates = getCoordinates(deg, dist, $sonarCommands.sonarData.sRange, screenRadius);
             context.save();
             context.translate(width / 2, height / 2);
             context.beginPath();
-            context.strokeStyle = lineToObjectColor;
+            context.strokeStyle = color;
             context.lineWidth = 5;
             context.moveTo(0, 0);
             context.lineTo(endCoordinates.x, endCoordinates.y);
@@ -47,7 +48,7 @@
             context.translate(width / 2, height / 2);
             context.beginPath();
             context.strokeStyle = activeSectorColor;
-            context.lineWidth = 4;
+            context.lineWidth = 1;
             context.moveTo(0, 0);
             context.lineTo(endCoordinates.x, endCoordinates.y);
             context.stroke();
@@ -67,14 +68,14 @@
      * @param height Canvas height 
      * @param currentlyActive Boolean flag indicating whether the function is called on the currently measured (active) sector
      */
-    const drawObjectFrom = (context, deg, dist, width, height, currentlyActive) => {
+    const drawObjectFrom = (context, deg, dist, width, height, currentlyActive,color) => {
         // Calculate coordinates for the endpoint for the line on the circle
             const startCoordinates = getCoordinates(deg, dist, $sonarCommands.sonarData.sRange, screenRadius);
             const endCoordinates = getCoordinates(deg, $sonarCommands.sonarData.sRange, $sonarCommands.sonarData.sRange, screenRadius);
             context.save();
             context.translate(width / 2, height / 2);
             context.beginPath();
-            context.strokeStyle = objectColor;
+            context.strokeStyle = color;
             context.lineWidth = 5;
             context.moveTo(startCoordinates.x, startCoordinates.y);
             context.lineTo(endCoordinates.x, endCoordinates.y);
@@ -89,7 +90,7 @@
             context.translate(width / 2, height / 2);
             context.beginPath();
             context.strokeStyle = activeSectorColor;
-            context.lineWidth = 4;
+            context.lineWidth = 1;
             context.moveTo(startCoordinates.x, startCoordinates.y);
             context.lineTo(endCoordinates.x, endCoordinates.y);
             context.stroke();
@@ -107,24 +108,26 @@
      */
     $: render = ({ context, width, height }) => {
         for (let i = 0; i < history.length; i++) {
+            let opacity=((1.0/history.length)*i).toString();
+
             if (history[i].dist1 > range) history[i].dist1 = range;
-            drawObjectFrom(context, history[i].deg1, history[i].dist1, width, height, false);
-            drawLineTo(context, history[i].deg1, history[i].dist1, width, height, false);
+            drawObjectFrom(context, history[i].deg1, history[i].dist1, width, height, false,objectColorAdj.replace("*OPC*",opacity));
+            drawLineTo(context, history[i].deg1, history[i].dist1, width, height, false,lineToObjectColor.replace("*OPC*",opacity));
 
             if (history[i].dist2 > range) history[i].dist2 = range;
-            drawObjectFrom(context, history[i].deg2, history[i].dist2, width, height, false);
-            drawLineTo(context, history[i].deg2, history[i].dist2, width, height, false);
+            drawObjectFrom(context, history[i].deg2, history[i].dist2, width, height, false,objectColorAdj.replace("*OPC*",opacity));
+            drawLineTo(context, history[i].deg2, history[i].dist2, width, height, false,lineToObjectColor.replace("*OPC*",opacity));
         }
 
         if (dist1 > range) dist1 = range;
-        drawObjectFrom(context, deg1, dist1, width, height, true);
-        drawLineTo(context, deg1, dist1, width, height, true);
+        drawObjectFrom(context, deg1, dist1, width, height, true,objectColor);
+        drawLineTo(context, deg1, dist1, width, height, true,lineToObjectColor);
 
         if (dist2 > range) dist2 = range;
-        drawObjectFrom(context, deg2, dist2, width, height, true);
-        drawLineTo(context, deg2, dist2, width, height, true);
+        drawObjectFrom(context, deg2, dist2, width, height, true,objectColor);
+        drawLineTo(context, deg2, dist2, width, height, true,lineToObjectColor);
         if(history.length>360){
-            history=[];
+            history.shift();
         }
         history.push({
             "deg1": deg1,

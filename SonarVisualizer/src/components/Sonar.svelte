@@ -7,6 +7,7 @@
     import Range from "./gui/Range.svelte";
     import Sector from "./gui/Sector.svelte";
     import ScanButton from "./gui/ScanButton.svelte";
+    import TrackMode from "./gui/TrackMode.svelte";
   
 
 </script>
@@ -22,6 +23,7 @@
     
     <div class="controls">
         <div class="group-sliders" id ="group-sliders">
+            <TrackMode/>
             <Range/>
             <Sector/>
         </div>
