@@ -182,10 +182,6 @@ bool record(int degree){
 }
 
 void spin(){
-  if(!track){
-    from=0;
-    to=180;
-  }
   if(servoRun){
   for(int i=from;i<to;i+=15){
     servo.goTo(i);
