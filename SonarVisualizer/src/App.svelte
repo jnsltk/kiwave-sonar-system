@@ -13,7 +13,7 @@ $: sonarIsOnline = $sonarStore.sonarStatus.isOnline;
 
 <main> 
    <MqttHandler/>
-  {#if !sonarIsOnline}
+  {#if sonarIsOnline}
   <div transition:fade>
     <Sonar/>
   </div>
