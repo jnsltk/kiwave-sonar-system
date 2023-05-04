@@ -1,20 +1,20 @@
 <script>
   // @ts-nocheck
   
-import {slide,fade } from "svelte/transition";
+import {fade } from "svelte/transition";
 import Sonar from './components/Sonar.svelte';
 import MqttHandler from './components/mqtt/MqttHandler.svelte';
 import ModeSwitch from './components/gui/ModeSwitch.svelte';
 import LoadingScene from './components/gui/LoadingScene.svelte';
 import {sonarStore} from "./data/stores";
 
-$: isSonarOnline = $sonarStore.sonarStatus.isOnline;
+$: sonarIsOnline = $sonarStore.sonarStatus.isOnline;
 
 </script>
 
 <main> 
    <MqttHandler/>
-  {#if isSonarOnline}
+  {#if sonarIsOnline}
   <div transition:fade>
     <Sonar/>
   </div>
