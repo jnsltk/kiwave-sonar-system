@@ -3,7 +3,7 @@
 
     let animationStarted = false;
   
-    function startAnimation() {
+    async function startAnimation() {
       animationStarted = true;
     }
   
