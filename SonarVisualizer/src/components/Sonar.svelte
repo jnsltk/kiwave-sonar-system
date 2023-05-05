@@ -133,6 +133,7 @@
         .screen {
             padding-right: 0;
             padding-bottom: 0px;
+            padding-left: 0;
         }   
     }
    
