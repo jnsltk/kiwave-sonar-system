@@ -1,6 +1,6 @@
 <script>
 // @ts-nocheck
-
+    
     import { sonarCommands,sonarStore } from "../../data/stores";
     async function toggleTrackMode(){
         if(!clearedBootInterval) {
@@ -40,7 +40,7 @@
     },1000)
 
 </script>
-    <div class="mt-2">
+    
 
         <button	class="{$sonarStore.sonarData.isTracking === true ? 'selected' : ''}" on:click={()=>toggleTrackMode()}>
             {#if $sonarCommands.sonarData.trackMode && notWaiting}
@@ -51,27 +51,17 @@
             Disable trackmode
             {/if}
         </button>
-        <div class="tooltip">
-            ?  
-        </div>
 
-        </div>
+
       <style>
 
-        .mt-2{
-            margin-top:2rem;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: end;
-            
-        }
+
         button{
             float: right;
             color: #f8f0f0;
             background-color: #007AFF;
             font-family: 'Inter', sans-serif;
-            border-radius: 20px;
+            border-radius: 10px;
             border: none;
             text-align: center;
             transition: all 0.2s ease;
@@ -88,21 +78,5 @@
             color: #007AFF;
             box-shadow: unset;
         }
-
-        .tooltip {
-            border: solid;
-            border-width: 1px;
-            border-color: #c3c1c1;
-            border-radius: 20px;
-            height: 20px;
-            width: 20px;
-            text-align: center;
-            margin-left: 5px;
-            color: #c3c1c1;
-            font-size: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            cursor: pointer;
-        }
+        
     </style>
