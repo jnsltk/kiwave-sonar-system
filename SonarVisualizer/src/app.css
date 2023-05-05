@@ -36,9 +36,11 @@ p{
 }
 
 .dark-mode .kiwave-dark{
-  width: 110px !important;
+  display: block !important;
+  width: 110px ;
   height: auto;
   padding-top: 10px;
+  padding-left: 15px;
 }
 
 .dark-mode .kiwave-light{
