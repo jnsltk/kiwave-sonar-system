@@ -50,7 +50,7 @@ p{
 }
 
 .dark-mode .tooltip::after {
-  background-color: #3b3b3b !important;
+  background-color: #4b4b4b !important;
   color: white !important;
 }
 
