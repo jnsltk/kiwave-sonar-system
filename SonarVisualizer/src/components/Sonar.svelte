@@ -9,16 +9,23 @@
     import ScanButton from "./gui/ScanButton.svelte";
     import TrackMode from "./gui/TrackMode.svelte";
     import TrackModeTooltip from "./gui/TrackModeTooltip.svelte";
+    import ModeSwitch from "./gui/ModeSwitch.svelte";
+
   
 
 </script>
 
 <!-- The order is arbitrary, feel free to modify. Ideally, create columns in separate divs -->
-<div class="container">
-    <div class="screen">
-
+<div class="header">
         <img src="KiWave-dark.png" class="kiwave-dark" alt="KiWave logo">
         <img src="KiWave-light.png" class="kiwave-light" alt="KiWave logo">
+        <div class="modeswitch">
+            <ModeSwitch/>  
+        </div>
+    </div>
+    <div class="container">
+    
+    <div class="screen">
         <RadarScreen/>
     </div>
     
@@ -31,14 +38,22 @@
             <Range/>
             <Sector/>
         </div>
-
         <ScanButton/>
     </div>
    
+    
+      
 </div>
 <style>
  
- .container {
+    .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 96%;
+    }
+
+    .container {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -50,6 +65,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding-left: 20px;
     }
 
     .controls {
@@ -62,16 +78,15 @@
     }
  
     .kiwave-dark{
-      width: 0;
+      display: none;
     }
     .kiwave-light{
       width: 110px;
-      height: auto;
+      height: 45px;
       padding-top: 10px;
+      padding-left: 15px;
     }
    
-   
-
     .group-sliders {
         padding: 1.8rem;
         border-radius: 20px;
@@ -92,6 +107,7 @@
        }
 
     } 
+
     @media only screen and (max-width: 1000px) {
         .container {
             flex-direction: column;

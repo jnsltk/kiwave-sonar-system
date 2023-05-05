@@ -4,7 +4,6 @@
 import {fade } from "svelte/transition";
 import Sonar from './components/Sonar.svelte';
 import MqttHandler from './components/mqtt/MqttHandler.svelte';
-import ModeSwitch from './components/gui/ModeSwitch.svelte';
 import LoadingScene from './components/gui/LoadingScene.svelte';
 import {sonarStore} from "./data/stores";
 
@@ -25,20 +24,10 @@ $: sonarIsOnline = $sonarStore.sonarStatus.isOnline;
     </div>
   {/if}
 
- 
-  <div class="modeswitch">
-    <ModeSwitch/>  
-  </div>
 </main>
 
 <style>
 
-  .modeswitch {
-      position: absolute;
-      top: 0.3rem;
-      right: 2rem;
-
-  }
 
     .loader {
     position: fixed;

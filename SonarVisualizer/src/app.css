@@ -36,9 +36,11 @@ p{
 }
 
 .dark-mode .kiwave-dark{
-  width: 110px !important;
+  display: block !important;
+  width: 110px ;
   height: auto;
   padding-top: 10px;
+  padding-left: 15px;
 }
 
 .dark-mode .kiwave-light{
@@ -52,6 +54,9 @@ p{
 .dark-mode .tooltip::after {
   background-color: #4b4b4b !important;
   color: white !important;
+
+.dark-mode .selected{
+ background-color: #3b3b3b !important;
 }
 
 
