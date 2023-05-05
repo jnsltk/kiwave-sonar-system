@@ -85,24 +85,28 @@
         justify-content: end;
         align-items: center;
     }
-    @media only screen and (max-width: 1300px) {
+    @media only screen and (max-width: 1350px) {
        .controls{
         margin-top: 100px;
+        transition: 0.2s;
        }
 
     } 
     @media only screen and (max-width: 1000px) {
         .container {
             flex-direction: column;
+            transition: 0.2s;
         }
         .controls {
             display: flex;
             flex-direction: column;
             justify-content: center;
             margin-top: 0px;
+            transition: 0.2s;
         }
         .screen {
             padding-right: 0;
+            padding-bottom: 20px;
         } 
 
     }
@@ -112,6 +116,7 @@
         } 
         .screen {
             padding-right: 0;
+            padding-bottom: 0px;
         }   
     }
    
