@@ -74,6 +74,7 @@
         box-shadow: unset;
     }
     .recieved {
+        background-color: #D9D9D9;
         color: #bcbcba; 
     }
 
@@ -88,7 +89,7 @@
       text-align: center;
       margin-top: 50px;
     }
-    
+
     .container {
       display: flex;
       flex-direction: column;
