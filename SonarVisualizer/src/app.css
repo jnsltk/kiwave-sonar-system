@@ -51,6 +51,10 @@ p{
   filter: drop-shadow(0px 0px 20px #1a1919) !important;
 }
 
+.dark-mode .tooltip::after {
+  background-color: #4b4b4b !important;
+  color: white !important;
+
 .dark-mode .selected{
  background-color: #3b3b3b !important;
 }

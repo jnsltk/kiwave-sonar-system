@@ -8,7 +8,9 @@
     import Sector from "./gui/Sector.svelte";
     import ScanButton from "./gui/ScanButton.svelte";
     import TrackMode from "./gui/TrackMode.svelte";
+    import TrackModeTooltip from "./gui/TrackModeTooltip.svelte";
     import ModeSwitch from "./gui/ModeSwitch.svelte";
+
   
 
 </script>
@@ -29,7 +31,10 @@
     
     <div class="controls">
         <div class="group-sliders" id ="group-sliders">
+            <div class="track-mode">
             <TrackMode/>
+            <TrackModeTooltip/>
+            </div>
             <Range/>
             <Sector/>
         </div>
@@ -89,30 +94,51 @@
         width:80%;
     }
 
+    .track-mode {
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+    }
+    @media only screen and (max-width: 1350px) {
+       .controls{
+        margin-top: 100px;
+        transition: 0.2s;
+       }
 
+    } 
+
+    @media only screen and (max-width: 1000px) {
+        .container {
+            flex-direction: column;
+            transition: 0.2s;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 0px;
+            transition: 0.2s;
+        }
+        .screen {
+            padding-right: 0;
+            padding-bottom: 20px;
+        } 
+
+    }
     @media only screen and (max-width: 600px) {
         .container {
             flex-direction: column;
         } 
         .screen {
             padding-right: 0;
-            padding-left: 0px;
+            padding-bottom: 0px;
+            padding-left: 0;
         }   
     }
-    @media only screen and (max-width: 1000px) {
-        .container {
-            flex-direction: column;
-        }
-        .controls {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .screen {
-            padding-right: 0;
-        } 
+   
 
-    }
+   
 
 
 </style>
