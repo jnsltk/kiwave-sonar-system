@@ -22,9 +22,10 @@
   
   <main>
     <div class="slideContainer">
-      <p>Range: <span>{range}</span> cm</p>
-      <!-- Coloring the left side of the range value-->
-      <input on:change={()=>setRange()} type="range" min="1" max="220" bind:value={range} id="myRange" class="slider"  style:background={`linear-gradient(90deg,#007AFF  ${100/220 * range}%,#D9D9D9  ${100/220 * range}%)`} > 
+      <!-- svelte-ignore a11y-unknown-role -->
+      <p role="label" >Range: <span>{range}</span> cm</p>
+      <!-- svelte-ignore a11y-no-abstract-role -->
+      <input on:change={()=>setRange()} type="range" data-testid="range" min="1" max="220" bind:value={range} id="myRange" class="slider"  style:background={`linear-gradient(90deg,#007AFF  ${100/220 * range}%,#D9D9D9  ${100/220 * range}%)`} > 
     </div>
   </main>
     
