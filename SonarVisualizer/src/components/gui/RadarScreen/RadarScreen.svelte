@@ -19,7 +19,7 @@
 
     // Set the canvas width in proportion with the client window's outer width, also depending on the breakpoint at 600 pixels
     $: canvasWidth = (width > 1000) ? (width / 2.3)
-                  : (width > 600 && width <= 1000) ? (width * 0.75)
+                  : (width > 600 && width <= 1000) ? (width * 0.9)
                   : (width * 0.95);
    
 
