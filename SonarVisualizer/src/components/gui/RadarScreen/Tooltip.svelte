@@ -1,60 +1,42 @@
 <script>
     import { Layer } from "svelte-canvas";
+    import { darkModeSwitch } from "../../../data/stores";
 
     export let x = 0;
     export let y = 0;
     export let value;
     export let displayTooltip = true;
 
-    const width = 100;
-    const height = 40;
+    const tooltipWidth = 88;
+    const tooltipHeight = 60;
 
-    $: text = (value != null) ? `Distance: ${Math.floor(value.dist)} \nDegree: ${Math.floor(value.deg)}` : "";
+    $: tooltipColor = ($darkModeSwitch.isDark) ? "#161616" : "#eef1ec";
+    $: fontColor = ($darkModeSwitch.isDark) ? "#fff" : "#000";
 
     console.log(x, y, value)
+
+    $: render = ({context, width, height}) => {
+        if (!displayTooltip) return;
+        context.save();
+
+        context.beginPath();
+        context.filter = "drop-shadow(rgba(0, 0, 0, 0.2) 0 2px 15px)";
+        context.fillStyle = tooltipColor;
+        context.roundRect(x - tooltipWidth / 2, y - tooltipHeight, tooltipWidth, tooltipHeight - 8, [10]);
+        context.fill()
+        context.moveTo(x - 7, y - 8);
+        context.lineTo(x, y);
+        context.lineTo(x + 7, y - 8);
+        context.fill();
+
+        context.beginPath();
+        context.fillStyle = fontColor;
+        context.font = "14px sans-serif"
+        context.fillText(`D: ${Math.floor(value.dist)} cm`, x - tooltipWidth / 2 + 12, y - tooltipHeight + 22);
+        context.fillText(`A: ${Math.floor(value.deg)}°`, x - tooltipWidth / 2 + 12, y - tooltipHeight + 40);
+
+        context.restore();
+    }
 </script>
 
-<div 
-    class="arrowBox"
-    style="
-        --after-border: {height / 4}px;
-        --after-margin-right: {-width / 10}px;
-        width: {width}px;
-        height: {height}px;
-        line-height: {height / 3}px;
-        left: {x - width / 2}px;
-        top: {y - height * 2 - 30}px;
-        display:{(displayTooltip) ? "block" : "none"};
-    ">
-    {text}
-</div>
-
-<style>
-    .arrowBox {
-        z-index: 10;
-        background-color: #252525;
-        border-radius: 2px;
-        position: absolute;
-        font-size: 0.725em;
-        font-weight: 200;
-        color: white;
-        text-align: center;
-        padding-top: 12px;
-        left: 500px;
-    }
-    .arrowBox:before {
-        content: " ";
-        z-index: 10;
-        width: 0px;
-        height: 0px;
-        border-top: var(--after-border) solid #252525;
-        border-left: var(--after-border) solid transparent;
-        border-bottom: var(--after-border) solid transparent;
-        border-right: var(--after-border) solid transparent;
-        border-radius: 2px;
-        position: absolute;
-        right: 50%;
-        top: 100%;
-        margin-right: var(--after-margin-right);
-  }
-</style>
+<Layer {render} />

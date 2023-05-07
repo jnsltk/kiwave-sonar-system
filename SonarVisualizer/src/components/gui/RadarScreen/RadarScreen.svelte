@@ -22,8 +22,9 @@
     let canvas;
     let tooltipX;
     let tooltipY;
-    let displayTooltip;
     let tooltipVal;
+
+    let displayTooltip = false;
 
     // Set the canvas width in proportion with the client window's outer width, also depending on the breakpoint at 600 pixels
     $: canvasWidth = (width > 1000) ? (width / 2.3)
@@ -38,12 +39,20 @@
     const getMousePosition = (e, canvas) => {
         const rect = canvas.getBoundingClientRect();
         return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        }
+    }
+
+    const getTranslatedMousePosition = (e, canvas) => {
+        const rect = canvas.getBoundingClientRect();
+        return {
             x: (e.clientX - rect.left) - canvasWidth / 2,
             y: -((e.clientY - rect.top) - canvasWidth / 2) 
         };
     }
 
-    const isInCanvas = (e, canvas) => {
+    const isPointerInCanvas = (e, canvas) => {
         const rect = canvas.getBoundingClientRect();
         return !((rect.x + rect.width) < e.clientX || rect.y + rect.height < e.clientY || rect.x > e.clientX || rect.y > e.clientY);
     }
@@ -57,30 +66,32 @@
 <svelte:window 
     bind:outerWidth={width} 
     on:click={(e) => {
-            displayTooltip = isInCanvas(e, canvas) && tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange);
+            displayTooltip = isPointerInCanvas(e, canvas) && tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange);
         }}/>
 
 <div id="canvas" bind:this={canvas}>
     <Canvas
         on:click={(e) => {
+            let translMousePos = getTranslatedMousePosition(e, canvas);
             let mousePos = getMousePosition(e, canvas);
-            tooltipX = e.clientX;
-            tooltipY = e.clientY;
-            tooltipVal = getDegDist(mousePos.x, mousePos.y, parseInt($sonarCommands.sonarData.sRange), screenRadius);
+            tooltipX = mousePos.x;
+            tooltipY = mousePos.y;
+            tooltipVal = getDegDist(translMousePos.x, translMousePos.y, parseInt($sonarCommands.sonarData.sRange), screenRadius);
             displayTooltip = (tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange));
-            console.log(tooltipVal, parseInt($sonarCommands.sonarData.sRange), displayTooltip)
+
         }}
         width={canvasWidth} 
         height={canvasWidth} >
         <Background {screenRadius} />
         <Object {screenRadius}/>
         <SectorLines {screenRadius} />
+        <Tooltip 
+            x={tooltipX} 
+            y={tooltipY}
+            value={tooltipVal}
+            displayTooltip={displayTooltip}/>
     </Canvas>
-    <Tooltip 
-        x={tooltipX} 
-        y={tooltipY}
-        value={tooltipVal}
-        displayTooltip={displayTooltip}/>
+    
 </div>
 
 <style>
