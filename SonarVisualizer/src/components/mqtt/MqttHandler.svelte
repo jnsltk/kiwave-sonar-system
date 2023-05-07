@@ -98,7 +98,6 @@
         $sonarStore.sonarData.rRange2=entry.rRange2;
         $sonarStore.sonarData.rDeg1=entry.rDeg1;
         $sonarStore.sonarData.rDeg2=entry.rDeg2;
-        console.log($sonarStore.sonarData)
       busy=false;
     }
     async function queueShifter(){
