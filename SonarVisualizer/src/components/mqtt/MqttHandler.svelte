@@ -17,7 +17,7 @@
     let storeCopy={};
     let mqttClient;
     let mqttConnected=false;
-
+  let lastKeepAliveReceived;
       setInterval(() => {
         let timePassed=parseInt(Date.now()/1000)-lastKeepAliveReceived;
         if(timePassed>10){
@@ -98,6 +98,7 @@
         $sonarStore.sonarData.rRange2=entry.rRange2;
         $sonarStore.sonarData.rDeg1=entry.rDeg1;
         $sonarStore.sonarData.rDeg2=entry.rDeg2;
+        console.log($sonarStore.sonarData)
       busy=false;
     }
     async function queueShifter(){
@@ -124,6 +125,7 @@
 
     //Callback function of mqtt connection. Runs every time we get a new message.
     async function mqttCallback(data){
+      
       //Decoding bytes to string.
         const parsedData = new TextDecoder().decode(data.payload);
         console.log(parsedData)
