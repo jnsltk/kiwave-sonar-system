@@ -17,7 +17,7 @@
     let storeCopy={};
     let mqttClient;
     let mqttConnected=false;
-
+  let lastKeepAliveReceived;
       setInterval(() => {
         let timePassed=parseInt(Date.now()/1000)-lastKeepAliveReceived;
         if(timePassed>10){
@@ -124,6 +124,7 @@
 
     //Callback function of mqtt connection. Runs every time we get a new message.
     async function mqttCallback(data){
+      
       //Decoding bytes to string.
         const parsedData = new TextDecoder().decode(data.payload);
         console.log(parsedData)
