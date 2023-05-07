@@ -18,7 +18,12 @@
     let width;
 
     // Set the canvas width in proportion with the client window's outer width, also depending on the breakpoint at 600 pixels
-    $: canvasWidth = (width > 600) ? (width / 2.3) : (width * 0.95);
+    $: canvasWidth = (width > 1000) ? (width / 2.3)
+                  : (width > 600 && width <= 1000) ? (width * 0.9)
+                  : (width * 0.95);
+   
+
+   
     // Set the radius of the radar screen in proportion of the width of the canvas, leaving larger margin on mobile for the labels
     $: screenRadius = (width > 600) ? (canvasWidth / 2) * 0.9 : (canvasWidth / 2) * 0.85;
 

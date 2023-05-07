@@ -123,19 +123,11 @@
         .screen {
             padding-right: 0;
             padding-bottom: 20px;
+            padding-left: 0;
         } 
 
     }
-    @media only screen and (max-width: 600px) {
-        .container {
-            flex-direction: column;
-        } 
-        .screen {
-            padding-right: 0;
-            padding-bottom: 0px;
-            padding-left: 0;
-        }   
-    }
+
    
 
    
