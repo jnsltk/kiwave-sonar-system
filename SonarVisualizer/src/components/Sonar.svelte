@@ -127,11 +127,7 @@
         } 
 
     }
-    @media only screen and (max-width: 600px) {
-        .container {
-            flex-direction: column;
-        } 
-    }
+
    
 
    
