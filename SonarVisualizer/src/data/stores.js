@@ -13,7 +13,7 @@ export let sonarStore=writable({
     },    
     "sonarStatus":{
         "lastCommandReceived":true,
-        "isOnline":true
+        "isOnline": false
     }
 })
 
