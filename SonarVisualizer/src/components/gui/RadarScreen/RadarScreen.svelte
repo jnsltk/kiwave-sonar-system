@@ -4,9 +4,9 @@
     import Background from "./Background.svelte";
     import Object from "./Object.svelte";
     import SectorLines from "./SectorLines.svelte";
-  import { getDegDist } from "./utils";
-  import { sonarCommands } from "../../../data/stores";
-  import Tooltip from "./Tooltip.svelte";
+    import { getDegDist } from "./utils";
+    import { sonarCommands } from "../../../data/stores";
+    import Tooltip from "./Tooltip.svelte";
     
     /*
     Sonar store can be accessible at all times and contains the mapping: 
