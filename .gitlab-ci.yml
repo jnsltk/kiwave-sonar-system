@@ -8,7 +8,7 @@ stages:
   
 # before building we need to install the dependencies on the runner and change directory to SonarVisualizer.
 before_script:
-  - apt install -y sshpass scp openssh-client
+  - apt-get install -y sshpass scp openssh-client
   - cd SonarVisualizer
   - npm install
 
