@@ -24,7 +24,7 @@ export let sonarCommands=writable({
         "trackMode":true,
         "sDeg1":"0",
         "sDeg2":"180",        
-        "sRange": "350",
+        "sRange": "100",
         "ts":0 //Reported at timestamp
     },
 
