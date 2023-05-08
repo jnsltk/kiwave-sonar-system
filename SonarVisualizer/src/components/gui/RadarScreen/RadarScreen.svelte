@@ -89,7 +89,8 @@
             x={tooltipX} 
             y={tooltipY}
             value={tooltipVal}
-            displayTooltip={displayTooltip}/>
+            displayTooltip={displayTooltip}
+            {screenRadius}/>
     </Canvas>
     
 </div>
