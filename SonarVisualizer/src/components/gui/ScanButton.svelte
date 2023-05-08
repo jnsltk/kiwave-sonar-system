@@ -1,18 +1,8 @@
 <script>
     import { sonarCommands, sonarStore } from "../../data/stores";
-    import { onMount } from 'svelte';
+    import LoadingScene from "./LoadingScene.svelte";
 
     let status = 'Start';
-    let animationStarted = false;
-  
-    async function startAnimation() {
-      animationStarted = true;
-    }
-  
-    //Start the animation and make the loader pulse
-    onMount(() => {
-      startAnimation();
-    });
 
     async function toggleScan() {
         $sonarCommands.sonarData.runSonar=!$sonarCommands.sonarData.runSonar;
@@ -29,12 +19,7 @@
 
     {#if !$sonarStore.sonarStatus.lastCommandReceived}
 
-    <div class="container">
-        {#if animationStarted}
-        <div class="loader"></div>
-        {/if}
-        <p>KiWave is processing your command...</p>
-    </div>  
+    <LoadingScene style = "height: 40vh"/>
 
     {/if}
 
@@ -81,66 +66,6 @@
     .recieved:hover {
         cursor:default;
         opacity:unset;
-    }
-
-    p {
-      font-size: 16px;
-      color: gray;
-      text-align: center;
-      margin-top: 50px;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 35vh;
-    }
-  
-    .loader {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      position: relative;
-      animation: pulsing 1.5s ease-in-out infinite;
-      background-color: #007aff;
-    }
-  
-    .loader::before {
-      content: "";
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 50%;
-      opacity: 0.5s;
-      animation: wave 2s ease-in-out infinite;
-    }
-  
-    @keyframes pulsing {
-      0% {
-        transform: scale(0.8);
-      }
-      50% {
-        transform: scale(1);
-      }
-      100% {
-        transform: scale(0.8);
-      }
-    }
-  
-    @keyframes wave {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4);
-      }
-      100% {
-        transform: scale(1.5);
-        box-shadow: 0 0 0 20px rgba(0, 122, 255, 0);
-      }
     }
 
 </style>
