@@ -65,13 +65,13 @@
 
 <svelte:window 
     bind:outerWidth={width} 
-    on:click={(e) => {
+    on:pointermove={(e) => {
             displayTooltip = isPointerInCanvas(e, canvas) && tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange);
         }}/>
 
 <div id="canvas" bind:this={canvas}>
     <Canvas
-        on:click={(e) => {
+        on:pointermove={(e) => {
             let translMousePos = getTranslatedMousePosition(e, canvas);
             let mousePos = getMousePosition(e, canvas);
             tooltipX = mousePos.x;
@@ -100,7 +100,6 @@
         /* Padding needs to stay zero for the tooltips' coordinates to be accurate */
         padding: 0;
         filter: drop-shadow(2px 4px 40px #c3c1c1);
-        cursor:crosshair;
     }
 
 </style>
