@@ -1,22 +1,29 @@
 <script>
-    import { sonarCommands } from "../../data/stores";
+    import { sonarCommands, sonarStore } from "../../data/stores";
+    import LoadingScene from "./LoadingScene.svelte";
 
     let status = 'Start';
 
-
     async function toggleScan() {
         $sonarCommands.sonarData.runSonar=!$sonarCommands.sonarData.runSonar;
-
+        $sonarStore.sonarStatus.lastCommandReceived = false;
         !$sonarCommands.sonarData.runSonar ? status = 'Start' : status = 'Stop';
 
     }
    
 </script>
- 
-    <button class='scan-button' class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()}>{status} scanning</button>
+
+    <button id = "button" class='scan-button' class:recieved = "{!$sonarStore.sonarStatus.lastCommandReceived}" class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()} disabled = {!$sonarStore.sonarStatus.lastCommandReceived}>
+        <span class = "text">{status} scanning</span>
+    </button>
+
+    {#if !$sonarStore.sonarStatus.lastCommandReceived}
+
+    <LoadingScene style = "height: 40vh"/>
+
+    {/if}
 
     <style>
-
 
     .scan-button{
         color: #f8f0f0;
@@ -51,6 +58,14 @@
         color: #007AFF;
         box-shadow: unset;
     }
+    .recieved {
+        background-color: #D9D9D9;
+        color: #bcbcba; 
+    }
 
+    .recieved:hover {
+        cursor:default;
+        opacity:unset;
+    }
 
 </style>

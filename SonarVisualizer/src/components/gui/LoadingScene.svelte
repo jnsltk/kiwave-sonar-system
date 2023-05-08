@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
 
     let animationStarted = false;
+    let style = $$props.style;
   
     async function startAnimation() {
       animationStarted = true;
@@ -13,7 +14,7 @@
     });
   </script>
   
-  <div class="container">
+  <div class="container" style= {style}>
     {#if animationStarted}
       <div class="loader"></div>
     {/if}
