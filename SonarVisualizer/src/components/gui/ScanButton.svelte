@@ -16,7 +16,7 @@
 
     async function toggleScan() {
         $sonarCommands.sonarData.runSonar=!$sonarCommands.sonarData.runSonar;
-        $sonarStore.sonarStatus.lastCommandReceived = !$sonarStore.sonarStatus.lastCommandReceived;
+        $sonarStore.sonarStatus.lastCommandReceived = false;
         !$sonarCommands.sonarData.runSonar ? status = 'Start' : status = 'Stop';
 
     }
