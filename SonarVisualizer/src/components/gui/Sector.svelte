@@ -130,7 +130,7 @@
       transition: all 0.2s ease;
     }
 
-    span p{
+    :is(span p){
       font-size: 14px;
     }
   

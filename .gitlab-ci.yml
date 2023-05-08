@@ -1,24 +1,45 @@
 # npm works with Node.js. Here we get the latest Node.js version. Note that node contains npm 
 image: node:20-alpine3.16
+
+# here we define the different stages that the jobs will be distributed under
+stages:
+  - test
+  - deploy
   
 # before building we need to install the dependencies on the runner and change directory to SonarVisualizer.
 before_script:
+  - apt install -y sshpass scp openssh-client
   - cd SonarVisualizer
   - npm install
 
-#run npm run build on the GUI to ensure that it compiles.
+# run npm run build on the GUI to ensure that it compiles.
 build-job:
-  #we want the the docker runner to execute this as the image can be run on a docker runner only
+  # We want this job to be in a different stage as deployment is different from testing
+  stage:
+    - deploy
+  # we want the the docker runner to execute this as the image can be run on a docker runner only
   tags:
     - docker
   # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run build
+    - sshpass -p "$KIWI_PASSWORD" scp -r dist kiwi@jnsl.tk:~
+    - sshpass -p "$KIWI_PASSWORD" ssh kiwi@jnsl.tk
+    - sudo rm -r /var/www/kiwave/*
+    - $KIWI_PASSWORD
+    - sudo mv ./dist/* /var/www/kiwave
+    - logout
+  # we want to deploy on the server only the parts that are merged with the main branch. In other words, when the commit source is the branch main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "Deployment"'
+    - when: never
   
 
 # we build the first job which configures dependencies on the Gitlab runner
 test-job:
-  #we want the the docker runner to execute this as the image can be run on a docker runner only
+  # we want the the docker runner to execute this as the image can be run on a docker runner only
+  stage:
+    - test
   tags:
     - docker
   # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
