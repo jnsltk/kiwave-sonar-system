@@ -10,8 +10,8 @@ stages:
 before_script:
   - apk update
   - apk add sshpass
-  - apk openssh-client
-  - apk rsync
+  - apk add openssh-client
+  - apk add rsync
   - cd SonarVisualizer
   - npm install
 
