@@ -9,7 +9,9 @@ stages:
 # before building we need to install the dependencies on the runner and change directory to SonarVisualizer.
 before_script:
   - apk update
-  - apk add sshpass scp openssh-client
+  - apk add sshpass
+  - apk openssh-client
+  - apk rsync
   - cd SonarVisualizer
   - npm install
 
@@ -23,12 +25,13 @@ build-job:
   # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run build
-    - sshpass -p "$KIWI_PASSWORD" scp -r dist kiwi@jnsl.tk:~
-    - sshpass -p "$KIWI_PASSWORD" ssh kiwi@jnsl.tk
-    - sudo rm -r /var/www/kiwave/*
-    - $KIWI_PASSWORD
-    - sudo mv ./dist/* /var/www/kiwave
-    - logout
+    #- rsync ./dist
+    #- sshpass -p "$KIWI_PASSWORD" scp -r dist kiwi@jnsl.tk:~
+    #- sshpass -p "$KIWI_PASSWORD" ssh kiwi@jnsl.tk
+    #- sudo rm -r /var/www/kiwave/*
+    #- $KIWI_PASSWORD
+    #- sudo mv ./dist/* /var/www/kiwave
+    #- logout
   # we want to deploy on the server only the parts that are merged with the main branch. In other words, when the commit source is the branch main
   rules:
     - if: '$CI_COMMIT_BRANCH == "Deployment"'
