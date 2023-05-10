@@ -1,7 +1,7 @@
 <script>
     import { sonarCommands, sonarStore } from "../../data/stores";
     import LoadingScene from "./LoadingScene.svelte";
-
+ 
     let status = 'Start scanning';
     let watchInterval;
     let watcherActive=false;

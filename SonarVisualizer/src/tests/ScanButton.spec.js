@@ -1,8 +1,9 @@
 // @ts-nocheck
-import { render , fireEvent} from '@testing-library/svelte';
+import { render , fireEvent,waitFor} from '@testing-library/svelte';
 import ScanButton from "../components/gui/ScanButton.svelte";
 import { sonarCommands,sonarStore } from "../data/stores";
 import { get } from 'svelte/store'
+import { tick } from "svelte";
 
 
 
@@ -10,16 +11,16 @@ import { get } from 'svelte/store'
 
 describe('ScanButton', () => {
 
-    let runSonar;
-
-    const {getByText, getByTestId} = render(ScanButton);
-
-    const scanButton = getByText('Start scanning');
 
    
 
     test('response to click scan button', async () => {
+        let runSonar;
 
+        const {getByText, getByTestId} = render(ScanButton);
+    
+        const scanButton = getByText('Start scanning');
+    
         const unsubscribe = sonarCommands.subscribe((value) => {
             runSonar = value.sonarData.runSonar;
         });
@@ -39,9 +40,10 @@ describe('ScanButton', () => {
         let oldValue=get(sonarStore);
         oldValue.sonarStatus.lastCommandReceived=true;
         sonarStore.set(oldValue);
-        console.log(get(sonarStore))
-        console.log(get(sonarCommands))
-        console.log(scanButton.textContent)
+        
+        await waitFor(()=>{
+            expect(scanButton.textContent).toMatch("Stop scanning");
+        })
         expect(scanButton.textContent).toMatch("Stop scanning");
 
         unsubscribe();
