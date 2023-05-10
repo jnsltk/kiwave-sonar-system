@@ -25,13 +25,12 @@ build-job:
   # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run build
-    #- rsync ./dist
-    #- sshpass -p "$KIWI_PASSWORD" scp -r dist kiwi@jnsl.tk:~
-    #- sshpass -p "$KIWI_PASSWORD" ssh kiwi@jnsl.tk
-    #- sudo rm -r /var/www/kiwave/*
-    #- $KIWI_PASSWORD
-    #- sudo mv ./dist/* /var/www/kiwave
-    #- logout
+    - sshpass -p "$KIWI_PASSWORD" rsync -a ./dist/* kiwi@jnsl.tk:/home/kiwi/kiwave
+    - sshpass -p "$KIWI_PASSWORD" ssh kiwi@jnsl.tk
+    - sudo rm -r /var/www/kiwave/*
+    - $KIWI_PASSWORD
+    - sudo mv ./kiwave/* /var/www/kiwave
+    - logout
   # we want to deploy on the server only the parts that are merged with the main branch. In other words, when the commit source is the branch main
   rules:
     - if: '$CI_COMMIT_BRANCH == "Deployment"'
