@@ -6,6 +6,7 @@ import Sonar from './components/Sonar.svelte';
 import MqttHandler from './components/mqtt/MqttHandler.svelte';
 import LoadingScene from './components/gui/LoadingScene.svelte';
 import {sonarStore} from "./data/stores";
+import WarningModal from './components/gui/WarningModal.svelte';
 
 $: sonarIsOnline = $sonarStore.sonarStatus.isOnline;
 
@@ -13,6 +14,7 @@ $: sonarIsOnline = $sonarStore.sonarStatus.isOnline;
 
 <main> 
    <MqttHandler/>
+   <WarningModal/>
   {#if sonarIsOnline}
   <div transition:fade>
     <Sonar/>
