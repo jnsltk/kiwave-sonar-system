@@ -4,6 +4,7 @@ image: node:20-alpine3.16
 # here we define the different stages that the jobs will be distributed under
 stages:
   - test
+  - build
   - deploy
   
 # before building we need to install the dependencies on the runner and change directory to SonarVisualizer.
@@ -17,19 +18,13 @@ before_script:
 # run npm run build on the GUI to ensure that it compiles.
 build-job:
   # We want this job to be in a different stage as deployment is different from testing
-  stage: deploy
+  stage: build
   # we want the the docker runner to execute this as the image can be run on a docker runner only
   tags:
     - docker
   # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run build
-    - sshpass -p $KIWI_PASSWORD scp -o StrictHostKeyChecking=no -r ./dist/* kiwi@jnsl.tk:/var/www/kiwave
-  # we want to deploy on the server only the parts that are merged with the main branch. In other words, when the commit source is the branch main
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "Deployment"'
-    - when: never
-  
 
 # we build the first job which configures dependencies on the Gitlab runner
 test-job:
@@ -40,4 +35,19 @@ test-job:
   # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run test
-  
+
+ # run npm run build on the GUI to ensure that it compiles.
+deploy-job:
+  # We want this job to be in a different stage as deployment is different from testing
+  stage: deploy
+  # we want the the docker runner to execute this as the image can be run on a docker runner only
+  tags:
+    - docker
+  # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
+  script:
+    - npm run build
+    - sshpass -p $KIWI_PASSWORD scp -o StrictHostKeyChecking=no -r ./dist/* kiwi@jnsl.tk:/var/www/kiwave
+  # we want to deploy on the server only the parts that are merged with the main branch. In other words, when the commit source is the branch main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - when: never
