@@ -25,8 +25,8 @@ build-job:
   # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run build
-    - sshpass -p "$KIWI_PASSWORD" rsync -a ./dist/* kiwi@jnsl.tk:/home/kiwi/kiwave
-    - sshpass -p "$KIWI_PASSWORD" ssh kiwi@jnsl.tk
+    - sshpass -p $KIWI_PASSWORD rsync -a ./dist/* kiwi@jnsl.tk:/home/kiwi/kiwave
+    - sshpass -p $KIWI_PASSWORD ssh kiwi@jnsl.tk
     - sudo rm -r /var/www/kiwave/*
     - $KIWI_PASSWORD
     - sudo mv ./kiwave/* /var/www/kiwave
