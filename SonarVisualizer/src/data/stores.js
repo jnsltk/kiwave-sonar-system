@@ -5,8 +5,8 @@ export let sonarStore=writable({
     "sonarData":{
         "rDeg1": "0", //Degree of the sonar
         "rDeg2": "0", //Distance of sonar      
-        "rRange1": "0",
-        "rRange2": "0",
+        "rRange1": "-1",
+        "rRange2": "-1",
         "isTracking":false,
         "trackingReportedAt":0,
         "ts":0 //Reported at timestamp

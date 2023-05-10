@@ -1,37 +1,42 @@
 <script>
     import { sonarStore } from "../../data/stores";
     
-    const ALARM_DISTANCE_THRESHOLD = 20; // set the distance threshold to 20cm
-    const NOTIFICATION_DISTANCE_THRESHOLD = 30; // set the distance threshold for notification to 30cm
+    const ALARM_DISTANCE_THRESHOLD = 10; // set the distance threshold to 20cm
+    const NOTIFICATION_DISTANCE_THRESHOLD = 20; // set the distance threshold for notification to 30cm
     const AUTO_CLOSE_DURATION = 4000; // auto close duration in milliseconds
     
     let alarmAudio = null;
     let showWarningModal = false;
     let showModalMessage = "";
     
+    let alarmPlaying=false;
+    async function triggerAlarm(){
+      if(alarmPlaying) return;
+      alarmPlaying=true;
 
-    let { rRange1, rRange2 } = $sonarStore.sonarData;
-
-    $: if ($sonarStore.sonarData) {
-      if (Number(rRange1) <= ALARM_DISTANCE_THRESHOLD || Number(rRange2) <= ALARM_DISTANCE_THRESHOLD) {
-        playAlarmSound();
+      playAlarmSound();
         showModalMessage = "An object has been detected within an extremely close range.";
         showWarningModal = true;
         setTimeout(() => {
           stopAlarmSound();
           showWarningModal = false;
         }, AUTO_CLOSE_DURATION);
-      } else if (Number(rRange1) <= NOTIFICATION_DISTANCE_THRESHOLD || Number(rRange2) <= NOTIFICATION_DISTANCE_THRESHOLD) {
-        showModalMessage = "An object has been detected within an unusually close range.";
-        showWarningModal = true;
-        setTimeout(() => {
-          showWarningModal = false;
-        }, AUTO_CLOSE_DURATION);
-      }
+
+        setTimeout(async function(){
+          alarmPlaying=false;
+        },6000)
+    }
+
+    $: if ($sonarStore.sonarData) {
+      let { rRange1, rRange2 } = $sonarStore.sonarData;
+
+      if ((parseFloat(rRange1) <= ALARM_DISTANCE_THRESHOLD && parseFloat(rRange1)>0) || (parseFloat(rRange2) <= ALARM_DISTANCE_THRESHOLD && parseFloat(rRange2)>0)) {
+        triggerAlarm()
+      } 
     }
     
     function playAlarmSound() {
-      alarmAudio = new Audio("assets/alarm.mp3");
+      alarmAudio = new Audio("alarm.mp3");
       alarmAudio.play();
     }
     
