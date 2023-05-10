@@ -6,7 +6,7 @@
     let sliderValue = 1;
     
     //The range that is given automatically is 100
-    let range="100";
+    let range = $sonarCommands.sonarData.sRange;
     async function setRange(){
       //Adds padding zero's to conform to command structure
       let paddingToAdd=3-range.toString().length;
