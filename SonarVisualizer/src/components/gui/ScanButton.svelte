@@ -2,26 +2,35 @@
     import { sonarCommands, sonarStore } from "../../data/stores";
     import LoadingScene from "./LoadingScene.svelte";
 
-    let status = 'Start';
+    let status = 'Start scanning';
+    let watchInterval;
+    let watcherActive=false;
+    async function startWatchInterval(){
+        watcherActive=true;
+        watchInterval=setInterval(async function(){
+            console.log("hehihiheih")
+            if($sonarStore.sonarStatus.lastCommandReceived==false) return;
+            clearInterval(watchInterval);
+            !$sonarCommands.sonarData.runSonar ? status = 'Start scanning' : status = 'Stop scanning';
+            watcherActive=false;
+        },100)
+    }
 
     async function toggleScan() {
         $sonarCommands.sonarData.runSonar=!$sonarCommands.sonarData.runSonar;
         $sonarStore.sonarStatus.lastCommandReceived = false;
-        !$sonarCommands.sonarData.runSonar ? status = 'Start' : status = 'Stop';
-
+        status="Awaiting...";
+        startWatchInterval()
     }
    
 </script>
 
-    <button id = "button" class='scan-button' class:recieved = "{!$sonarStore.sonarStatus.lastCommandReceived}" class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()} disabled = {!$sonarStore.sonarStatus.lastCommandReceived}>
-        <span class = "text">{status} scanning</span>
+    <button id = "button" class='scan-button' class:recieved = "{watcherActive}" class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()} disabled = {watcherActive}>
+        <span class = "text">
+            {status}
+        </span>
     </button>
 
-    {#if !$sonarStore.sonarStatus.lastCommandReceived}
-
-    <LoadingScene style = "height: 40vh"/>
-
-    {/if}
 
     <style>
 
