@@ -32,8 +32,16 @@
 
       if ((parseFloat(rRange1) <= ALARM_DISTANCE_THRESHOLD && parseFloat(rRange1)>0) || (parseFloat(rRange2) <= ALARM_DISTANCE_THRESHOLD && parseFloat(rRange2)>0)) {
         triggerAlarm()
-      } 
+      }
     }
+    setTimeout(async function(){
+      $sonarStore.sonarStatus.isOnline=true;
+      $sonarStore.sonarData.rDeg1=180;
+      $sonarStore.sonarData.rDeg2=180;
+      $sonarStore.sonarData.rRange1=5;
+      $sonarStore.sonarData.rRange2=5;
+
+    }, 5000)
     
     function playAlarmSound() {
       alarmAudio = new Audio("alarm.mp3");
