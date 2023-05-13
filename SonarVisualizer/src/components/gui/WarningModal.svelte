@@ -43,6 +43,8 @@
     stopAlarmSound();
     showWarningModal = false;
   }
+
+
 </script>
 
 <style>
@@ -57,6 +59,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+		
   }
 
   .modal.dark-mode {
@@ -84,7 +87,6 @@
 
   .modal-body {
     font-size: 18px;
-    margin-bottom: 20px;
   }
 
   .close-button {
@@ -98,6 +100,8 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
+		margin-left: 400px;
+		margin-top: 20px;
   }
 </style>
 
@@ -106,11 +110,12 @@
     <div class={$darkModeSwitch.isDark ? 'modal-content dark-mode' : 'modal-content'}>
       <div class="modal-header">
         Warning
-        <button class="close-button" on:click={closeModal}>Close</button>
       </div>
       <div class="modal-body">
         {showModalMessage}
+        <button class="close-button" on:click={closeModal}>Close</button>
       </div>
     </div>
   </div>
 {/if}
+

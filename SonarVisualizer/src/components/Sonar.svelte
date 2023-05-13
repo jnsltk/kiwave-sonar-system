@@ -12,7 +12,6 @@
     import ModeSwitch from "./gui/ModeSwitch.svelte";
     import NotificationButton from "./gui/NotificationButton.svelte";
     
-    
   
 
 </script>
