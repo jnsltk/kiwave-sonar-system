@@ -33,7 +33,7 @@ export let sonarCommands=writable({
 
 
 
-export const notificationStore = writable(true); // default state is true
+export const notificationStore = writable(false); // default state is true
 
 
 export let darkModeSwitch=writable({

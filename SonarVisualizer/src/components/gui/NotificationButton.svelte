@@ -1,17 +1,15 @@
 <script>
    import { notificationStore } from "../../data/stores";
 
-let notificationEnabled = true;
   
 function toggleNotification() {
-  notificationEnabled = !notificationEnabled;
-  notificationStore.set(notificationEnabled); // set the state in the store
+  $notificationStore = !$notificationStore;
 }
 
 </script>
   
 <button class='notification-button' on:click="{toggleNotification}">
-    <span class="text">Notificion: {notificationEnabled ? 'On' : 'Off'}</span>
+    <span class="text">Notificion: {$notificationStore ? 'On' : 'Off'}</span>
 </button>
   
 <style>

@@ -6,6 +6,7 @@
   let alarmAudio = null;
   let showWarningModal = false;
   let showModalMessage = "";
+  
 
   async function triggerAlarm() {
     if (showWarningModal) return;
@@ -43,7 +44,6 @@
     stopAlarmSound();
     showWarningModal = false;
   }
-
 
 </script>
 
@@ -118,4 +118,12 @@
     </div>
   </div>
 {/if}
+
+
+
+
+
+
+
+
 
