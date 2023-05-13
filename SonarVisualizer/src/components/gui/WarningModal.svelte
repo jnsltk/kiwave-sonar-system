@@ -1,104 +1,116 @@
 <script>
-    import { sonarStore } from "../../data/stores";
-    
-    const ALARM_DISTANCE_THRESHOLD = 10; // set the distance threshold to 20cm
-    const NOTIFICATION_DISTANCE_THRESHOLD = 20; // set the distance threshold for notification to 30cm
-    const AUTO_CLOSE_DURATION = 4000; // auto close duration in milliseconds
-    
-    let alarmAudio = null;
-    let showWarningModal = false;
-    let showModalMessage = "";
-    
-    let alarmPlaying=false;
-    async function triggerAlarm(){
-      if(alarmPlaying) return;
-      alarmPlaying=true;
+  import { sonarStore, darkModeSwitch, notificationStore } from "../../data/stores";
 
-      playAlarmSound();
-        showModalMessage = "An object has been detected within an extremely close range.";
-        showWarningModal = true;
-        setTimeout(() => {
-          stopAlarmSound();
-          showWarningModal = false;
-        }, AUTO_CLOSE_DURATION);
+  const ALARM_DISTANCE_THRESHOLD = 5;
 
-        setTimeout(async function(){
-          alarmPlaying=false;
-        },6000)
-    }
+  let alarmAudio = null;
+  let showWarningModal = false;
+  let showModalMessage = "";
 
-    $: if ($sonarStore.sonarData) {
-      let { rRange1, rRange2 } = $sonarStore.sonarData;
+  async function triggerAlarm() {
+    if (showWarningModal) return;
 
-      if ((parseFloat(rRange1) <= ALARM_DISTANCE_THRESHOLD && parseFloat(rRange1)>0) || (parseFloat(rRange2) <= ALARM_DISTANCE_THRESHOLD && parseFloat(rRange2)>0)) {
-        triggerAlarm()
-      }
-    }
-    setTimeout(async function(){
-      $sonarStore.sonarStatus.isOnline=true;
-      $sonarStore.sonarData.rDeg1=180;
-      $sonarStore.sonarData.rDeg2=180;
-      $sonarStore.sonarData.rRange1=5;
-      $sonarStore.sonarData.rRange2=5;
+    showWarningModal = true;
+    showModalMessage = "An object has been detected within an extremely close range.";
 
-    }, 5000)
-    
-    function playAlarmSound() {
-      alarmAudio = new Audio("alarm.mp3");
-      alarmAudio.play();
+    playAlarmSound();
+  }
+
+  $: if ( $sonarStore.sonarData && $notificationStore ) {
+    let { rRange1, rRange2 } = $sonarStore.sonarData;
+
+    if (
+      (parseFloat(rRange1) <= ALARM_DISTANCE_THRESHOLD && parseFloat(rRange1) > 0) ||
+      (parseFloat(rRange2) <= ALARM_DISTANCE_THRESHOLD && parseFloat(rRange2) > 0)
+    ) {
+      triggerAlarm();
     }
-    
-    function stopAlarmSound() {
-      if (alarmAudio) {
-        alarmAudio.pause();
-        alarmAudio.currentTime = 0;
-      }
+  }
+
+  function playAlarmSound() {
+    alarmAudio = new Audio("alarm.mp3");
+    alarmAudio.play();
+  }
+
+  function stopAlarmSound() {
+    if (alarmAudio) {
+      alarmAudio.pause();
+      alarmAudio.currentTime = 0;
     }
-  </script>
-  
-  <style>
-    .modal {
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.4);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  
-    .modal-content {
-      background-color: white;
-      border-radius: 12px;
-      padding: 20px;
-      width: 80%;
-      max-width: 500px;
-    }
-  
-    .modal-header {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-  
-    .modal-body {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-  </style>
-  
-  
-  {#if showWarningModal}
-    <div class="modal">
-      <div class="modal-content">
-        <div class="modal-header">Warning</div>
-        <div class="modal-body">
-          {showModalMessage}
-        </div>
+  }
+
+  function closeModal() {
+    stopAlarmSound();
+    showWarningModal = false;
+  }
+</script>
+
+<style>
+  .modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal.dark-mode {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .modal-content {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+  }
+
+  .modal-content.dark-mode {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .modal-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .modal-body {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .close-button {
+    background-color: #007AFF;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+</style>
+
+{#if showWarningModal}
+  <div class={$darkModeSwitch.isDark ? 'modal dark-mode' : 'modal'}>
+    <div class={$darkModeSwitch.isDark ? 'modal-content dark-mode' : 'modal-content'}>
+      <div class="modal-header">
+        Warning
+        <button class="close-button" on:click={closeModal}>Close</button>
+      </div>
+      <div class="modal-body">
+        {showModalMessage}
       </div>
     </div>
-  {/if}
-  
+  </div>
+{/if}

@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 
+
 export let sonarStore=writable({
     //Data for sonar as per agreed description
     "sonarData":{
@@ -30,7 +31,13 @@ export let sonarCommands=writable({
 
 })
 
+
+
+export const notificationStore = writable(true); // default state is true
+
+
 export let darkModeSwitch=writable({
     //Data for darkmode switch
     "isDark" : false
 })
+
