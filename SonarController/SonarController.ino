@@ -79,13 +79,13 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
         Serial.println("Starting sonar");
     } else if(memcmp(msgHeader,SSR,sizeof(msgHeader))==0){
         Serial.println("RCV: Go To Sector"); 
-        wireless.publish("RCVD");
-
         char charFrom[3];
         char charTo[3]; 
 
         int c=0;
         for(int i=3;i<6;i++){
+          Serial.println((char) data[i]);
+
           charFrom[c]=(char) (data[i]);
           c++;
         }
@@ -95,36 +95,44 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
           c++;
         }
         Serial.println("Sector Set");
-
         String strFrom=String(charFrom);
         String strTo=String(charTo);
         from= (strFrom).toInt();
         to=(strTo).toInt();
         Serial.println(from);
         Serial.println(to);
+        wireless.publish("RCVD");
+
     }else if(memcmp(msgHeader,SRR,sizeof(msgHeader))==0){
         Serial.println("RCV: Set Range"); 
-        char charFrom[3];
-        char charTo[3]; 
-        wireless.publish("RCVD");
+        char charMaxRange1[3];
+        char charMaxRange2[3]; 
 
         int c=0;
         for(int i=3;i<6;i++){
-          charFrom[c]=(char) (data[i]);
+          charMaxRange1[c]=(char) (data[i]);
+          //Serial.println(charMaxRange1[c]);
+
           c++;
         }
         c=0;
         for(int i=6;i<9;i++){
-          charTo[c]=(char) (data[i]);
+
+          charMaxRange2[c]=(char) (data[i]);
+          //Serial.println(charMaxRange2[c]);
+
           c++;
         }
         Serial.println("Range Set");
 
-        String strFrom=String(charFrom);
-        String strTo=String(charTo);
-        maxRange1= (strFrom).toInt();
-        maxRange2=(strTo).toInt();
-        
+        String strMaxRange1=String(charMaxRange1);
+        String strMaxRange2=String(charMaxRange2);
+        maxRange1= (strMaxRange1).toInt();
+        maxRange2=(strMaxRange2).toInt();
+        Serial.println(strMaxRange1);
+        Serial.println(strMaxRange2);        
+        wireless.publish("RCVD");
+
     }
 
 }
