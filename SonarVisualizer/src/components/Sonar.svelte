@@ -10,7 +10,8 @@
     import TrackMode from "./gui/TrackMode.svelte";
     import TrackModeTooltip from "./gui/TrackModeTooltip.svelte";
     import ModeSwitch from "./gui/ModeSwitch.svelte";
-
+    import NotificationButton from "./gui/NotificationButton.svelte";
+    
   
 
 </script>
@@ -19,20 +20,26 @@
 <div class="header">
         <img src="KiWave-dark.png" class="kiwave-dark" alt="KiWave logo">
         <img src="KiWave-light.png" class="kiwave-light" alt="KiWave logo">
+        <dive class="notficationButton">
+            <NotificationButton/>
+        </dive>
         <div class="modeswitch">
-            <ModeSwitch/>  
+            <ModeSwitch/>
         </div>
     </div>
-    <div class="container">
     
+
+    <div class="container">
+
     <div class="screen">
         <RadarScreen/>
     </div>
     
+
     <div class="controls">
         <div class="group-sliders" id ="group-sliders">
             <div class="track-mode">
-            <TrackMode/>
+                <TrackMode/>
             <TrackModeTooltip/>
             </div>
             <Range/>
@@ -40,6 +47,7 @@
         </div>
         <ScanButton/>
     </div>
+
    
     
       
@@ -49,8 +57,16 @@
     .header {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-start;
         width: 96%;
+    }
+
+    .notficationButton{
+        width: 87%;
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 6px;
+        margin-bottom: 14px;
     }
 
     .container {
@@ -125,9 +141,9 @@
             padding-bottom: 20px;
             padding-left: 0;
         } 
-
     }
 
+ 
    
 
    
