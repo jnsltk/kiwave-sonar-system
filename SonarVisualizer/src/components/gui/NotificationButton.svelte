@@ -18,8 +18,8 @@ function toggleNotification() {
       background-color: #007AFF;
       font-family: 'Inter', sans-serif;
       align-self: flex-end;
-      width: 190px;  
-      height: 32px;  
+      width: 130px;  
+      height: 30px;  
       border-radius: 10px;
       border: none;
       margin-top: 18px;
