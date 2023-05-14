@@ -68,8 +68,10 @@
     }
     async function setSector(){
       //Adds padding zero's to conform to command structure
-      $sonarCommands.sonarData.sDeg1=await processDeg(minVal);
-      $sonarCommands.sonarData.sDeg2=await processDeg(maxVal);
+      console.log(minValRange)
+      console.log(maxValRange)
+      $sonarCommands.sonarData.sDeg1=await processDeg(minValRange);
+      $sonarCommands.sonarData.sDeg2=await processDeg(maxValRange);
     }
 
     onMount(() => {

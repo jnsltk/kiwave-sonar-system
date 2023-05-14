@@ -8,14 +8,18 @@ import LoadingScene from './components/gui/LoadingScene.svelte';
 import {sonarStore} from "./data/stores";
 import WarningModal from './components/gui/WarningModal.svelte';
 
+//Checking if the sonar is online using Svelte reactive statements.
 $:sonarIsOnline = $sonarStore.sonarStatus.isOnline;
 
 </script>
 
 <main> 
+  <!-- MqttHandler component. Has the responsibility of handling communication over MQTT protocol-->
    <MqttHandler/>
+   <!-- The warning modal notifies the user if an object gets close. -->
    <WarningModal/>
   {#if sonarIsOnline}
+  <!--If the sonar is online we show the sonar component -->
   <div transition:fade>
     <Sonar/>
   </div>
@@ -29,8 +33,6 @@ $:sonarIsOnline = $sonarStore.sonarStatus.isOnline;
 </main>
 
 <style>
-
-
     .loader {
     position: fixed;
     background-color: #eef1ec;
@@ -41,5 +43,4 @@ $:sonarIsOnline = $sonarStore.sonarStatus.isOnline;
     justify-content: center;
     align-items: center;
   }
-
 </style>

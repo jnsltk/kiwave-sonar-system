@@ -5,6 +5,9 @@
     export let screenRadius;
 
     const lineColor = "#8f948d";
+    /*
+     * If dark mode is activated, we have another color for the background.
+    */
     $: radarBackround = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
     
     /**

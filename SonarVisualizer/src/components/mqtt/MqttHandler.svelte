@@ -1,23 +1,24 @@
 <script>
     // @ts-nocheck
-    import mqtt_client from '../../mqtt' // or v4.min.js or v5.min.js    import {sonarStore,sonarCommands} from "../../data/stores.js";
+    // We use a ported version of u8-mqtt that will work with vite compiler.
+    import mqtt_client from '../../mqtt'
     import {sonarStore,sonarCommands} from "../../data/stores.js";
 
     const BROKER="mqtt.jnsl.tk";
     const BROKER_PORT="443";
-    const REPORTING_TOPIC="KiWaveSonarData";
-    const RECEIVED_CONFIRMATION="RCVD";
-    const CONNECTED_CONFIRMATION="CNCTD"
-    const MEASUREMENT_ANGLE=15;
-    const TRACK_MODE="TRK";
-    const MAX_QUEUE_LENGTH=300;
-    const MIN_INTERVAL=25;
-    const MAX_INTERVAL=75;
+    const REPORTING_TOPIC="KiWaveSonarData"; //Topic where the sonar sends its data
+    const RECEIVED_CONFIRMATION="RCVD"; //A command for the sonar
+    const CONNECTED_CONFIRMATION="CNCTD" //Another command for the sonar
+    const MEASUREMENT_ANGLE=15; //The sonar measures thing effectively every 15 degrees.
+    const TRACK_MODE="TRK"; //A notification sent by the sonar to tell the frontend that it is in track mode.
+    const MAX_QUEUE_LENGTH=300; //Maximum length of the queue which stores the buffered data from the sonar.
+    const MIN_INTERVAL=25; //The slowest time for the queue to be processed.
+    const MAX_INTERVAL=75; //The fastest time of which the queue can be processed.
     let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
     let mqttConnected=false;
-  let lastKeepAliveReceived;
+    let lastKeepAliveReceived;
       setInterval(() => {
         let timePassed=parseInt(Date.now()/1000)-lastKeepAliveReceived;
         if(timePassed>10){
@@ -85,6 +86,9 @@
     let previousQueueLength=0;
     let fetchInterval=MIN_INTERVAL;
     async function shiftAndDrawEntry(){
+      /*
+      * Responsible for taking the first element from the queue and updating the sonarData.
+      */
       if(busy) return;
       busy=true;
         let entry=measurementsQueue.shift();
@@ -100,9 +104,16 @@
         $sonarStore.sonarData.rDeg2=entry.rDeg2;
       busy=false;
     }
+
     async function queueShifter(){
+      /*
+      * Responsible for calling the function that will process entries at a fixed interval.
+      */
       let shifter=setInterval(async function(){
       await shiftAndDrawEntry()
+      /*
+      * If the length keeps increasing we need to increase the interval at which we playback the data.
+      */
       if(measurementsQueue.length==0){
         if(fetchInterval<MAX_INTERVAL){
           fetchInterval+=1;
@@ -138,6 +149,8 @@
           let initDeg=(360-parseInt(parsedArray[i+2]));
           if(previousDeg<(360-parseInt(parsedArray[i+2]))){
             for(let i=initDeg-MEASUREMENT_ANGLE;i<initDeg;i++){
+              //If measurements are empty then we do not need to add them to the queue
+              if(parseInt(rRange1)==-1 && parseInt(rRange2)==-1) continue;
               let queueEntry={
                 "rRange1":rRange1,
                 "rRange2":rRange2,
@@ -150,6 +163,8 @@
             }
           } else {
             for(let i=initDeg+MEASUREMENT_ANGLE;i>initDeg;i--){
+               //If measurements are empty then we do not need to add them to the queue
+              if(parseInt(rRange1)==-1 && parseInt(rRange2)==-1) continue;
               let queueEntry={
                 "rRange1":rRange1,
                 "rRange2":rRange2,
@@ -179,6 +194,7 @@
       //Setting degrees and ranges if any of the store variables change.
         $: if(storeCopy.sDeg1!=$sonarCommands.sonarData.sDeg1){
           console.log("Sending degrees!")
+          console.log(("SSR"+($sonarCommands.sonarData.sDeg1)+($sonarCommands.sonarData.sDeg2)))
           mqttSend("KiWaveSonarCommand","SSR"+($sonarCommands.sonarData.sDeg1)+($sonarCommands.sonarData.sDeg2));
           storeCopy.sDeg1=$sonarCommands.sonarData.sDeg1
         }
@@ -220,21 +236,3 @@
     
 
     </script>
-    
-
-      <!--
-    <button on:click={()=>stopsonar()}>stop</button>
-    <button on:click={()=>startsonar()}>start</button>
-    <p>maxrange</p>
-  <input bind:value={maxRange} type="text" placeholder="maxrange">
-    <p>startdeg</p>
-    
-  <input bind:value={startDeg} type="text" placeholder="startdeg">
-    <p>enddeg</p>
-    
-  <input bind:value={endDeg} type="text" placeholder="enddegree"><br>
-    <button on:click={()=>setrange()}>setrange</button>
-    <button on:click={()=>setdeg()}>setdegree</button>-->
-    
-
-    
