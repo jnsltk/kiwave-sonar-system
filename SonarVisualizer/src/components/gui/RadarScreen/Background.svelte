@@ -5,6 +5,8 @@
     export let screenRadius;
 
     const lineColor = "#8f948d";
+
+    // Reactively change background based on darkmode switch value
     $: radarBackround = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
     
     /**

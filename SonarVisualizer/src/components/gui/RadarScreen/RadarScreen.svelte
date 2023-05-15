@@ -24,9 +24,10 @@
     let tooltipY;
     let tooltipVal;
 
+    // Should the tooltip be displayed
     let displayTooltip = false;
 
-    // Set the canvas width in proportion with the client window's outer width, also depending on the breakpoint at 600 pixels
+    // Set the canvas width in proportion with the client window's outer width, also depending on the breakpoints at 600 and 1000 pixels
     $: canvasWidth = (width > 1000) ? (width / 2.3)
                   : (width > 600 && width <= 1000) ? (width * 0.9)
                   : (width * 0.95);
@@ -36,6 +37,13 @@
     // Set the radius of the radar screen in proportion of the width of the canvas, leaving larger margin on mobile for the labels
     $: screenRadius = (width > 600) ? (canvasWidth / 2) * 0.9 : (canvasWidth / 2) * 0.85;
 
+    /**
+     * Returns the position of the pointer on the canvas at a given event, where the 0,0 position would mean the top left corner of the canvas
+     * @typedef {Object} mousePos
+     * @param e The event object
+     * @param canvas The canvas element
+     * @return {mousePos} The object containing the x and y coordinates
+     */
     const getMousePosition = (e, canvas) => {
         const rect = canvas.getBoundingClientRect();
         return {
@@ -44,6 +52,12 @@
         }
     }
 
+    /**
+     * Returns the translated position of the pointer on the canvas at a given event, where the 0,0 position would mean the center of the canvas
+     * @param e The event object
+     * @param canvas The canvas element
+     * @return {mousePos} The object containing the x and y coordinates
+     */
     const getTranslatedMousePosition = (e, canvas) => {
         const rect = canvas.getBoundingClientRect();
         return {
@@ -52,6 +66,12 @@
         };
     }
 
+    /**
+     * Checks to see if during the passed in event the pointer was in the canvas or not
+     * @param e The event object
+     * @param canvas The canvas element
+     * @return {boolean} Value indicating whether the pointer was in the canvas
+     */
     const isPointerInCanvas = (e, canvas) => {
         const rect = canvas.getBoundingClientRect();
         return !((rect.x + rect.width) < e.clientX || rect.y + rect.height < e.clientY || rect.x > e.clientX || rect.y > e.clientY);
@@ -66,12 +86,14 @@
 <svelte:window 
     bind:outerWidth={width} 
     on:pointermove={(e) => {
+            // If the pointer is outside the canvas, the tooltip should not be displayed
             displayTooltip = isPointerInCanvas(e, canvas) && tooltipVal.dist <= parseInt($sonarCommands.sonarData.sRange);
         }}/>
 
 <div id="canvas" bind:this={canvas}>
     <Canvas
         on:pointermove={(e) => {
+            // If the pointer is in the canvas and also in the circular area of the radar screen, the tooltip should be displayed
             let translMousePos = getTranslatedMousePosition(e, canvas);
             let mousePos = getMousePosition(e, canvas);
             tooltipX = mousePos.x;
