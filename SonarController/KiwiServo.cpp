@@ -7,7 +7,6 @@
 KiwiServo::KiwiServo(int sigPin) {
     _sigPin = sigPin;
     pinMode(_sigPin, OUTPUT); //We need to transmit signals.
-    setDelay(25); 
 }
 
 int KiwiServo::convertAngleToPulse(float angle) {
@@ -26,9 +25,3 @@ void KiwiServo::goTo(float angle) {
     //Stopping signal transmission to servo
     digitalWrite(_sigPin, LOW);
 }
-
-
-
-void KiwiServo::setDelay(int newDelay) { _delay = newDelay; }
-
-int KiwiServo::getDelay() { return _delay; }

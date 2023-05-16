@@ -12,18 +12,21 @@ KiwiSonic ultrasonicSensor2(D8,350);
 KiwiTemp tempSensor(A0);
 KiwiServo servo(D2);
 KiwiMQTT wireless(ssid,secret);
+
+const int STANDARD_DELAY=100; //Used to delay certain operations for readability or stability.
+const int SOUNDWAVE_DISSIPATION_DELAY=250; //Used to prevent accumulation of sound waves when used in smaller rooms.
+const long UPDATE_INTERVAL=5000; //How often are we going to fetch new messages from MQTT.
+const int MAX_MEASUREMENTS=5; //Maximum measurements
+
 bool servoRun=false;
 bool track=false;
-bool objectFound=false;
 bool result=false;
 float temperature=0;
 int maxRange1=999;
 int maxRange2=999;
 long lastUpdateTime=0;
-const long updateInterval=5000;
 int from=0;
 int to=180;
-int maxMeasurements=5;
 void safeDelay(int ms){
   long timeRunning=millis();
    while((millis()-timeRunning)<ms){
@@ -79,13 +82,13 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
         Serial.println("Starting sonar");
     } else if(memcmp(msgHeader,SSR,sizeof(msgHeader))==0){
         Serial.println("RCV: Go To Sector"); 
-        wireless.publish("RCVD");
-
         char charFrom[3];
         char charTo[3]; 
 
         int c=0;
         for(int i=3;i<6;i++){
+          Serial.println((char) data[i]);
+
           charFrom[c]=(char) (data[i]);
           c++;
         }
@@ -95,36 +98,40 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
           c++;
         }
         Serial.println("Sector Set");
-
         String strFrom=String(charFrom);
         String strTo=String(charTo);
         from= (strFrom).toInt();
         to=(strTo).toInt();
         Serial.println(from);
         Serial.println(to);
+        wireless.publish("RCVD");
+
     }else if(memcmp(msgHeader,SRR,sizeof(msgHeader))==0){
         Serial.println("RCV: Set Range"); 
-        char charFrom[3];
-        char charTo[3]; 
-        wireless.publish("RCVD");
+        char charMaxRange1[3];
+        char charMaxRange2[3]; 
 
         int c=0;
         for(int i=3;i<6;i++){
-          charFrom[c]=(char) (data[i]);
+          charMaxRange1[c]=(char) (data[i]);
           c++;
         }
         c=0;
         for(int i=6;i<9;i++){
-          charTo[c]=(char) (data[i]);
+
+          charMaxRange2[c]=(char) (data[i]);
           c++;
         }
         Serial.println("Range Set");
 
-        String strFrom=String(charFrom);
-        String strTo=String(charTo);
-        maxRange1= (strFrom).toInt();
-        maxRange2=(strTo).toInt();
-        
+        String strMaxRange1=String(charMaxRange1);
+        String strMaxRange2=String(charMaxRange2);
+        maxRange1= (strMaxRange1).toInt();
+        maxRange2=(strMaxRange2).toInt();
+        Serial.println(strMaxRange1);
+        Serial.println(strMaxRange2);        
+        wireless.publish("RCVD");
+
     }
 
 }
@@ -141,8 +148,8 @@ Serial.println(temperature);
   wireless.init();
 
 while(wireless.getWiFiStatus()!=WL_CONNECTED){
-
-  Serial.println(".");
+  Serial.println("Initial connect failed... Attempting reconnect.");
+  wireless.init();
   safeDelay(1000);
 }
 Serial.println("Wifi set.");
@@ -153,21 +160,27 @@ Serial.println("Callback set");
 }
 
 void sendBundle(){
+  /*
+  * Format buffer segment in accordance with specified format.
+  */
   String bundle=String("M");
-  for(int i=0;i<maxMeasurements;i++){
+  for(int i=0;i<MAX_MEASUREMENTS;i++){
     bundle=bundle+String("/")+sonar1Measurement[i]+String("/")+sonar2Measurement[i]+String("/")+degrees[i];
   }
   wireless.publish(bundle);
 }
 
 bool record(int degree){
-  if(measurementsMade>=maxMeasurements){
+  if(measurementsMade>=MAX_MEASUREMENTS){
+    /*
+    * We have reached the maximum number of measurements for this buffer segment, send it over MQTT.
+    */
     sendBundle();
     measurementsMade=0;    
   }
   
   int measure1=ultrasonicSensor1.calculateDistance(temperature);
-  safeDelay(250);
+  safeDelay(SOUNDWAVE_DISSIPATION_DELAY);
   int measure2=ultrasonicSensor2.calculateDistance(temperature);
   int reportedMeasurement1=measure1<maxRange1?measure1:-1;
   int reportedMeasurement2=measure2<maxRange2?measure2:-1;
@@ -182,32 +195,41 @@ bool record(int degree){
 }
 
 void spin(){
+  /*
+  * This method is responsible for moving the ultrasonic sensor and tracking objects if tracking mode is enabled.
+  */
   if(servoRun){
   for(int i=from;i<to;i+=15){
     servo.goTo(i);
     if(record(i)){
       if(track){
+        /*
+        * If track mode is activated we enter the track mode.
+        */
         int degree=i;
         bool keepTracking=true;
         while(keepTracking){
-          safeDelay(100);
+          safeDelay(STANDARD_DELAY);
           wireless.publish("TRK");
           wireless.sweep();          
-          bool res=record(degree);
-          if(!res){
-            if((degree-15)>0){
+          bool res=record(degree); //Checking if anything is in our vicinity at the current degree.
+          if(!res){ //If nothing is seen we need to check if there is something to the left.
+            if((degree-15)>0){ //Ensure we are not going to break the servo.
               servo.goTo(degree-15);
-              if(record(degree-15)){
-                  degree=degree-15;
-              } else if((degree+15)<180) {
+              if(record(degree-15)){ //Record at new degree 
+                  degree=degree-15; //If we found something at degree-15, let this be the new value of degree.
+              } else if((degree+15)<180) { //If we are going to break the servo by going more left, we should check if we can go right.
               servo.goTo(degree+15);
                 if(record(degree+15)){
-                  degree=degree+15;
+                  degree=degree+15; //If we found something at degree+15, let this be the new value of degree.
                 } else {
-                    keepTracking=false;
+                    keepTracking=false; //If both directions were checked and nothing was found, drop the object.
                 }
               }
             } else if((degree+15)<180) {
+              /*
+              * Same process as above but inverted.
+              */
               servo.goTo(degree+15);
                 if(record(degree+15)){
                   degree=degree+15;
@@ -228,21 +250,58 @@ void spin(){
    
       }
     }
-    safeDelay(100);
+    safeDelay(STANDARD_DELAY);
       for(int i=to;i>from;i-=15){
     servo.goTo(i);
     if(record(i)){
       if(track){
-        while(record(i)){
-          safeDelay(100);
+        /*
+        * If track mode is activated we enter the track mode.
+        */
+        int degree=i;
+        bool keepTracking=true;
+        while(keepTracking){
+          safeDelay(STANDARD_DELAY);
           wireless.publish("TRK");
-          wireless.sweep(); 
+          wireless.sweep();          
+          bool res=record(degree); //Checking if anything is in our vicinity at the current degree.
+          if(!res){ //If nothing is seen we need to check if there is something to the left.
+            if((degree-15)>0){ //Ensure we are not going to break the servo.
+              servo.goTo(degree-15);
+              if(record(degree-15)){ //Record at new degree 
+                  degree=degree-15; //If we found something at degree-15, let this be the new value of degree.
+              } else if((degree+15)<180) { //If we are going to break the servo by going more left, we should check if we can go right.
+              servo.goTo(degree+15);
+                if(record(degree+15)){
+                  degree=degree+15; //If we found something at degree+15, let this be the new value of degree.
+                } else {
+                    keepTracking=false; //If both directions were checked and nothing was found, drop the object.
+                }
+              }
+            } else if((degree+15)<180) {
+              /*
+              * Same process as above but inverted.
+              */
+              servo.goTo(degree+15);
+                if(record(degree+15)){
+                  degree=degree+15;
+                } else if((degree-15)>0){
+              servo.goTo(degree-15);
+                  if(record(degree-15)){
+                    degree=degree-15;
+                  } else {
+                    keepTracking=false;
+                  }
+                }
+            }
+          }
+        }
+  
 
         }
-
+   
       }
-    }
-    safeDelay(100);
+    safeDelay(STANDARD_DELAY);
     }
   }
 
@@ -255,11 +314,9 @@ void loop(){
     Serial.println("Broker disconnected");
     wireless.connect();
     Serial.println("Connected");
-    //Short for connected. We send this to let front-end know we received command.
-   
   } else {
     long currentTime=millis(); //Retrieving the number ms the Wio terminal has been alive.
-    if((currentTime-lastUpdateTime)>=updateInterval){
+    if((currentTime-lastUpdateTime)>=UPDATE_INTERVAL){
       /*
       * This part can get stuck, this is why have enabled logging, for debugging purposes in case
       * the sonar gets stuck. 
@@ -267,7 +324,7 @@ void loop(){
       Serial.println("Sweep");
       lastUpdateTime=currentTime; //Updating the variable that keeps track how often we fetch new messages.
       result=wireless.sweep(); //Fetching new messages from MQTT broker.
-      wireless.publish("CNCTD");
+      wireless.publish("CNCTD");  //Short for connected. We send this to let front-end know we are connected and subcribed to topic.
       Serial.println(result);
       if(result==1){
           spin(); //Perform rotation in accorance to the specified sector.

@@ -6,9 +6,12 @@
     let watchInterval;
     let watcherActive=false;
     async function startWatchInterval(){
+        /*
+        * The watch interval checks if the sonar has received the command. If it has not we will simply exit the interval callback.
+        * If it has received the command we change the button label to the appropriate value and then disable the interval.
+        */
         watcherActive=true;
         watchInterval=setInterval(async function(){
-            console.log("hehihiheih")
             if($sonarStore.sonarStatus.lastCommandReceived==false) return;
             clearInterval(watchInterval);
             !$sonarCommands.sonarData.runSonar ? status = 'Start scanning' : status = 'Stop scanning';
@@ -17,6 +20,11 @@
     }
 
     async function toggleScan() {
+        /*
+        * When the user toggle's the scan button we assume that the sonar has not yet received the command,
+        * hence we set lastCommandReceived to false. It will be switched back by the MqttHandler once it receives the command.
+        * Then we toggle the previous value of runSonar and change the status to awaiting for visual purposes while starting the watchInterval.
+        */
         $sonarCommands.sonarData.runSonar=!$sonarCommands.sonarData.runSonar;
         $sonarStore.sonarStatus.lastCommandReceived = false;
         status="Awaiting...";
@@ -25,7 +33,7 @@
    
 </script>
 
-    <button id = "button" class='scan-button' class:recieved = "{watcherActive}" class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()} disabled = {watcherActive}>
+    <button id = "button" class='scan-button' class:received = "{watcherActive}" class:selected="{$sonarCommands.sonarData.runSonar}" on:click={()=>toggleScan()} disabled = {watcherActive}>
         <span class = "text">
             {status}
         </span>
@@ -67,12 +75,12 @@
         color: #007AFF;
         box-shadow: unset;
     }
-    .recieved {
+    .received {
         background-color: #D9D9D9;
         color: #bcbcba; 
     }
 
-    .recieved:hover {
+    .received:hover {
         cursor:default;
         opacity:unset;
     }
