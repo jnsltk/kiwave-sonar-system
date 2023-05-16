@@ -71,7 +71,10 @@
         console.log("Sonar is online.");
         return true;
       }else if (data.includes(TRACK_MODE)){
-        $sonarStore.sonarData.isTracking=true;        
+        $sonarStore.sonarStatus.isOnline=true;
+
+        $sonarStore.sonarData.isTracking=true;    
+        lastKeepAliveReceived=parseInt(Date.now()/1000)    
         $sonarStore.sonarData.trackingReportedAt=parseInt((Date.now()/1000));
 
         return true;

@@ -129,6 +129,11 @@
         if(history.length>360){
             //If the history contains more than 360 elements we remove the first one, to prevent performance issues.
             history.shift();
+        } else {
+            setTimeout(async function(){
+                history.shift();
+
+            },10000)
         }
         history.push({
             "deg1": deg1,
