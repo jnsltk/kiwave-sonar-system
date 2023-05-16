@@ -12,7 +12,7 @@
     $: range = parseInt($sonarCommands.sonarData.sRange);
     let history = [];
 
-    const activeSectorColor = "rgba(0, 122, 255, 0)"
+    const activeSectorColor = "rgba(0, 122, 255, 0.5)"
     $: objectColor = $darkModeSwitch.isDark ? "#c3c1c1" : "#767676";
     $: lineToObjectColor = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
         
