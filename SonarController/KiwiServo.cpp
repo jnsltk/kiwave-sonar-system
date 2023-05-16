@@ -26,9 +26,3 @@ void KiwiServo::goTo(float angle) {
     //Stopping signal transmission to servo
     digitalWrite(_sigPin, LOW);
 }
-
-
-
-void KiwiServo::setDelay(int newDelay) { _delay = newDelay; }
-
-int KiwiServo::getDelay() { return _delay; }

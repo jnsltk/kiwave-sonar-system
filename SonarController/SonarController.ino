@@ -14,7 +14,6 @@ KiwiServo servo(D2);
 KiwiMQTT wireless(ssid,secret);
 bool servoRun=false;
 bool track=false;
-bool objectFound=false;
 bool result=false;
 float temperature=0;
 int maxRange1=999;
@@ -111,16 +110,12 @@ void callback(char* topic, uint8_t* data, unsigned int msglen){
         int c=0;
         for(int i=3;i<6;i++){
           charMaxRange1[c]=(char) (data[i]);
-          //Serial.println(charMaxRange1[c]);
-
           c++;
         }
         c=0;
         for(int i=6;i<9;i++){
 
           charMaxRange2[c]=(char) (data[i]);
-          //Serial.println(charMaxRange2[c]);
-
           c++;
         }
         Serial.println("Range Set");
@@ -149,8 +144,8 @@ Serial.println(temperature);
   wireless.init();
 
 while(wireless.getWiFiStatus()!=WL_CONNECTED){
-
-  Serial.println(".");
+  Serial.println("Initial connect failed... Attempting reconnect.");
+  wireless.init();
   safeDelay(1000);
 }
 Serial.println("Wifi set.");
@@ -161,6 +156,9 @@ Serial.println("Callback set");
 }
 
 void sendBundle(){
+  /*
+  * Format buffer segment in accordance with specified format.
+  */
   String bundle=String("M");
   for(int i=0;i<maxMeasurements;i++){
     bundle=bundle+String("/")+sonar1Measurement[i]+String("/")+sonar2Measurement[i]+String("/")+degrees[i];
@@ -170,6 +168,9 @@ void sendBundle(){
 
 bool record(int degree){
   if(measurementsMade>=maxMeasurements){
+    /*
+    * We have reached the maximum number of measurements for this buffer segment, send it over MQTT.
+    */
     sendBundle();
     measurementsMade=0;    
   }
@@ -190,32 +191,41 @@ bool record(int degree){
 }
 
 void spin(){
+  /*
+  * This method is responsible for moving the ultrasonic sensor and tracking objects if tracking mode is enabled.
+  */
   if(servoRun){
   for(int i=from;i<to;i+=15){
     servo.goTo(i);
     if(record(i)){
       if(track){
+        /*
+        * If track mode is activated we enter the track mode.
+        */
         int degree=i;
         bool keepTracking=true;
         while(keepTracking){
           safeDelay(100);
           wireless.publish("TRK");
           wireless.sweep();          
-          bool res=record(degree);
-          if(!res){
-            if((degree-15)>0){
+          bool res=record(degree); //Checking if anything is in our vicinity at the current degree.
+          if(!res){ //If nothing is seen we need to check if there is something to the left.
+            if((degree-15)>0){ //Ensure we are not going to break the servo.
               servo.goTo(degree-15);
-              if(record(degree-15)){
-                  degree=degree-15;
-              } else if((degree+15)<180) {
+              if(record(degree-15)){ //Record at new degree 
+                  degree=degree-15; //If we found something at degree-15, let this be the new value of degree.
+              } else if((degree+15)<180) { //If we are going to break the servo by going more left, we should check if we can go right.
               servo.goTo(degree+15);
                 if(record(degree+15)){
-                  degree=degree+15;
+                  degree=degree+15; //If we found something at degree+15, let this be the new value of degree.
                 } else {
-                    keepTracking=false;
+                    keepTracking=false; //If both directions were checked and nothing was found, drop the object.
                 }
               }
             } else if((degree+15)<180) {
+              /*
+              * Same process as above but inverted.
+              */
               servo.goTo(degree+15);
                 if(record(degree+15)){
                   degree=degree+15;
@@ -241,15 +251,52 @@ void spin(){
     servo.goTo(i);
     if(record(i)){
       if(track){
-        while(record(i)){
+        /*
+        * If track mode is activated we enter the track mode.
+        */
+        int degree=i;
+        bool keepTracking=true;
+        while(keepTracking){
           safeDelay(100);
           wireless.publish("TRK");
-          wireless.sweep(); 
+          wireless.sweep();          
+          bool res=record(degree); //Checking if anything is in our vicinity at the current degree.
+          if(!res){ //If nothing is seen we need to check if there is something to the left.
+            if((degree-15)>0){ //Ensure we are not going to break the servo.
+              servo.goTo(degree-15);
+              if(record(degree-15)){ //Record at new degree 
+                  degree=degree-15; //If we found something at degree-15, let this be the new value of degree.
+              } else if((degree+15)<180) { //If we are going to break the servo by going more left, we should check if we can go right.
+              servo.goTo(degree+15);
+                if(record(degree+15)){
+                  degree=degree+15; //If we found something at degree+15, let this be the new value of degree.
+                } else {
+                    keepTracking=false; //If both directions were checked and nothing was found, drop the object.
+                }
+              }
+            } else if((degree+15)<180) {
+              /*
+              * Same process as above but inverted.
+              */
+              servo.goTo(degree+15);
+                if(record(degree+15)){
+                  degree=degree+15;
+                } else if((degree-15)>0){
+              servo.goTo(degree-15);
+                  if(record(degree-15)){
+                    degree=degree-15;
+                  } else {
+                    keepTracking=false;
+                  }
+                }
+            }
+          }
+        }
+  
 
         }
-
+   
       }
-    }
     safeDelay(100);
     }
   }
@@ -263,8 +310,6 @@ void loop(){
     Serial.println("Broker disconnected");
     wireless.connect();
     Serial.println("Connected");
-    //Short for connected. We send this to let front-end know we received command.
-   
   } else {
     long currentTime=millis(); //Retrieving the number ms the Wio terminal has been alive.
     if((currentTime-lastUpdateTime)>=updateInterval){
@@ -275,7 +320,7 @@ void loop(){
       Serial.println("Sweep");
       lastUpdateTime=currentTime; //Updating the variable that keeps track how often we fetch new messages.
       result=wireless.sweep(); //Fetching new messages from MQTT broker.
-      wireless.publish("CNCTD");
+      wireless.publish("CNCTD");  //Short for connected. We send this to let front-end know we are connected and subcribed to topic.
       Serial.println(result);
       if(result==1){
           spin(); //Perform rotation in accorance to the specified sector.
