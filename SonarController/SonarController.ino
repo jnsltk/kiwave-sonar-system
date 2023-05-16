@@ -12,6 +12,12 @@ KiwiSonic ultrasonicSensor2(D8,350);
 KiwiTemp tempSensor(A0);
 KiwiServo servo(D2);
 KiwiMQTT wireless(ssid,secret);
+
+const int STANDARD_DELAY=100; //Used to delay certain operations for readability or stability.
+const int SOUNDWAVE_DISSIPATION_DELAY=250; //Used to prevent accumulation of sound waves when used in smaller rooms.
+const long UPDATE_INTERVAL=5000; //How often are we going to fetch new messages from MQTT.
+const int MAX_MEASUREMENTS=5; //Maximum measurements
+
 bool servoRun=false;
 bool track=false;
 bool result=false;
@@ -19,10 +25,8 @@ float temperature=0;
 int maxRange1=999;
 int maxRange2=999;
 long lastUpdateTime=0;
-const long updateInterval=5000;
 int from=0;
 int to=180;
-int maxMeasurements=5;
 void safeDelay(int ms){
   long timeRunning=millis();
    while((millis()-timeRunning)<ms){
@@ -160,14 +164,14 @@ void sendBundle(){
   * Format buffer segment in accordance with specified format.
   */
   String bundle=String("M");
-  for(int i=0;i<maxMeasurements;i++){
+  for(int i=0;i<MAX_MEASUREMENTS;i++){
     bundle=bundle+String("/")+sonar1Measurement[i]+String("/")+sonar2Measurement[i]+String("/")+degrees[i];
   }
   wireless.publish(bundle);
 }
 
 bool record(int degree){
-  if(measurementsMade>=maxMeasurements){
+  if(measurementsMade>=MAX_MEASUREMENTS){
     /*
     * We have reached the maximum number of measurements for this buffer segment, send it over MQTT.
     */
@@ -176,7 +180,7 @@ bool record(int degree){
   }
   
   int measure1=ultrasonicSensor1.calculateDistance(temperature);
-  safeDelay(250);
+  safeDelay(SOUNDWAVE_DISSIPATION_DELAY);
   int measure2=ultrasonicSensor2.calculateDistance(temperature);
   int reportedMeasurement1=measure1<maxRange1?measure1:-1;
   int reportedMeasurement2=measure2<maxRange2?measure2:-1;
@@ -205,7 +209,7 @@ void spin(){
         int degree=i;
         bool keepTracking=true;
         while(keepTracking){
-          safeDelay(100);
+          safeDelay(STANDARD_DELAY);
           wireless.publish("TRK");
           wireless.sweep();          
           bool res=record(degree); //Checking if anything is in our vicinity at the current degree.
@@ -246,7 +250,7 @@ void spin(){
    
       }
     }
-    safeDelay(100);
+    safeDelay(STANDARD_DELAY);
       for(int i=to;i>from;i-=15){
     servo.goTo(i);
     if(record(i)){
@@ -257,7 +261,7 @@ void spin(){
         int degree=i;
         bool keepTracking=true;
         while(keepTracking){
-          safeDelay(100);
+          safeDelay(STANDARD_DELAY);
           wireless.publish("TRK");
           wireless.sweep();          
           bool res=record(degree); //Checking if anything is in our vicinity at the current degree.
@@ -297,7 +301,7 @@ void spin(){
         }
    
       }
-    safeDelay(100);
+    safeDelay(STANDARD_DELAY);
     }
   }
 
@@ -312,7 +316,7 @@ void loop(){
     Serial.println("Connected");
   } else {
     long currentTime=millis(); //Retrieving the number ms the Wio terminal has been alive.
-    if((currentTime-lastUpdateTime)>=updateInterval){
+    if((currentTime-lastUpdateTime)>=UPDATE_INTERVAL){
       /*
       * This part can get stuck, this is why have enabled logging, for debugging purposes in case
       * the sonar gets stuck. 

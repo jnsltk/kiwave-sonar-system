@@ -7,7 +7,6 @@
 KiwiServo::KiwiServo(int sigPin) {
     _sigPin = sigPin;
     pinMode(_sigPin, OUTPUT); //We need to transmit signals.
-    setDelay(25); 
 }
 
 int KiwiServo::convertAngleToPulse(float angle) {
