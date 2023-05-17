@@ -11,7 +11,7 @@ function toggleNotification() {
 </script>
   
 <button class='notification-button' on:click="{toggleNotification}">
-    <span class="text">Notificion: {$notificationStore ? 'On' : 'Off'}</span>
+    <span class="text">Notification: {$notificationStore ? 'On' : 'Off'}</span>
 </button>
   
 <style>
@@ -20,7 +20,7 @@ function toggleNotification() {
       background-color: #007AFF;
       font-family: 'Inter', sans-serif;
       align-self: flex-end;
-      width: 130px;  
+      width: 140px;  
       height: 30px;  
       border-radius: 10px;
       border: none;
