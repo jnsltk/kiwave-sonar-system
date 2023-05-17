@@ -9,11 +9,16 @@
     import TrackMode from "./gui/TrackMode.svelte";
     import TrackModeTooltip from "./gui/TrackModeTooltip.svelte";
     import ModeSwitch from "./gui/ModeSwitch.svelte";
+    import NotificationButton from "./gui/NotificationButton.svelte";
+    
 </script>
 
 <div class="header">
         <img src="KiWave-dark.png" class="kiwave-dark" alt="KiWave logo">
         <img src="KiWave-light.png" class="kiwave-light" alt="KiWave logo">
+        <div class="notficationButton">
+            <NotificationButton/>
+        </div>
         <div class="modeswitch">
             <ModeSwitch/>  
         </div>
@@ -55,6 +60,8 @@
 
     }
 
+
+
     .screen {
         display: flex;
         flex-direction: column;
@@ -87,6 +94,14 @@
         border-radius: 20px;
         box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
         width:80%;
+    }
+
+    .notficationButton{
+        width: 87%;
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 6px;
+        margin-bottom: 14px;
     }
 
     .track-mode {
