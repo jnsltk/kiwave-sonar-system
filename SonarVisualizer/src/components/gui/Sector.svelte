@@ -2,61 +2,75 @@
     import { onMount } from 'svelte';
     import { sonarCommands } from "../../data/stores";
   
-    let minVal = 0;
-    let maxVal = 180;
+    //Initial start and end degree values for the sector.
+    let startDegree = 0;
+    let endDegree = 180;
 
-    let inputMin;
-    let inputMax;
+    let inputStartDeg;
+    let inputEndDeg;
 
-    $: minValRange = minVal;
-    $: maxValRange =  maxVal;
+    // Reactive statement to update the displayed start and end degree values.
+    $: displatedStartDeg = startDegree;
+    $: displayedEndDeg =  endDegree;
 
-  //check new max input  
-  function checkMaxVal(inputElem) {
-    let newMaxVal = parseInt(inputElem.value);
+  //Check the new end degree value input.
+  function checkEndDeg(inputElem) {
+    let newEndDegree = parseInt(inputElem.value);
 
-    if (newMaxVal > 180) {
-      newMaxVal = 180;
+    //The end degree can not be more than 180.
+    if (newEndDegree > 180) {
+      newEndDegree = 180;
     }
 
-    if (newMaxVal - minVal < 15) {
-      if (minVal === 0) {
-        newMaxVal = 15;
-      } else if (newMaxVal === 180) {
-        minVal = 180 - 15;
+    //The minimum difference between the start and end can be 15 degrees.
+    if (newEndDegree - startDegree < 15) {
+      if (startDegree === 0) {
+        newEndDegree = 15;
+      } else if (newEndDegree === 180) {
+        startDegree = 180 - 15;
       } else {
-        newMaxVal = minVal + 15;
+        newEndDegree = startDegree + 15;
       }
     }
 
-    inputElem.value = newMaxVal;
-    maxVal = newMaxVal;
+    inputElem.value = newEndDegree;
+    endDegree = newEndDegree;
   }
 
-  // checks new min value
-  function checkMinVal(inputElem) {
-    let newMinVal = parseInt(inputElem.value);
+  //Check the new start degree input.
+  function checkStartDegree(inputElem) {
+    let newstartDegree = parseInt(inputElem.value);
 
-    if (newMinVal < 0) {
-      newMinVal = 0;
+    //The minimum value for start degree is 0.
+    if (newstartDegree < 0) {
+      newstartDegree = 0;
     }
 
-    if (maxVal - newMinVal < 15) {
-      if (newMinVal === 0) {
-        maxVal = 15;
-      } else if (maxVal === 180) {
-        newMinVal = 180 - 15;
+    //The minimum difference between the start and end can be 15 degrees.
+    if (endDegree - newstartDegree < 15) {
+      if (newstartDegree === 0) {
+        endDegree = 15;
+      } else if (endDegree === 180) {
+        newstartDegree = 180 - 15;
       } else {
-        maxVal = newMinVal + 15;
+        endDegree = newstartDegree + 15;
       }
     }
 
-    inputElem.value = newMinVal;
-    minVal = newMinVal;
+    inputElem.value = newstartDegree;
+    startDegree = newstartDegree;
   }
 
-    $: progressStyle = `left: ${minVal / 180 * 100}%; right: ${100 - (maxVal / 180 * 100)}%;`;
+    //Calculate the progress that will be shown on the slider based on the initial start and end degrees.
+    $: progressStyle = `left: ${startDegree / 180 * 100}%; right: ${100 - (endDegree / 180 * 100)}%;`;
    
+
+     /**
+      * Processing the degrees by adding padding zeros.
+      * For instance: If the input degree is 5, then it is formatted to be 005.
+      * This ensures that the degree format respects the command structure.
+      */
+
     async function processDeg(inputDeg){
       let paddingToAdd=3-inputDeg.toString().length;
       let processedDeg="";
@@ -66,33 +80,33 @@
       processedDeg+=inputDeg.toString()
       return processedDeg;
     }
+
+    // Set the sector by updating sonarCommands with the processed degrees
     async function setSector(){
-      //Adds padding zero's to conform to command structure
-      console.log(minValRange)
-      console.log(maxValRange)
-      $sonarCommands.sonarData.sDeg1=await processDeg(minValRange);
-      $sonarCommands.sonarData.sDeg2=await processDeg(maxValRange);
+      //Adds padding zero's to conform to command structure.
+      $sonarCommands.sonarData.sDeg1=await processDeg(startDegree);
+      $sonarCommands.sonarData.sDeg2=await processDeg(endDegree);
     }
 
     onMount(() => {
-  const rangeInput = document.querySelector(".range-input");
+  const rangeInput = document.querySelector(".sector-input");
   rangeInput.addEventListener('input', () => {
     // @ts-ignore
-    minVal = parseInt(rangeInput.querySelector('.range-min').value);
+    startDegree = parseInt(rangeInput.querySelector('.sector-start').value);
     // @ts-ignore
-    maxVal = parseInt(rangeInput.querySelector('.range-max').value);
+    endDegree = parseInt(rangeInput.querySelector('.sector-end').value);
     /*
     * Making sure the sector can not be set to less than 15 degrees
     * since it is the smallest range in which the ultrasonic sensors can
     * detect objects.
     */
-    if (maxVal - minVal < 15) {
-        if (minVal === 0) {
-          maxVal = 15;
-        } else if (maxVal === 180) {
-          minVal = 180-15;
+    if (endDegree - startDegree < 15) {
+        if (startDegree === 0) {
+          endDegree = 15;
+        } else if (endDegree === 180) {
+          startDegree = 180-15;
         } else {
-          maxVal = minVal + 15;
+          endDegree = startDegree + 15;
         }
       }
   });
@@ -105,22 +119,22 @@
     <div class="degree-input">
       <div class="field">
         <span><p>Start degree</p></span>
-        <input on:change={()=>setSector()}  on:blur={(e)=>checkMinVal(e.target)} type="number" class="input-min" min="0" max="180"  value={minVal} bind:this={inputMin}>
+        <input on:change={()=>setSector()}  on:blur={(e)=>checkStartDegree(e.target)} type="number" class="input-min" min="0" max="180"  value={startDegree} bind:this={inputStartDeg}>
       </div>
       <div class="field">
         <span>
           <p>End degree</p>
          </span>
 
-        <input on:change={()=>setSector()} on:blur={(e)=>checkMaxVal(e.target)} type="number"  class="input-max" min="15" max="180" value={maxVal} bind:this={inputMax}>
+        <input on:change={()=>setSector()} on:blur={(e)=>checkEndDeg(e.target)} type="number"  class="input-max" min="15" max="180" value={endDegree} bind:this={inputEndDeg}>
       </div>
     </div>
     <div class="slider">
       <div class="progress" style={progressStyle}></div>
     </div>
-    <div class="range-input">
-      <input  on:change={()=>setSector()} type="range" class="range-min" min="0" max="180" bind:value={minValRange}>
-      <input  on:change={()=>setSector()} type="range" class="range-max" min="0" max="180" bind:value={maxValRange}>
+    <div class="sector-input">
+      <input  on:change={()=>setSector()} type="range" class="sector-start" min="0" max="180" bind:value={displatedStartDeg}>
+      <input  on:change={()=>setSector()} type="range" class="sector-end" min="0" max="180" bind:value={displayedEndDeg}>
     </div>
   </div>
   
@@ -187,11 +201,11 @@
     background:#007AFF ;
     }
 
-    .range-input{
+    .sector-input{
         position:relative;
     }
     
-    .range-input input{
+    .sector-input input{
         background: none;
         -webkit-appearance: none;
         position:absolute;
