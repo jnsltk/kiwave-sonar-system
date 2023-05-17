@@ -12,14 +12,14 @@
     $: range = parseInt($sonarCommands.sonarData.sRange);
     let history = [];
 
-    const activeSectorColor = "#007AFF"
+    const activeSectorColor = "rgba(0, 122, 255, 0.5)"
     $: objectColor = $darkModeSwitch.isDark ? "#c3c1c1" : "#767676";
     $: lineToObjectColor = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
         
     $: objectColorAdj = $darkModeSwitch.isDark ? "rgba(213, 215, 212, *OPC*)" : "rgba(118, 118, 118, *OPC*)";
     $: lineToObjectColorAdj = $darkModeSwitch.isDark ? "rgba(59, 59, 59, *OPC*)" : "rgba(213, 215, 212, *OPC*)";
     /**
-     * Draws 15 lines (because of the 15 degree measurement angle) from the center to the specified coordinates to erase 
+     * Draws 1 line from the center to the specified coordinates to erase 
      * previous object measurments. If called on the currently measured (active) sector, the line corresponding to the 
      * degree will be highlighted.
      * @param context The graphical context
@@ -58,7 +58,7 @@
 
 
     /**
-     * Draws 15 lines (because of the 15 degree measurement angle) from the specified coordinates to the edge of the 
+     * Draws 1 line from the specified coordinates to the edge of the 
      * radar screen, which represents a detected object. If called on the currently measured (active) sector, the line corresponding to the 
      * degree will be highlighted.
      * @param context The graphcial context
@@ -127,7 +127,13 @@
         drawObjectFrom(context, deg2, dist2, width, height, true,objectColor);
         drawLineTo(context, deg2, dist2, width, height, true,lineToObjectColor);
         if(history.length>360){
+            //If the history contains more than 360 elements we remove the first one, to prevent performance issues.
             history.shift();
+        } else {
+            setTimeout(async function(){
+                history.shift();
+
+            },10000)
         }
         history.push({
             "deg1": deg1,

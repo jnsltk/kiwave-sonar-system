@@ -2,7 +2,6 @@
     /*
     This file shall bind all separate components into one single component.
     */
-    
     import RadarScreen from "./gui/RadarScreen/RadarScreen.svelte";
     import Range from "./gui/Range.svelte";
     import Sector from "./gui/Sector.svelte";
@@ -10,36 +9,25 @@
     import TrackMode from "./gui/TrackMode.svelte";
     import TrackModeTooltip from "./gui/TrackModeTooltip.svelte";
     import ModeSwitch from "./gui/ModeSwitch.svelte";
-    import NotificationButton from "./gui/NotificationButton.svelte";
-    
-  
-
 </script>
 
-<!-- The order is arbitrary, feel free to modify. Ideally, create columns in separate divs -->
 <div class="header">
         <img src="KiWave-dark.png" class="kiwave-dark" alt="KiWave logo">
         <img src="KiWave-light.png" class="kiwave-light" alt="KiWave logo">
-        <dive class="notficationButton">
-            <NotificationButton/>
-        </dive>
         <div class="modeswitch">
-            <ModeSwitch/>
+            <ModeSwitch/>  
         </div>
     </div>
-    
-
     <div class="container">
-
+    
     <div class="screen">
         <RadarScreen/>
     </div>
     
-
     <div class="controls">
         <div class="group-sliders" id ="group-sliders">
             <div class="track-mode">
-                <TrackMode/>
+            <TrackMode/>
             <TrackModeTooltip/>
             </div>
             <Range/>
@@ -47,7 +35,6 @@
         </div>
         <ScanButton/>
     </div>
-
    
     
       
@@ -57,16 +44,8 @@
     .header {
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: space-between;
         width: 96%;
-    }
-
-    .notficationButton{
-        width: 87%;
-        display: flex;
-        justify-content: flex-end;
-        margin-right: 6px;
-        margin-bottom: 14px;
     }
 
     .container {
@@ -141,9 +120,9 @@
             padding-bottom: 20px;
             padding-left: 0;
         } 
+
     }
 
- 
    
 
    

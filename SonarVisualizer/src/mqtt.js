@@ -1,5 +1,5 @@
 /*
-Imported as local CDN from: https://github.com/shanewholloway/js-u8-mqtt
+Imported from: https://github.com/shanewholloway/js-u8-mqtt
 */
 
 function encode_varint(n, a=[]) {

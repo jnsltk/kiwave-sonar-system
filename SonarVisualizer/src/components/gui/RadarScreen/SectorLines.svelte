@@ -61,7 +61,6 @@
         context.moveTo(0, 0);
         context.lineTo(Math.cos(toRadians(180)) * screenRadius, Math.sin(toRadians(180)) * screenRadius);
         context.stroke();
-
         context.restore();
     }
 </script>

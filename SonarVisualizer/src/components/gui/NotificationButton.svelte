@@ -1,7 +1,9 @@
 <script>
    import { notificationStore } from "../../data/stores";
 
-  
+  /*
+  * This component simply toggles a boolean flag that informs the WarningModal component whether or not it should display the warning modal.
+  */
 function toggleNotification() {
   $notificationStore = !$notificationStore;
 }
