@@ -160,7 +160,7 @@ Needed libraries:
 5. If you use global environment variables or a `.env` file in your code, you need to install `babel-plugin-transform-vite-meta-env` to transform these variables for the commonJS module.
 6. `@testing-library/jest-dom` provides a set of custom jest matchers that you can use to extend jest. These can be used to make your tests more declarative. It has functions such as `toBeDisabled()`, `toBeInTheDocument()`, and `toBeVisible()`.
 
-You can installthe aforementioned libraires using npm:
+You can install the aforementioned libraires using npm:
 
 ```
 npm install -D jest babel-jest @babel/preset-env svelte-jester jest-transform-stub @testing-library/svelte @testing-library/user-event babel-plugin-transform-vite-meta-env @testing-library/jest-dom
