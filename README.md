@@ -22,18 +22,22 @@
 [Introductory video](https://www.youtube.com/watch?v=9HAqAKBQyas) for the project:
 
 # Project Background/ Problem Description
+<details><summary>Click to expand</summary>
 The need for efficient, cost-effective, and non-invasive monitoring solutions has become increasingly important in various industries. The monitoring system offers a reliable and accessible solution to security and environmental concerns. The system can be used in home security, industrial safety, parking assistance, environmental monitoring, retail analytics, and traffic management. The project builds on existing technologies and offers a customizable and expandable monitoring solution for different applications.
+</details>
 
 # Utilization
+<details><summary>Click to expand</summary>
 Despite the fact that the system is mainly designed for "Home Security", it has multiple other potential applications.
 - Industrial safety: The system can detect objects in areas with heavy machinery and prevent accidents.
 - Parking assistance: The system can detect the presence of vehicles and assist drivers in parking.
 - Environmental monitoring: The system can detect changes in the environment and provide valuable insights.
 - Retail analytics: The system can track the movement of customers and provide valuable data for businesses
 - Traffic management: The system can detect and monitor traffic flow and help manage congestion.
-
+</details>
 
 # Project Description
+<details><summary>Click to expand</summary>
 This project aims to implement a monitoring system for a designated area or sector. The system employs two kinds of sensors: two ultrasonic sensors, a temperature sensor, and an actuator in the form of a servo motor, all of which are connected to a Wio Seeed Terminal, a microcontroller.
 
 The core concept of the system involves mounting two ultrasonic sensors on top of a servo motor, which rotates the sensors to scan the designated area. These sensors transmit high-frequency sound waves and receive the corresponding echoes, thus detecting any objects that move within a specific radius of the sensors. The temperature sensor comes into play by measuring the temperature, which helps calculate the speed of sound in air. This information, in turn, assists in determining the amount of time in milliseconds to wait for the echo.
@@ -41,8 +45,10 @@ The core concept of the system involves mounting two ultrasonic sensors on top o
 The servo motor is responsible for continuously monitoring its position in degrees, while the ultrasonic sensors passes the distance data it has recieved as a result of the ultrasoic wave transmission and reception to the microcontroller, the Wio Seeed Terminal, which then publishes this information over WiFi to the topic: KiWaveSonarData.
 
 To provide a user-friendly interface, the front-end utilizes SvelteJS front-end framework and other JavaScript libraries to subscribe to the topic KiWaveSonarData. Upon receiving new information, the front-end parses and displays it in the form of a radar image that showcases the range and degree of any detected object relative to the sensors.
+</details>
 
 ## Used Technologies
+<details><summary>Click to expand</summary>
 - C++
 - JAVA SCRIPT
 - FIGMA
@@ -50,17 +56,21 @@ To provide a user-friendly interface, the front-end utilizes SvelteJS front-end 
 - SERVO MOTOR
 - ULTRASONIC SENSOR
 - TEMPERATURE SENSOR
+</details>
 
 # Documentation 
 [Documents](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/wikis/Home)
-[User Manual] ()
 
 # Installation and Usage
+<details><summary>Click to expand</summary>
 
 ## Introduction
+<details><summary>Click to expand</summary>
 This projetct builds a sonar using one Wio Seed Terminal (which is Arduino compatibale), two ultrasonic sensors, one temperature sensor, and one servo motor. These parts make up the hardware required to build the sonar. The hardware parts are controlled using a GUI made using SvelteJs frot-end framework. The project uses the MQTT protocol (which belongs to the Publish-Subscribe Architecture style ) to connect the GUI to the Wio Seeed Terminal.
+</details>
 
 ## Working with Wio Terminal and the sensors
+<details><summary>Click to expand</summary>
 The Wio Seeed Terminal is an Arduino Compatibale microcontroller. This means that its manipulation is done using C++ programming language. To easily upload code on the Wio Seeed Terminal, you can use the [Arduino IDE](https://www.arduino.cc/en/software). There are libraries implemented for different sensors and also for the MQTT protocol in the SonarController directory:
     - `KiwiServo` library contains methods that are used to rotate the servo motor.
     - `KiwiTemp` contains methods that are used to manipulate the ultrasonic sensors
@@ -77,27 +87,27 @@ You also need to download the foolwing libraires. You can download these by clic
 The following lines will explain the pin-out instructions. Use these instructions to connect the sensors to the Wio Seeed Terminal. you can use the following image for referrence to which pin is which.
 
 <img src = "https://files.seeedstudio.com/wiki/Wio-Terminal/img/WioT-Pinout.jpg">
+
 <img src = "https://files.seeedstudio.com/wiki/Wio-Terminal/img/WT-GROVE.jpeg">
 
-    - Servo motor pinout structure:
-        - VCC connected to 4 (which is 5V) on the Wio
-        - GND connected to 6 (which is GND) on the Wio
-        - SIG connected to 16 (which is D2) on the Wio
-    - First ultrasonic sensor pinout structure:
-        - GND connected to 30 (which is GND) on the Wio
-        - VCC connected to 1 (which is 3V3 (3.3 V)) on the Wio
-        - SIG connected to 36 (which is D7)non the Wio
-    - Second ultrasoic sensor pinout structure:
-        - GND connected to 34 (which is GND) on the Wio
-        - VCC connected to 2 (which is 3v3 (3.3 v)) on the Wio
-        - SIG connected to 37 (which is D8) on the Wio
-    - Temperature sensor pinout structure:
-        - Use the Multifunctional pinout under the joystick
-
-
-
+Servo motor pinout structure:
+    - VCC connected to 4 (which is 5V) on the Wio
+    - GND connected to 6 (which is GND) on the Wio
+    - SIG connected to 16 (which is D2) on the Wio
+First ultrasonic sensor pinout structure:
+    - GND connected to 30 (which is GND) on the Wio
+    - VCC connected to 1 (which is 3V3 (3.3 V)) on the Wio
+    - SIG connected to 36 (which is D7)non the Wio
+Second ultrasoic sensor pinout structure:
+    - GND connected to 34 (which is GND) on the Wio
+    - VCC connected to 2 (which is 3v3 (3.3 v)) on the Wio
+    - SIG connected to 37 (which is D8) on the Wio
+Temperature sensor pinout structure:
+    - Use the Multifunctional pinout under the joystick
+</details>
 
 ## Working with the GUI
+<details><summary>Click to expand</summary>
 SvelteJS was used to make the GUI for this project. In order to use SvelteJS you need to have [Node.js](https://nodejs.org/en/download) downloaded.
 
 The GUi initial setup was done by runnign the command `npm create vite@latest` in the `SonarVisualizer` directory. However, if you use our project, you do not need to run the forementioned command, but rather the commands mentioned next.
@@ -114,11 +124,15 @@ After installing all the required dependencies, the application can be built fro
 If you navigate to the `src` subdirectory, you can find the different components under the `components` subdirectory. There is also a subdirectory called `data`. This directory contains the `stores.js` file which holds the information that is sent by the Wio Seeed Terminal over MQTT, and commands to be sent to the Wio Seeed Terminal by the GUI. The `App.svelte` component is the root component which contains the other components that are made under the `components` subdirectory.
 
 Under `components` subdirectory, there is another directory called `mqtt` which conatins the `MQTTHandler.svelte` component. This component contains the publish and subscribe methods needed for the MQTT to work on the GUI.
+</details>
+</details>
 
 # Testing
+<details><summary>Click to expand</summary>
 Unit tests were made for the GUI in this project. The Jest testing framework was used to make unit tests that checked the correctness of the commands sent by the GUI and the way componenets were rendered. This section contains information regarding configuring Jest on a svelte project and the commands used to run the tests. Note that when you use `npm i` after forking our project and pulling from the remote repository, you can already use the testing commands on our project as Jest is already configured on it. The Jest configuration part is useful for those who want to configure Jest on their own projects.
 
 ## Jest configuration
+<details><summary>Click to expand</summary>
 Needed libraries:
 1. `@babel/core`, `babel-jest` and `@babel/preset-env`are some libraires that we need. . These are needed for the transpilation that is required by jest.
 2. `svelte-jester` and `jest-transform-stub`. Jest does not understand how to parse non-JavaScript files. We need to use svelte-jester to transform Svelte files, and jest-transform-stub for importing non-JavaScript assets (images, CSS, etc).
@@ -164,13 +178,17 @@ Add the scripts to run the tests in your `package.json`. NOte that you should ad
 "test:watch": "npm run test -- --watch"
 ```
 sources: https://www.roboleary.net/2021/11/18/svelte-app-testing-jest.html
+</details>
 
-After following the instructions, you should be able to use the command `npm run test` to run the tests that you have written for your project. Note that a test file should be name after the component that your are testing. For example, if you have a component called `Button.svelte` then the test file should be called `Button.spec.js` or `Button.test.js`. As you can see, the test file has `.spec.js` or `.test.js`. This is needed for jest to be able to find the test files which are written in JavaScript.
+After following the instructions (in case your configuring jest on your own project), you should be able to use the command `npm run test` to run the tests that you have written for your project. Note that a test file should be name after the component that your are testing. For example, if you have a component called `Button.svelte` then the test file should be called `Button.spec.js` or `Button.test.js`. As you can see, the test file has `.spec.js` or `.test.js`. This is needed for jest to be able to find the test files which are written in JavaScript.
+</details>
 
 # CI/CD
+<details><summary>Click to expand</summary>
 CI/CD stands for "continuous intergration" and "continuous development". We use the GitLab piplelines to continuous test code that is committed and and then deploy the code, if it passes the tests. The pipleine is written in `.gitlab-ci.yml` file which is usually uploaded on the root of the project (good practice to put it there). As you have noticed by now, this is a YAML file which contains commands that are executed by the GitLab runner(s). GitLab runners are computers that have Linux as their Operating System. These runners pull your project and look for the CI file and run the commands that you have given there. To install packages and programs on the runner to run your commands, most projects (our project too) use docker images. You can find docker images for the applications (programs) that you need in order to test and/or deploy your project from [docker hub](https://hub.docker.com/). Each block of commands that is executed by the GitLab runner is called a job. Note that you need to use a runner that can handle docker images. You can see the available runners under CI/CD in settings. You can see the result of your pipline under the CI/CD Pipelines.
 
 You can customize your `.gitlab-ci.yml` file in many ways:
+
     - You can add stages, so that if one stage fails the reat do not run (useful in case of deployment). For example, if your test job fails, you do not want to deploy your project.
     - You can customize your jobs by using the `rules` flag, so that your job runs only on specific branches (in case of deployment, in `main` branch only as an example). 
     - You can add the `before-script` to download dependencies needed by the commands that run in the `script` flag.
@@ -178,6 +196,7 @@ You can customize your `.gitlab-ci.yml` file in many ways:
     - Note that the jobs need to have the `script` flag. A job without the `script` flag does not do anything, so it will always pass.
 
 This is just a glimpse into what you can do using CI/CD in GitLab. Our project uses CI/CD for automated testing and deployment. It is a simple pipileine. You can use this as a starting point. You can read and learn more about the sphisticated and advanced features of GitLab CI/CD [here](https://docs.gitlab.com/ee/ci/).
+</details>
 
 
 
