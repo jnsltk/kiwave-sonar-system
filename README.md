@@ -53,7 +53,7 @@ To provide a user-friendly interface, the front-end utilizes SvelteJS front-end 
 
 </details>
 
-## Used Technologies
+# Used Technologies
 <details><summary>Click to expand</summary>
 
 - C++
