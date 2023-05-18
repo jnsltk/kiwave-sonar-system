@@ -31,7 +31,7 @@ The need for efficient, cost-effective, and non-invasive monitoring solutions ha
 # Utilization
 <details><summary>Click to expand</summary>
 
-Despite the fact that the system is mainly designed for "Home Security", it has multiple other potential applications.
+Despite the fact that the system is mainly designed for "Home Security", it has multiple other potential applications:
 - Industrial safety: The system can detect objects in areas with heavy machinery and prevent accidents.
 - Parking assistance: The system can detect the presence of vehicles and assist drivers in parking.
 - Environmental monitoring: The system can detect changes in the environment and provide valuable insights.
@@ -82,41 +82,41 @@ This projetct builds a sonar using one Wio Seed Terminal (which is Arduino compa
 ## Working with Wio Terminal and the sensors
 <details><summary>Click to expand</summary>
 
-The Wio Seeed Terminal is an Arduino Compatibale microcontroller. This means that its manipulation is done using C++ programming language. To easily upload code on the Wio Seeed Terminal, you can use the [Arduino IDE](https://www.arduino.cc/en/software). There are libraries implemented for different sensors and also for the MQTT protocol in the SonarController directory.
-    - `KiwiServo` library contains methods that are used to rotate the servo motor.
-    - `KiwiTemp` contains methods that are used to manipulate the ultrasonic sensors
-    - `KiwiTemp` contains methods that are used to manipulate the temperature sensor.
-    - `KiwiMQTT` contains method that are used to manipulate the Wio Seeed Terminal to send information over the MQTT protocol.
-    - Note that the `SonarController.ino` is the file containing the main code which is uploaded on the Wio Seeed Terminal. It contains the `void setup()` and the `void loop()` methods that are needed for the Wio to run.
+The Wio Seeed Terminal is an Arduino Compatibale microcontroller. This means that its manipulation is done using C++ programming language. To easily upload code on the Wio Seeed Terminal, you can use the [Arduino IDE](https://www.arduino.cc/en/software). There are libraries implemented for different sensors and also for the MQTT protocol in the SonarController directory:
+- `KiwiServo` library contains methods that are used to rotate the servo motor.
+- `KiwiTemp` contains methods that are used to manipulate the ultrasonic sensors
+- `KiwiTemp` contains methods that are used to manipulate the temperature sensor.
+- `KiwiMQTT` contains method that are used to manipulate the Wio Seeed Terminal to send information over the MQTT protocol.
+- Note that the `SonarController.ino` is the file containing the main code which is uploaded on the Wio Seeed Terminal. It contains the `void setup()` and the `void loop()` methods that are needed for the Wio to run.
 
 There is a hpp file named `KiwiSecrets_template`. This file is meant to keep the WiFi name and and password. When you write your WiFi name (in the `ssd` attribute) and password (in the `secret` attribute), you should change the name of the file from KiwiSecrets_template.h to `KiwiSecrets.h`. Note that the file `KiwiSecrets.h` is put in the `.gitignore` file so that the WiFi name and password are not sent to the remote repository.
 
-You also need to download the foolwing libraires. You can download these by clickoing on the library icon in the arduion library and search the name that are mentioned.
-    - `rpcwifi.h` is needed to connect to the WiFi. You can download it by searching for rpcwifi.
-    - `PubSubClient.h` is needed for publishing data and subscribing for data to the broker using the MQTT protocol. You can download it by searching for PubSubClinet.
+You also need to download the foolwing libraires. You can download these by clickoing on the library icon in the arduion library and search the name that are mentioned:
+- `rpcwifi.h` is needed to connect to the WiFi. You can download it by searching for rpcwifi.
+- `PubSubClient.h` is needed for publishing data and subscribing for data to the broker using the MQTT protocol. You can download it by searching for PubSubClinet.
 
 The following lines will explain the pin-out instructions. Use these instructions to connect the sensors to the Wio Seeed Terminal. you can use the following image for referrence to which pin is which.
 
 <img src = "https://files.seeedstudio.com/wiki/Wio-Terminal/img/WioT-Pinout.jpg">
 <img src = "https://files.seeedstudio.com/wiki/Wio-Terminal/img/WT-GROVE.jpeg">
 
-Servo motor pinout structure.
-    - VCC connected to 4 (which is 5V) on the Wio
-    - GND connected to 6 (which is GND) on the Wio
-    - SIG connected to 16 (which is D2) on the Wio
+Servo motor pinout structure:
+- VCC connected to 4 (which is 5V) on the Wio
+- GND connected to 6 (which is GND) on the Wio
+- SIG connected to 16 (which is D2) on the Wio
 
-First ultrasonic sensor pinout structure.
-    - GND connected to 30 (which is GND) on the Wio
-    - VCC connected to 1 (which is 3V3 (3.3 V)) on the Wio
-    - SIG connected to 36 (which is D7)non the Wio
+First ultrasonic sensor pinout structure:
+- GND connected to 30 (which is GND) on the Wio
+- VCC connected to 1 (which is 3V3 (3.3 V)) on the Wio
+- SIG connected to 36 (which is D7)non the Wio
 
-Second ultrasoic sensor pinout structure.
-    - GND connected to 34 (which is GND) on the Wio
-    - VCC connected to 2 (which is 3v3 (3.3 v)) on the Wio
-    - SIG connected to 37 (which is D8) on the Wio
+Second ultrasoic sensor pinout structure:
+- GND connected to 34 (which is GND) on the Wio
+- VCC connected to 2 (which is 3v3 (3.3 v)) on the Wio
+- SIG connected to 37 (which is D8) on the Wio
 
 Temperature sensor pinout structure.
-    - Use the Multifunctional pinout under the joystick
+- Use the Multifunctional pinout under the joystick
 
 </details>
 
@@ -209,12 +209,12 @@ After following the instructions (in case your configuring jest on your own proj
 
 CI/CD stands for "continuous intergration" and "continuous development". We use the GitLab piplelines to continuous test code that is committed and and then deploy the code, if it passes the tests. The pipleine is written in `.gitlab-ci.yml` file which is usually uploaded on the root of the project (good practice to put it there). As you have noticed by now, this is a YAML file which contains commands that are executed by the GitLab runner(s). GitLab runners are computers that have Linux as their Operating System. These runners pull your project and look for the CI file and run the commands that you have given there. To install packages and programs on the runner to run your commands, most projects (our project too) use docker images. You can find docker images for the applications (programs) that you need in order to test and/or deploy your project from [docker hub](https://hub.docker.com/). Each block of commands that is executed by the GitLab runner is called a job. Note that you need to use a runner that can handle docker images. You can see the available runners under CI/CD in settings. You can see the result of your pipline under the CI/CD Pipelines.
 
-You can customize your `.gitlab-ci.yml` file in many ways.
-    - You can add stages, so that if one stage fails the reat do not run (useful in case of deployment). For example, if your test job fails, you do not want to deploy your project.
-    - You can customize your jobs by using the `rules` flag, so that your job runs only on specific branches (in case of deployment, in `main` branch only as an example). 
-    - You can add the `before-script` to download dependencies needed by the commands that run in the `script` flag.
-    - You can specify the runner on which each job needs to run on using the `tags` flag.
-    - Note that the jobs need to have the `script` flag. A job without the `script` flag does not do anything, so it will always pass.
+You can customize your `.gitlab-ci.yml` file in many ways:
+- You can add stages, so that if one stage fails the reat do not run (useful in case of deployment). For example, if your test job fails, you do not want to deploy your project.
+- You can customize your jobs by using the `rules` flag, so that your job runs only on specific branches (in case of deployment, in `main` branch only as an example). 
+- You can add the `before-script` to download dependencies needed by the commands that run in the `script` flag.
+- You can specify the runner on which each job needs to run on using the `tags` flag.
+- Note that the jobs need to have the `script` flag. A job without the `script` flag does not do anything, so it will always pass.
 
 This is just a glimpse into what you can do using CI/CD in GitLab. Our project uses CI/CD for automated testing and deployment. It is a simple pipileine. You can use this as a starting point. You can read and learn more about the sphisticated and advanced features of GitLab CI/CD [here](https://docs.gitlab.com/ee/ci/).
 
