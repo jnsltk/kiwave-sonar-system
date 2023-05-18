@@ -10,6 +10,7 @@
 [[_TOC_]]
 
 # Information
+<details><summary>Click to expand</summary>
 
 ### Team Kiwi(Group 13) 
 - Kaisa Arumeel
@@ -20,6 +21,8 @@
 - János Litkei
  
 [Introductory video](https://www.youtube.com/watch?v=9HAqAKBQyas) for the project:
+
+</details>
 
 # Project Background/ Problem Description
 <details><summary>Click to expand</summary>
@@ -67,7 +70,11 @@ To provide a user-friendly interface, the front-end utilizes SvelteJS front-end 
 </details>
 
 # Documentation 
+<details><summary>Click to expand</summary>
+
 [Documents](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/wikis/Home)
+
+</details>
 
 # Installation and Usage
 <details><summary>Click to expand</summary>
