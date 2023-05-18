@@ -83,6 +83,7 @@ This projetct builds a sonar using one Wio Seed Terminal (which is Arduino compa
 <details><summary>Click to expand</summary>
 
 The Wio Seeed Terminal is an Arduino Compatibale microcontroller. This means that its manipulation is done using C++ programming language. To easily upload code on the Wio Seeed Terminal, you can use the [Arduino IDE](https://www.arduino.cc/en/software). There are libraries implemented for different sensors and also for the MQTT protocol in the SonarController directory:
+
     - `KiwiServo` library contains methods that are used to rotate the servo motor.
     - `KiwiTemp` contains methods that are used to manipulate the ultrasonic sensors
     - `KiwiTemp` contains methods that are used to manipulate the temperature sensor.
@@ -92,28 +93,35 @@ The Wio Seeed Terminal is an Arduino Compatibale microcontroller. This means tha
 There is a hpp file named `KiwiSecrets_template`. This file is meant to keep the WiFi name and and password. When you write your WiFi name (in the `ssd` attribute) and password (in the `secret` attribute), you should change the name of the file from KiwiSecrets_template.h to `KiwiSecrets.h`. Note that the file `KiwiSecrets.h` is put in the `.gitignore` file so that the WiFi name and password are not sent to the remote repository.
 
 You also need to download the foolwing libraires. You can download these by clickoing on the library icon in the arduion library and search the name that are mentioned:
+
     - `rpcwifi.h` is needed to connect to the WiFi. You can download it by searching for rpcwifi.
     - `PubSubClient.h` is needed for publishing data and subscribing for data to the broker using the MQTT protocol. You can download it by searching for PubSubClinet.
 
 The following lines will explain the pin-out instructions. Use these instructions to connect the sensors to the Wio Seeed Terminal. you can use the following image for referrence to which pin is which.
 
 <img src = "https://files.seeedstudio.com/wiki/Wio-Terminal/img/WioT-Pinout.jpg">
-
 <img src = "https://files.seeedstudio.com/wiki/Wio-Terminal/img/WT-GROVE.jpeg">
 
 Servo motor pinout structure:
+
     - VCC connected to 4 (which is 5V) on the Wio
     - GND connected to 6 (which is GND) on the Wio
     - SIG connected to 16 (which is D2) on the Wio
+
 First ultrasonic sensor pinout structure:
+
     - GND connected to 30 (which is GND) on the Wio
     - VCC connected to 1 (which is 3V3 (3.3 V)) on the Wio
     - SIG connected to 36 (which is D7)non the Wio
+
 Second ultrasoic sensor pinout structure:
+
     - GND connected to 34 (which is GND) on the Wio
     - VCC connected to 2 (which is 3v3 (3.3 v)) on the Wio
     - SIG connected to 37 (which is D8) on the Wio
+
 Temperature sensor pinout structure:
+
     - Use the Multifunctional pinout under the joystick
 
 </details>
@@ -130,6 +138,7 @@ If you fork this project and and then pull from the remote repository, before us
 The GUI can be run locally for testing or development purposes. This can be done by running `npm run dev` in the terminal while in the `SonarVisualizer` directory. After running the command, the application will be accessible at http://localhost:5173. To test the application on mobile, or other devices, it can be exposed on the local network by running `npm run dev -- --host`. Following this command the application can be accessed on the local network at the local IP address of the machine it’s running on, at port 5173. The exact address will also be displayed in the terminal.
 
 After installing all the required dependencies, the application can be built from source by following these steps: 
+
 1. Using the terminal, navigate to the source directory of `SonarVisualizer`.
 2. Run `npm run build` to compile the Svelte files and build the project.
 3. The final result can be found in the `dist` subdirectory in the `SonarVisualizer` directory. This command is mostly used in case you want to see if all the packages, especially the extra packages you have added to the project, can be run on the browser. Moreover, it is also used if you are planning to deploy your project on a server (more on this later).
@@ -151,6 +160,7 @@ Unit tests were made for the GUI in this project. The Jest testing framework was
 <details><summary>Click to expand</summary>
 
 Needed libraries:
+
 1. `@babel/core`, `babel-jest` and `@babel/preset-env`are some libraires that we need. . These are needed for the transpilation that is required by jest.
 2. `svelte-jester` and `jest-transform-stub`. Jest does not understand how to parse non-JavaScript files. We need to use svelte-jester to transform Svelte files, and jest-transform-stub for importing non-JavaScript assets (images, CSS, etc).
 3. `@testing-library/svelte` (known as Svelte Testing Library) provides DOM query functions on top of Svelte in a way that encourages better testing practices. Some of the most commonly used functions are `render`, `getByText`, `getByLabelText`, and `getByRole`.
@@ -196,9 +206,9 @@ Add the scripts to run the tests in your `package.json`. NOte that you should ad
 ```
 sources: https://www.roboleary.net/2021/11/18/svelte-app-testing-jest.html
 
-</details>
-
 After following the instructions (in case your configuring jest on your own project), you should be able to use the command `npm run test` to run the tests that you have written for your project. Note that a test file should be name after the component that your are testing. For example, if you have a component called `Button.svelte` then the test file should be called `Button.spec.js` or `Button.test.js`. As you can see, the test file has `.spec.js` or `.test.js`. This is needed for jest to be able to find the test files which are written in JavaScript.
+
+</details>
 
 </details>
 
@@ -208,7 +218,6 @@ After following the instructions (in case your configuring jest on your own proj
 CI/CD stands for "continuous intergration" and "continuous development". We use the GitLab piplelines to continuous test code that is committed and and then deploy the code, if it passes the tests. The pipleine is written in `.gitlab-ci.yml` file which is usually uploaded on the root of the project (good practice to put it there). As you have noticed by now, this is a YAML file which contains commands that are executed by the GitLab runner(s). GitLab runners are computers that have Linux as their Operating System. These runners pull your project and look for the CI file and run the commands that you have given there. To install packages and programs on the runner to run your commands, most projects (our project too) use docker images. You can find docker images for the applications (programs) that you need in order to test and/or deploy your project from [docker hub](https://hub.docker.com/). Each block of commands that is executed by the GitLab runner is called a job. Note that you need to use a runner that can handle docker images. You can see the available runners under CI/CD in settings. You can see the result of your pipline under the CI/CD Pipelines.
 
 You can customize your `.gitlab-ci.yml` file in many ways:
-
     - You can add stages, so that if one stage fails the reat do not run (useful in case of deployment). For example, if your test job fails, you do not want to deploy your project.
     - You can customize your jobs by using the `rules` flag, so that your job runs only on specific branches (in case of deployment, in `main` branch only as an example). 
     - You can add the `before-script` to download dependencies needed by the commands that run in the `script` flag.
