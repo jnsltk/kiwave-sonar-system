@@ -59,6 +59,8 @@ The servo motor is responsible for continuously monitoring its position in degre
 
 To provide a user-friendly interface, the front-end utilizes SvelteJS front-end framework and other JavaScript libraries to subscribe to the topic KiWaveSonarData. Upon receiving new information, the front-end parses and displays it in the form of a radar image that showcases the range and degree of any detected object relative to the sensors.
 
+<img src = "https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/blob/ReadMe/Resources/SonrOuterLook.jpg">
+
 </details>
 
 # Used Technologies
@@ -129,6 +131,8 @@ Second ultrasoic sensor pinout structure:
 
 Temperature sensor pinout structure.
 - Use the Multifunctional pinout under the joystick
+
+<img src = "https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/blob/ReadMe/Resources/SonarInerStructure.jpg">
 
 </details>
 
