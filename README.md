@@ -216,7 +216,7 @@ You can customize your `.gitlab-ci.yml` file in many ways:
 - You can specify the runner on which each job needs to run on using the `tags` flag.
 - Note that the jobs need to have the `script` flag. A job without the `script` flag does not do anything, so it will always pass.
 
-This is just a glimpse into what you can do using CI/CD in GitLab. Our project uses CI/CD for automated testing and deployment. It is a simple pipileine. You can use this as a starting point. You can read and learn more about the sphisticated and advanced features of GitLab CI/CD [here](https://docs.gitlab.com/ee/ci/).
+This is just a glimpse into what you can do using CI/CD in GitLab. Our project uses CI/CD for automated testing and deployment. It is a simple pipileine. You can use this as a starting point. You can read and learn more about the sophisticated and advanced features of GitLab CI/CD [here](https://docs.gitlab.com/ee/ci/).
 
 </details>
 
