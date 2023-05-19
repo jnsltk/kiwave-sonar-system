@@ -60,7 +60,7 @@ The servo motor is responsible for continuously monitoring its position in degre
 
 To provide a user-friendly interface, the front-end utilizes SvelteJS front-end framework and other JavaScript libraries to subscribe to the topic KiWaveSonarData. Upon receiving new information, the front-end parses and displays it in the form of a radar image that showcases the range and degree of any detected object relative to the sensors.
 
-![SonarOuterLook](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/blob/ReadMe/Resources/SonarPictures/SonrOuterLook.png)
+![SonarOuterLook](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/ReadMe/Resources/SonarPictures/SonrOuterLook.png)
 
 </details>
 
@@ -137,7 +137,7 @@ Second ultrasoic sensor pinout structure:
 Temperature sensor pinout structure.
 - Use the Multifunctional pinout under the joystick
 
-![SonarInnerLook](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/blob/ReadMe/Resources/SonarPictures/SonarInerStructure.png)
+![SonarInnerLook](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/ReadMe/Resources/SonarPictures/SonarInerStructure.png)
 
 </details>
 
@@ -176,7 +176,7 @@ MQTT is some kind of protocol that belongs to the publish-subscribe architecture
 
 Now that the base of our system's architecture is explained, you can dig deeper into our project and see how our team made use of open source publish-subscribe libraries. Here is a component diagram that depicts the architecture of our system. Note that the broker is shown as a component, eventhough it plays the role of a connector:
 
-![ComponentDiagram](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/blob/ReadMe/Resources/ComponentDiagram/ComponentDiagram.png)
+![ComponentDiagram](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/ReadMe/Resources/ComponentDiagram/ComponentDiagram.png)
 
 As you can see in the diagram, We have to main components that communicate to each other via the broker. The App component (which is a subsystem itself), subscribes to the topic "KiwiSonarData" to receive the data that the Wio Seeed Terminal has published to the mentioned topic. The App component also publishes user's input to the KiwiSonarCommand topic. Then, the Wio Seeed Terminal subscribes to this topic and manipulates the way the sensors should work according to the user's input.
 
