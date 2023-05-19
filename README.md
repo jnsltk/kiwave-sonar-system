@@ -83,7 +83,7 @@ To provide a user-friendly interface, the front-end utilizes SvelteJS front-end 
 
 </details>
 
-# Installation and Usage
+# Installation and "Get Started"
 <details><summary>Click to expand</summary>
 
 ## Introduction
@@ -157,6 +157,9 @@ If you navigate to the `src` subdirectory, you can find the different components
 Under `components` subdirectory, there is another directory called `mqtt` which conatins the `MQTTHandler.svelte` component. This component contains the publish and subscribe methods needed for the MQTT to work on the GUI.
 
 </details>
+
+## System Architecture
+
 
 </details>
 
@@ -236,7 +239,29 @@ This is just a glimpse into what you can do using CI/CD in GitLab. Our project u
 
 </details>
 
+#Team Members' Main Contributions
+<details><summary> Click to expand </summary>
 
+Kaisa Arumeel:
+
+Alexander Säfström:
+
+Omid Khodaparast:
+- Implemented the initaial KiwiServo library which is used to rotate the servo motor and tell it when to stop. This library, later in the project, went under some changes as Alexander Säfström started working on implementing the KiwiMQTT library.
+- Implemented the KiwiTemp library which contains functionality used to receive the temperature measured by the temperature sensor.
+- Implementedthe loading scen for the `ScanButton.svelte`component which showcases to the end user when the start and stop commands have been received by the sonar (the Wio Seed Terminal).
+- Configured Jest (used to make unit tests) in the `SonarVisualizer` directory, which contains the main application used by the end users to manipulate the sonar. 
+- Configured the CI/CD part of the project by creating the `.gitlab-ci.yml` and editing it by giving it different stages and different jobs to complete the Automated testing and continous deployment of the project.
+- Edtited and gave structure to the `README.md` file.
+
+Amirpooya Asadollahnejad:
+
+Milad Tamaddondar:
+
+János Litkei:
+
+
+</details>
 
 
 
