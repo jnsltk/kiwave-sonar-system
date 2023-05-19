@@ -239,7 +239,7 @@ This is just a glimpse into what you can do using CI/CD in GitLab. Our project u
 
 </details>
 
-#Team Members' Main Contributions
+# Team Members' Main Contributions
 <details><summary> Click to expand </summary>
 
 Kaisa Arumeel:
