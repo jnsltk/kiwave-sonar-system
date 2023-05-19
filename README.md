@@ -16,6 +16,7 @@
 
 # Information
 <details><summary>Click to expand</summary>
+<br>
 
 ### Team Kiwi(Group 13) 
 - Kaisa Arumeel
@@ -159,6 +160,14 @@ Under `components` subdirectory, there is another directory called `mqtt` which 
 </details>
 
 ## System Architecture
+Our system, as mentioned before, made use of the MQTT protocol to create connection between the application programmed using SvelteJS and the Wio Seeed Terminal and the Sensors and actuator programmed using C++. 
+
+What is MQTT?
+
+MQTT is some kind of protocol that belongs to the publish-subscribe architecture style. The publish-subscribe architecture style works in the way that different components, publish the iformation needed by other components to a message bus (usually called the broker) under specific topics that are defined by the programmers. The components that need these data need to subscribe to the broker under the same topic that was used by the component(s) that published the information. The benefits od using the publish-subscribe architecture style is that there is little coupling between the componenets. Moreover, the components can work asynchronously as they can subcribe to the broker whenever they need, hence less coupling.
+
+Now that the base of our system's architecture is explained, you can dig deeper into our project and see how our team made use of open source publish-subscribe libraries. Here is a component diagram that depicts the architecture of our system. Note that the broker is shown as a component, eventhough it plays the role of a connector:
+
 
 
 </details>
