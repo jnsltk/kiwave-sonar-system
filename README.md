@@ -295,6 +295,14 @@ Omid Khodaparast:
 - Edtited and gave structure to the `README.md` file.
 
 Amirpooya Asadollahnejad:
+- Created the `ScanButton.svelte`
+- Wrote the tests for range and scanbutton component
+- Fixed the problem with invalid inputs for `Sector.svelte`
+- Helped with the notification button styling
+- Helped in creating the initial sequence diagram
+- Polished and made different sections for wiki page and linked issues in it.
+- Helped with creating the console (which we discarded this feature later)
+
 
 Milad Tamaddondar:
 
@@ -308,7 +316,7 @@ János Litkei:
 - Set up private MQTT broker for better reliability.
 - Worked on the deployment of the frontend on a VPS, as part of the CI/CD pipelines.
 - Edited the user manual.
-
+ 
 </details>
 
 
