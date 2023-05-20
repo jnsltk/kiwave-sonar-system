@@ -8,16 +8,6 @@
     import { sonarCommands } from "../../../data/stores";
     import Tooltip from "./Tooltip.svelte";
     
-    /*
-    Sonar store can be accessible at all times and contains the mapping: 
-    "sonarData":{
-        "deg": "125", //Degree of the sonar
-        "dist": "24.56", //Distance of sonar
-        "ts":0 //Reported at timestamp
-    },
-    Used for communicating data from Mqtt component and radar screen
-    */
-   
     let width;
     let canvas;
     let tooltipX;
@@ -76,11 +66,6 @@
         const rect = canvas.getBoundingClientRect();
         return !((rect.x + rect.width) < e.clientX || rect.y + rect.height < e.clientY || rect.x > e.clientX || rect.y > e.clientY);
     }
-
-    onMount(() => {
-        console.log("RadarScreen mounted");
-    });
-
 </script>
 
 <svelte:window 

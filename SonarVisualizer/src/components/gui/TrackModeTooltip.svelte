@@ -1,3 +1,5 @@
+
+<!-- This component explains to the user what track mode is. -->
 <div class="tooltip" data-tooltip = "When the radar is in trackmode, it finds an object in the range and starts tracking it, ignoring all other objects.">         
     <div class="questionmark">?</div>
 </div>
