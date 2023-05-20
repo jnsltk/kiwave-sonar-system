@@ -7,6 +7,11 @@ export const toRadians = (deg) => {
     return deg * (Math.PI / 180);
 }
 
+/**
+ * Converts radians to degrees
+ * @param rad Angle in radians
+ * @return {Number} Angle in degrees
+ */
 export const toDegrees = (rad) => {
     return rad * (180 / Math.PI);
 }
@@ -22,6 +27,13 @@ export const mapDistance = (dist, range, screenRadius) => {
     return dist / range * screenRadius;
 }
 
+/**
+ * Maps distance on radar screen to the real-life distance of the object from the sensor
+ * @param dist The distance on the radar screen
+ * @param range The current maximum distance the radar is set to
+ * @param screenRadius The radius of the RadarScreen in pixels
+ * @return {number} - The real-life distance of the object from the sensor
+ */
 export const reMapDist = (mappedDist, range, screenRadius) => {
     return mappedDist * range / screenRadius;
 }
@@ -44,6 +56,15 @@ export const getCoordinates = (deg, dist, range, screenRadius) => {
     };
 }
 
+/**
+ * Returns the data shown on the tooltip: the measurement angle and the real-life distance
+ * @typedef {Object} degDist
+ * @param x The x coordinate of the point
+ * @param y The y coordinate of the point
+ * @param range The current measuring range set by the user
+ * @param screenRadius The radius of the RadarScreen in pixels
+ * @return {degDist} The object containing the angle and the real-life distance
+ */
 export const getDegDist = (x, y, range, screenRadius) => {
     // Calculate the mappedDist using the Pythagorean theorem
     let mappedDist = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)); 

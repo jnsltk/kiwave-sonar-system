@@ -17,6 +17,8 @@
 
     const tooltipWidth = 88;
     const tooltipHeight = 60;
+
+    // Object containing the different positions of the tooltip based on which direction its arrow is pointing
     const tooltipDimensions = {
         /*
         * The arrow on the box sometimes need to be positioned in other places, therefore we need to make
@@ -72,21 +74,17 @@
         }
     }
 
-
+    // Set the tooltip colors based on the value of the darkmode switch
     $: tooltipColor = ($darkModeSwitch.isDark) ? "#161616" : "#eef1ec";
     $: fontColor = ($darkModeSwitch.isDark) ? "#fff" : "#000";
 
-    const drawRect = (context, x, y, w, h, r) => {
-        /*
-        * Some versions of Firefox do not support roundRect, therefore we have a fallback for them.
-        */
-        if (navigator.userAgent.indexOf("Firefox") > -1) {
-            context.rect(x, y, w, h);
-        } else {
-            context.roundRect(x, y, w, h, r);
-        }
-    }
-
+    /**
+     * Draws the correct tooltip based on the direction passed to it, using the neccessary function in the tooltipDimensions object
+     * @param context The graphical context of the canvas element
+     * @param x The x coordinate of the tip of the tooltip's arrow
+     * @param y The y coordinate of the tip of the tooltip's arrow
+     * @param direction The direction of the tooltip's arrow
+     */
     const drawToolTip = (context, x, y, direction) => {
         let tooltip;
         switch (direction) {
@@ -110,7 +108,7 @@
         context.beginPath();
         context.filter = "drop-shadow(rgba(0, 0, 0, 0.2) 0 2px 15px)";
         context.fillStyle = tooltipColor;
-        drawRect(context, tooltip.tooltipX, tooltip.tooltipY, tooltipWidth, tooltipHeight - 8, [10]);
+        context.roundRect(tooltip.tooltipX, tooltip.tooltipY, tooltipWidth, tooltipHeight - 8, [10]);
         context.fill()
         context.moveTo(tooltip.arrowStartX, tooltip.arrowStartY);
         context.lineTo(x, y);
@@ -124,7 +122,13 @@
         context.restore();
     }
 
-    $: render = ({context, width, height}) => {
+    /**
+     * Renders the Tooltip component to the Canvas element. The Tooltip component shows information about any point on the radar
+     * screen that the user hovers over. This data includes the distance from the sensor, and the measurement angle.
+     * By declaring this function reactively, we make sure svelte-canvas re-render anytime the values the function depends on change. 
+     * @param context The 2D rendering context of the Canvas element
+     */
+    $: render = ({context}) => {
         if (!displayTooltip) return;
         let direction;
         /*

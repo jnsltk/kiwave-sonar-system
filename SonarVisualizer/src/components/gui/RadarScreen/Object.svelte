@@ -12,7 +12,9 @@
     $: range = parseInt($sonarCommands.sonarData.sRange);
     let history = [];
 
-    const activeSectorColor = "rgba(0, 122, 255, 0.5)"
+    const activeSectorColor = "#007AFF"
+    
+    // Reactively change colors based on darkmode switch value
     $: objectColor = $darkModeSwitch.isDark ? "#c3c1c1" : "#767676";
     $: lineToObjectColor = $darkModeSwitch.isDark ? "#3b3b3b" : "#d5d7d4";
         
@@ -28,8 +30,9 @@
      * @param width Canvas width
      * @param height Canvas height 
      * @param currentlyActive Boolean flag indicating whether the function is called on the currently measured (active) sector
+     * @param color Color of the line drawn
      */
-    const drawLineTo = (context, deg, dist, width, height, currentlyActive,color) => {
+    const drawLineTo = (context, deg, dist, width, height, currentlyActive, color) => {
             const endCoordinates = getCoordinates(deg, dist, $sonarCommands.sonarData.sRange, screenRadius);
             context.save();
             context.translate(width / 2, height / 2);
@@ -67,8 +70,9 @@
      * @param width Canvas width
      * @param height Canvas height 
      * @param currentlyActive Boolean flag indicating whether the function is called on the currently measured (active) sector
+     * @param color Color of the line drawn    
      */
-    const drawObjectFrom = (context, deg, dist, width, height, currentlyActive,color) => {
+    const drawObjectFrom = (context, deg, dist, width, height, currentlyActive, color) => {
         // Calculate coordinates for the endpoint for the line on the circle
             const startCoordinates = getCoordinates(deg, dist, $sonarCommands.sonarData.sRange, screenRadius);
             const endCoordinates = getCoordinates(deg, $sonarCommands.sonarData.sRange, $sonarCommands.sonarData.sRange, screenRadius);
