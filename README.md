@@ -305,6 +305,16 @@ Amirpooya Asadollahnejad:
 
 
 Milad Tamaddondar:
+- Created the Console component and made it responsive (which was later removed from the project)
+- Created the `WarningModal.svelte` component for the alarm and notification 
+- Created `NotificatonButton.svelte`component for disabling and enabling the notification and alarm feature
+- Designed the sequence diagram and modified it
+- Edited the wikipage and wrote in the `README.md` file.
+- Wrote in the user manual
+- Removed Unnecessary files form the repository
+- Wrote method to measure distance from ultrasonic sensors
+- Tested the ultrasonic sensors to work accurately in environments with different temperatures
+- Tested the temperature sensor to work accurately 
 
 János Litkei:
 - Created the 3D model for the 3D printed mount to fix the ultrasonic sensors on the servo. In the final product we ended up not using it.
