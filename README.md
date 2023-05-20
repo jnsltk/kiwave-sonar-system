@@ -291,7 +291,15 @@ Amirpooya Asadollahnejad:
 Milad Tamaddondar:
 
 János Litkei:
-
+- Created the 3D model for the 3D printed mount to fix the ultrasonic sensors on the servo. In the final product we ended up not using it.
+- Implemented the RadarScreen component of the frontend, which interprets and visualises the data received from the sensors.
+    - Created the methods for processing the data received from the sensors.
+    - Implemented the visualisation of the data.
+    - Made the RadarScreen component responsive.
+    - Implemented tooltips showing object-meausrement data on the RadarScreen component.
+- Set up private MQTT broker for better reliability.
+- Worked on the deployment of the frontend on a VPS, as part of the CI/CD pipelines.
+- Edited the user manual.
 
 </details>
 
