@@ -2,7 +2,7 @@
     import { sonarCommands, sonarStore } from "../../data/stores";
     import LoadingScene from "./LoadingScene.svelte";
  
-    let status = 'Start scanning';
+    let status = !$sonarCommands.sonarData.runSonar ?'Start scanning' :'Stop scanning';
     let watchInterval;
     let watcherActive=false;
     async function startWatchInterval(){
