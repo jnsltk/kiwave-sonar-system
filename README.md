@@ -110,9 +110,9 @@ The Wio Seeed Terminal is an Arduino Compatibale microcontroller. This means tha
 
 There is a hpp file named `KiwiSecrets_template`. This file is meant to keep the WiFi name and and password. When you write your WiFi name (in the `ssd` attribute) and password (in the `secret` attribute), you should change the name of the file from KiwiSecrets_template.h to `KiwiSecrets.h`. Note that the file `KiwiSecrets.h` is put in the `.gitignore` file so that the WiFi name and password are not sent to the remote repository.
 
-You also need to download the foolwing libraires. You can download these by clickoing on the library icon in the arduion library and search the name that are mentioned:
+You also need to download the following libraires. You can download these by clicking on the library icon in the arduino library and search the name that are mentioned:
 - `rpcwifi.h` is needed to connect to the WiFi. You can download it by searching for rpcwifi.
-- `PubSubClient.h` is needed for publishing data and subscribing for data to the broker using the MQTT protocol. You can download it by searching for PubSubClinet.
+- `PubSubClient.h` is needed for publishing data and subscribing for data to the broker using the MQTT protocol. You can download it by searching for PubSubClient.
 
 The following lines will explain the pin-out instructions. Use these instructions to connect the sensors to the Wio Seeed Terminal. you can use the following image for referrence to which pin is which.
 
@@ -147,7 +147,7 @@ Temperature sensor pinout structure.
 
 SvelteJS was used to make the GUI for this project. In order to use SvelteJS you need to have [Node.js](https://nodejs.org/en/download) downloaded.
 
-The GUi initial setup was done by runnign the command `npm create vite@latest` in the `SonarVisualizer` directory. However, if you use our project, you do not need to run the forementioned command, but rather the commands mentioned next.
+The GUi initial setup was done by runnign the command `npm create vite@latest` in the `SonarVisualizer` directory. However, if you use our project, you do not need to run the aforementioned command, but rather the commands mentioned next.
 
 If you fork this project and and then pull from the remote repository, before using npm commands to upload the web page, you need to open a terminal in the `SonarVisualizer` directory and run the command `npm install` or `npm i`. This command downloads the dependicies and packages that are used in the project.
 
@@ -172,13 +172,13 @@ Our system, as mentioned before, made use of the MQTT protocol to create connect
 
 What is MQTT?
 
-MQTT is some kind of protocol that belongs to the publish-subscribe architecture style. The publish-subscribe architecture style works in the way that different components, publish the iformation needed by other components to a message bus (usually called the broker) under specific topics that are defined by the programmers. The components that need these data need to subscribe to the broker under the same topic that was used by the component(s) that published the information. The benefits od using the publish-subscribe architecture style is that there is little coupling between the componenets. Moreover, the components can work asynchronously as they can subcribe to the broker whenever they need, hence less coupling.
+MQTT is a protocol that belongs to the publish-subscribe architecture style. The publish-subscribe architecture style works in the way that different components, publish the information needed by other components to a message bus (usually called the broker) under specific topics that are defined by the developers. The components that need that data need to subscribe to the broker under the same topic that was used by the component(s) that published the information. The benefits of using the publish-subscribe architecture style is that there is little coupling between the componenets. Moreover, the components can work asynchronously as they can subcribe to the broker whenever they need, hence less coupling.
 
 Now that the base of our system's architecture is explained, you can dig deeper into our project and see how our team made use of open source publish-subscribe libraries. Here is a component diagram that depicts the architecture of our system. Note that the broker is shown as a component, eventhough it plays the role of a connector:
 
 ![ComponentDiagram](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/ReadMe/Resources/ComponentDiagram/ComponentDiagram.png)
 
-As you can see in the diagram, We have to main components that communicate to each other via the broker. The App component (which is a subsystem itself), subscribes to the topic "KiwiSonarData" to receive the data that the Wio Seeed Terminal has published to the mentioned topic. The App component also publishes user's input to the KiwiSonarCommand topic. Then, the Wio Seeed Terminal subscribes to this topic and manipulates the way the sensors should work according to the user's input.
+As you can see in the diagram, We have two main components that communicate to each other via the broker. The App component (which is a subsystem itself), subscribes to the topic "KiwiSonarData" to receive the data that the Wio Seeed Terminal has published to the mentioned topic. The App component also publishes user's input to the KiwiSonarCommand topic. Then, the Wio Seeed Terminal subscribes to this topic and manipulates the way the sensors should work according to the user's input.
 
 </details>
 
@@ -195,7 +195,7 @@ Unit tests were made for the GUI in this project. The Jest testing framework was
 <br>
 
 Needed libraries:
-1. `@babel/core`, `babel-jest` and `@babel/preset-env`are some libraires that we need. . These are needed for the transpilation that is required by jest.
+1. `@babel/core`, `babel-jest` and `@babel/preset-env`are some libraires that we used. These are needed for the transpilation that is required by jest.
 2. `svelte-jester` and `jest-transform-stub`. Jest does not understand how to parse non-JavaScript files. We need to use svelte-jester to transform Svelte files, and jest-transform-stub for importing non-JavaScript assets (images, CSS, etc).
 3. `@testing-library/svelte` (known as Svelte Testing Library) provides DOM query functions on top of Svelte in a way that encourages better testing practices. Some of the most commonly used functions are `render`, `getByText`, `getByLabelText`, and `getByRole`.
 4. `@testing-library/user-event` is a companion library to Svelte Testing Library that provides more advanced simulation of browser interactions than the built-in fireEvent function. An example of this is if you need to trigger an event for a mouse click while the Ctrl key is being pressed. You can find test examples using this library in our `test` subdirectory under `SonarVisualizer`. This library is handy for dealing with making tests for buttons.
@@ -250,7 +250,7 @@ After following the instructions (in case your configuring jest on your own proj
 <details><summary>Click to expand</summary>
 <br>
 
-CI/CD stands for "continuous intergration" and "continuous development". We use the GitLab piplelines to continuous test code that is committed and and then deploy the code, if it passes the tests. The pipleine is written in `.gitlab-ci.yml` file which is usually uploaded on the root of the project (good practice to put it there). As you have noticed by now, this is a YAML file which contains commands that are executed by the GitLab runner(s). GitLab runners are computers that have Linux as their Operating System. These runners pull your project and look for the CI file and run the commands that you have given there. To install packages and programs on the runner to run your commands, most projects (our project too) use docker images. You can find docker images for the applications (programs) that you need in order to test and/or deploy your project from [docker hub](https://hub.docker.com/). Each block of commands that is executed by the GitLab runner is called a job. Note that you need to use a runner that can handle docker images. You can see the available runners under CI/CD in settings. You can see the result of your pipline under the CI/CD Pipelines.
+CI/CD stands for "continuous intergration" and "continuous development". We use the GitLab piplelines to continuously test code that is committed and and then deploy the code, if it passes the tests. The pipeline is written in `.gitlab-ci.yml` file which is usually uploaded on the root of the project (good practice to put it there). As you have noticed by now, this is a YAML file which contains commands that are executed by the GitLab runner(s). GitLab runners are computers that have Linux as their Operating System. These runners pull your project and look for the CI file and run the commands that you have given there. To install packages and programs on the runner to run your commands, most projects (our project too) use docker images. You can find docker images for the applications (programs) that you need in order to test and/or deploy your project from [docker hub](https://hub.docker.com/). Each block of commands that is executed by the GitLab runner is called a job. Note that you need to use a runner that can handle docker images. You can see the available runners under CI/CD in settings. You can see the result of your pipline under the CI/CD Pipelines.
 
 You can customize your `.gitlab-ci.yml` file in many ways:
 - You can add stages, so that if one stage fails the reat do not run (useful in case of deployment). For example, if your test job fails, you do not want to deploy your project.
@@ -259,7 +259,7 @@ You can customize your `.gitlab-ci.yml` file in many ways:
 - You can specify the runner on which each job needs to run on using the `tags` flag.
 - Note that the jobs need to have the `script` flag. A job without the `script` flag does not do anything, so it will always pass.
 
-This is just a glimpse into what you can do using CI/CD in GitLab. Our project uses CI/CD for automated testing and deployment. It is a simple pipileine. You can use this as a starting point. You can read and learn more about the sophisticated and advanced features of GitLab CI/CD [here](https://docs.gitlab.com/ee/ci/).
+This is just a glimpse into what you can do using CI/CD in GitLab. Our project uses CI/CD for automated testing and deployment. It is a simple pipeline. You can use this as a starting point. You can read and learn more about the sophisticated and advanced features of GitLab CI/CD [here](https://docs.gitlab.com/ee/ci/).
 
 </details>
 
@@ -268,6 +268,13 @@ This is just a glimpse into what you can do using CI/CD in GitLab. Our project u
 <br>
 
 Kaisa Arumeel:
+- Organised our GitLab repository by making milestones, labels and issues. Continuously updating our repository and keeping track of the issues.
+- Created the front-end design prototype, project name and logo.
+- Implemented the range slider and the sector specification slider features.
+- Designed and implemented the loading scene.
+- Implemented dark mode (including the dark mode switch and the colour scheme for the theme).
+- Resposible for putting the whole front-end layout together and making it responsive.
+- Edited the wiki pages and user manual.
 
 Alexander Säfström:
 
