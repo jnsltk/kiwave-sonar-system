@@ -277,6 +277,14 @@ Kaisa Arumeel:
 - Edited the wiki pages and user manual.
 
 Alexander Säfström:
+- Implemented MQTT library to Wio Terminal
+- Added MQTT library to frontend.
+- Ported `u8-mqtt.js` to vite.
+- Created `TrackMode.svelte`
+- Helped solving bugs
+- Developed algorithm for tracking objects in Wio Terminal
+- Created `MqttHandler.svelte`
+- Created main logic for periodically updating `stores.js`
 
 Omid Khodaparast:
 - Implemented the initaial KiwiServo library which is used to rotate the servo motor and tell it when to stop. This library, later in the project, went under some changes as Alexander Säfström started working on implementing the KiwiMQTT library.
