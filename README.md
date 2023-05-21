@@ -23,7 +23,9 @@
 - Milad Tamaddondar
 - János Litkei
  
-[Introductory video](https://www.youtube.com/watch?v=9HAqAKBQyas) for the project:
+[Introductory video](https://www.youtube.com/watch?v=9HAqAKBQyas) for the project
+
+[Final presentation video](https://www.youtube.com/watch?v=Eti_41lDb20) for the project
 
 </details>
 
