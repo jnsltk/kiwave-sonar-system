@@ -60,7 +60,7 @@ The servo motor is responsible for continuously monitoring its position in degre
 
 To provide a user-friendly interface, the front-end utilizes SvelteJS front-end framework and other JavaScript libraries to subscribe to the topic `KiwiSonarData`. Upon receiving new information, the front-end parses and displays it in the form of a radar image that showcases the range and degree of any detected object relative to the sensors.
 
-![SonarOuterLook](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/ReadMe/Resources/SonarPictures/SonrOuterLook.png)
+![SonarOuterLook](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/main/Resources/SonarPictures/SonrOuterLook.png)
 
 </details>
 
@@ -85,7 +85,7 @@ To provide a user-friendly interface, the front-end utilizes SvelteJS front-end 
 [Documents](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/wikis/Home)
 
 
-[User Manual](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/blob/ReadMe/Resources/User%20Manual/User_Manual_-_KiWaveSonar.pdf)
+[User Manual](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/main/Resources/User%20Manual/User_Manual_-_KiWaveSonar.pdf)
 
 
 </details>
@@ -146,7 +146,7 @@ Second ultrasoic sensor pinout structure:
 Temperature sensor pinout structure.
 - Use the Multifunctional pinout under the joystick
 
-![SonarInnerLook](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/ReadMe/Resources/SonarPictures/SonarInerStructure.png)
+![SonarInnerLook](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/main/Resources/SonarPictures/SonarInerStructure.png)
 
 </details>
 
