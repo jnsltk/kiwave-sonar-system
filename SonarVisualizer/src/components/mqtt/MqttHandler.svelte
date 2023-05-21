@@ -14,18 +14,33 @@
     const MAX_QUEUE_LENGTH=300; //Maximum length of the queue which stores the buffered data from the sonar.
     const MIN_INTERVAL=25; //The slowest time for the queue to be processed.
     const MAX_INTERVAL=75; //The fastest time of which the queue can be processed.
+    const CONNECTION_TIMEOUT=10;
     let measurementsQueue=[];
     let storeCopy={};
     let mqttClient;
     let mqttConnected=false;
     let lastKeepAliveReceived;
+
+    /**
+     * Used to check if the sonar is still connected. We regard it as disconnected after 10 seconds has passed. 
+     * @param topic
+     * @param msg
+     */
       setInterval(() => {
         let timePassed=parseInt(Date.now()/1000)-lastKeepAliveReceived;
-        if(timePassed>10){
+        if(timePassed>CONNECTION_TIMEOUT){
           $sonarStore.sonarStatus.isOnline=false;
         }
       }, 500);
 
+    
+
+      /**
+       * Used to send messages to the broker.
+       * @param topic
+       * @param msg
+       */
+      
        async function mqttSend(topic,msg){
         if(!mqttConnected) console.log("Ignoring send request due to no connection to broker.");
         await mqttClient.send(
@@ -33,6 +48,11 @@
         msg)
       }
 
+      /**
+       * Wrapper function for subscribing to a topic.
+       * @param topic
+       * @param callback
+       */
       async function mqttSubscribe(topic,callback){
         if(!mqttConnected) throw Error("MQTT Client Not Connected!");
         if (!(callback instanceof Function)) throw Error("Invalid callback function!");
@@ -43,6 +63,11 @@
         })
       }
 
+      /**
+       * Wrapper function to initialize MQTT connection to broker.
+       * @param server
+       * @param port
+       */
     async function initMqtt(server,port){
         mqttClient = mqtt_client()
       .with_websock('wss://'+server+':'+port+"/mqtt")
@@ -184,6 +209,9 @@
 
     }
 
+    /**
+     * Creates a copy of the store to look check for changes.
+     */
     async function copyStore(){
       for(let key in $sonarCommands.sonarData){
         storeCopy[key]=$sonarCommands.sonarData[key];
@@ -203,6 +231,8 @@
         }
         $: if(storeCopy.sDeg2!=$sonarCommands.sonarData.sDeg2){
           console.log("Sending degrees!")
+          console.log(("SSR"+($sonarCommands.sonarData.sDeg1)+($sonarCommands.sonarData.sDeg2)))
+
           mqttSend("KiWaveSonarCommand","SSR"+($sonarCommands.sonarData.sDeg1)+($sonarCommands.sonarData.sDeg2));
           storeCopy.sDeg2=$sonarCommands.sonarData.sDeg2
         }
