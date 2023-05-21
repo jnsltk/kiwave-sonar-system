@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { sonarCommands } from "../../data/stores";
+    import { degreeToServoDegree, padDeg } from '../../degrees/degrees';
   
     //Initial start and end degree values for the sector.
     let startDegree = 0;
@@ -65,27 +66,12 @@
     $: progressStyle = `left: ${startDegree / 180 * 100}%; right: ${100 - (endDegree / 180 * 100)}%;`;
    
 
-     /**
-      * Processing the degrees by adding padding zeros.
-      * For instance: If the input degree is 5, then it is formatted to be 005.
-      * This ensures that the degree format respects the command structure.
-      */
-
-    async function processDeg(inputDeg){
-      let paddingToAdd=3-inputDeg.toString().length;
-      let processedDeg="";
-      for(let i=0;i<paddingToAdd;i++){
-        processedDeg+="0";
-      }
-      processedDeg+=inputDeg.toString()
-      return processedDeg;
-    }
 
     // Set the sector by updating sonarCommands with the processed degrees
     async function setSector(){
       //Adds padding zero's to conform to command structure.
-      $sonarCommands.sonarData.sDeg1=await processDeg(startDegree);
-      $sonarCommands.sonarData.sDeg2=await processDeg(endDegree);
+      $sonarCommands.sonarData.sDeg2=await padDeg(await degreeToServoDegree(startDegree));
+      $sonarCommands.sonarData.sDeg1=await padDeg(await degreeToServoDegree(endDegree));
     }
 
     onMount(() => {
