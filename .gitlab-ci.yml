@@ -17,33 +17,30 @@ before_script:
 
 # run npm run build on the GUI to ensure that it compiles.
 build-job:
-  # We want this job to be in a different stage as deployment is different from testing
+  # We want this job to be in the build stage, as we are building the dependencies here.
   stage: build
   # we want the the docker runner to execute this as the image can be run on a docker runner only
   tags:
     - docker
-  # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
+  # the commands of script are run on the Gitlab runner which works on Linux OS.
   script:
     - npm run build
 
-# we build the first job which configures dependencies on the Gitlab runner
+# The test jobs runs the tests that have been written for the GUI.
 test-job:
-  # we want the the docker runner to execute this as the image can be run on a docker runner only
+  # This the test job and should run in the test stage.
   stage: test
   tags:
     - docker
-  # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run test
 
- # run npm run build on the GUI to ensure that it compiles.
+ # this job runs only on main and deploys the GUI on the VPS.
 deploy-job:
-  # We want this job to be in a different stage as deployment is different from testing
+  # We want this job to be in the deployment stage.
   stage: deploy
-  # we want the the docker runner to execute this as the image can be run on a docker runner only
   tags:
     - docker
-  # the commands of script are run on the Gitlab runner which works on Linux OS. We want to run the test files that have been written for the GUI
   script:
     - npm run build
     - sshpass -p $KIWI_PASSWORD scp -o StrictHostKeyChecking=no -r ./dist/* kiwi@jnsl.tk:/var/www/kiwave
