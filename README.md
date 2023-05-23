@@ -331,7 +331,7 @@ Milad Tamaddondar:
 - Edited the wikipage and wrote in the `README.md` file.
 - Wrote in the user manual.
 - Removed Unnecessary files form the repository.
-- Wrote methods to measure distance from ultrasonic sensors.
+- Implemented the library which is used to measure distance from ultrasonic sensors.
 - Tested the ultrasonic sensors to work accurately in environments with different temperatures.
 - Tested the temperature sensor to work accurately. 
 
