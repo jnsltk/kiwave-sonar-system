@@ -188,7 +188,7 @@ MQTT is a protocol that belongs to the Publish-Subscribe architecture style. The
 
 Now that the base of our system's architecture is explained, you can dig deeper into our project and see how our team made use of open source Publish-Subscribe libraries. Here is a component diagram that depicts the architecture of our system. Note that the broker is shown as a component, eventhough it plays the role of a connector:
 
-![ComponentDiagram](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/ReadMe/Resources/ComponentDiagram/ComponentDiagram.png)
+![ComponentDiagram](https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/raw/main/Resources/ComponentDiagram/ComponentDiagram.png)
 
 As you can see in the diagram, We have two main components that communicate to each other via the broker. The App component (which is a subsystem itself), subscribes to the topic "KiwiSonarData" to receive the data that the Wio Seeed Terminal has published to the mentioned topic. The App component also publishes user's input to the KiwiSonarCommand topic. Then, the Wio Seeed Terminal subscribes to this topic and manipulates the way the sensors should work according to the user's input.
 
