@@ -53,7 +53,7 @@ To provide a user-friendly interface, the front-end utilizes SvelteJS front-end 
 
 # Documentation 
 
-[Documents]([https://git.chalmers.se/courses/dit113/2023/group-13/kiwi/-/wikis/Home](https://github.com/jnsltk/kiwave-sonar-system/wiki))
+[Documents](https://github.com/jnsltk/kiwave-sonar-system/wiki)
 
 [User Manual](https://github.com/jnsltk/kiwave-sonar-system/blob/a921cff26a3625b1a8911e5ecf0ce3f2966f95dc/Resources/User%20Manual/User_Manual_-_KiWaveSonar.pdf)
 
